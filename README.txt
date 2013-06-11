@@ -7,13 +7,13 @@ Tested up to: 3.5.1
 License: GPLv2 or later
 Stable tag: 0.2
 
-Ultimate Auction: Awesome plugin to host auctions on your wordpress site and sell anything you want.
+Awesome plugin to host auctions on your wordpress site and sell anything you want.
 
 == Description ==
 
-Hosting auctions on wp is something that not a single one of the WordPress plugins has ever gotten really right. This plugin aims to fix that.
-
 The **Ultimate Wordpress Auction** plugin allows easy and quick way to set up a professional auction website in ebay style.
+
+Hosting auctions on WP is something that not a single one of the plugins has ever gotten really right. This plugin aims to fix that.
 
 Simple and flexible, Ultimate Wordpress Auction plugin works with any WordPress theme. 
 Lots of features, very configurable.  Easy to setup.  Great support.
@@ -75,5 +75,5 @@ This page is responsible for displaying all live auctions. If you click a specif
 
 == Changelog ==
 
-= 0.2 =
+= 1.0 =
 Alpha Launch
