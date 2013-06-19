@@ -1,9 +1,13 @@
 <?php
 /*
- * Plugin Name: Ultimate Auction
- * Description: Provides a simple way to set up your WordPress site as an Auction site. 
- * Version: 1.0
- * License: GPL2 or later
+  Plugin Name: Ultimate Auction
+  Plugin URI: http://auctionplugin.net
+  Description: Awesome plugin to host auctions on your wordpress site and sell anything you want.
+  Author: Nitesh Singh	
+  Author URI: http://auctionplugin.net
+  Version: 1.0.0
+  License: GPLv2
+  Copyright 2013 Nitesh Singh (nitesh@auctionplugin.net)
  */
 
 require_once('settings-page.php');
