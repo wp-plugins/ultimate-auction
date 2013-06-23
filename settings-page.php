@@ -143,6 +143,7 @@ if(!class_exists('wdm_settings'))
 	        <?php
 		    settings_fields('test_option_group');//adds all the nonce/hidden fields and verifications	
 		    do_settings_sections('test-setting-admin');
+		    echo wp_nonce_field('ua_setting_wp_n_f','ua_wdm_setting_auc');
 		?>
 	        <?php submit_button(); ?>
 	    </form>
@@ -260,6 +261,8 @@ if(!class_exists('wdm_settings'))
     //save/update fields under 'Settings tab'	
     public function wdm_validate_save_data($input){
         $mid = $input;
+	
+	if(isset($_POST['ua_wdm_setting_auc']) && wp_verify_nonce($_POST['ua_wdm_setting_auc'],'ua_setting_wp_n_f')){
         if(is_email($mid['wdm_auction_email']))
         update_option('wdm_auction_email',$mid['wdm_auction_email']);
         else{
@@ -279,7 +282,10 @@ if(!class_exists('wdm_settings'))
 	update_option('wdm_mailing_address',$mid['wdm_mailing_address']);
 	update_option('wdm_powered_by',$mid['wdm_powered_by']);
 	update_option('wdm_account_mode',$mid['wdm_account_mode']);
-	
+    }
+    else{
+	die('Sorry, your nonce did not verify.');
+    }
 	return $mid;
     }
 

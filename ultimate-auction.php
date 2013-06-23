@@ -1,14 +1,14 @@
 <?php
 /*
-  Plugin Name: Ultimate Auction
+  Plugin Name: Wordpress Auction Plugin
   Plugin URI: http://auctionplugin.net
   Description: Awesome plugin to host auctions on your wordpress site and sell anything you want.
-  Author: Nitesh Singh	
+  Author: Nitesh Singh
   Author URI: http://auctionplugin.net
-  Version: 1.0.0
+  Version: 1.0.1
   License: GPLv2
-  Copyright 2013 Nitesh Singh (nitesh@auctionplugin.net)
- */
+  Copyright 2013 Nitesh Singh
+*/
 
 require_once('settings-page.php');
 require_once('auction-shortcode.php');
@@ -141,6 +141,7 @@ add_action('wp_ajax_nopriv_cancel_last_bid', 'cancel_last_bid_callback');
 //place bid Ajax callback - 'Place Bid' button on Single Auction page
 function place_bid_now_callback()
 {
+   if(is_user_logged_in()){
     global $wpdb;
     $wpdb->hide_errors();
     
@@ -195,6 +196,10 @@ function place_bid_now_callback()
                         
 	}
     }
+}
+else{
+   echo "Please log in to place bid";
+}
 	die();
 }
 
@@ -322,9 +327,6 @@ function wdm_set_auction_timezone()
         date_default_timezone_set($get_default_timezone);
     }
     
-    
-    if(isset($_GET['tx']) && !empty($_GET['tx']))
-				{
                                     if(isset($_GET["ult_auc_id"]) && $_GET["ult_auc_id"]){
                                        
                                     $single_auction=get_post($_GET["ult_auc_id"]);
@@ -349,8 +351,6 @@ function wdm_set_auction_timezone()
                                           </script>';
                                         }
                                     }
-                                            
-				}
                               
 
 }

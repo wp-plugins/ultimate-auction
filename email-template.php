@@ -2,6 +2,10 @@
 //email template to be sent to auction winners
 function ultimate_auction_email_template($auction_name, $auction_id, $auction_desc, $winner_bid, $winner_email, $return_url)
 {
+	global $wpdb;
+	$name_qry = "SELECT name FROM ".$wpdb->prefix."wdm_bidders WHERE bid =".$winner_bid." AND auction_id =".$auction_id;
+	$winner_name = $wpdb->get_var($name_qry);
+	
         $rec_email    	= get_option('wdm_paypal_address');
         $cur_code     	= substr(get_option('wdm_currency'), -3);
 	$site_name 	= get_bloginfo('name');
@@ -9,8 +13,9 @@ function ultimate_auction_email_template($auction_name, $auction_id, $auction_de
         $auction_email 	= get_option('wdm_auction_email');
         $site_url 	= get_bloginfo('url');
 	
-        $message = "";	
-        $message = "This is to inform you that you won the auction at WEBSITE URL (".$site_url."). Here are the auction details: <br /><br />";
+        $message = "";
+	$message = "Hi ".$winner_name.", <br /><br />";
+        $message .= "This is to inform you that you won the auction at WEBSITE URL (".$site_url."). Here are the auction details: <br /><br />";
         
 	$mode = get_option('wdm_account_mode');
 	
@@ -52,7 +57,7 @@ function ultimate_auction_email_template($auction_name, $auction_id, $auction_de
 				'auc_currency' => $cur_code
 			      );
 	    
-	    $message .= "You can pay ".$pay_amt." through PayPal - <br /><br />";
+	    $message .= "You can contact ADMIN at ".$auction_email." for delivery of the item and pay ".$pay_amt." through PayPal - <br /><br />";
 	    
 	    $paypal_link = apply_filters( 'ua_paypal_email_content', $paypal_link, $auction_data );
 	    

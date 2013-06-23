@@ -56,11 +56,12 @@ function wdm_auction_listing(){
 					<img class="auction-small-img" src="<?php echo get_post_meta($wdm_auction->ID,'wdm-image-4',true); ?>" width="60" height="65"/>
 			</div> <!--wdm-image-container ends here-->
 			
-			<div class="wdm-single-auction-title">
-				<?php echo $wdm_auction->post_title; ?>
-			</div> <!--wdm-single-auction-title ends here-->
-			
 			<div class="wdm_single_prod_desc">
+			    
+			    <div class="wdm-single-auction-title">
+				<?php echo $wdm_auction->post_title; ?>
+			    </div> <!--wdm-single-auction-title ends here-->
+			    
 			<?php //get auction-status taxonomy value for the current post - live/expired
 			$active_terms = wp_get_post_terms($wdm_auction->ID, 'auction-status',array("fields" => "names"));
 			
@@ -178,19 +179,13 @@ function wdm_auction_listing(){
 					</div>
 					<?php
 				}
+				if(is_user_logged_in()) {
+				   $curr_user = wp_get_current_user();
+				   $auction_bidder_name = $curr_user->user_login;
+				   $auction_bidder_email = $curr_user->user_email;
 				?>
 				<br />
 				<form action="<?php echo dirname(__FILE__); ?>" style="margin-top:20px;">
-					<div class="wdm_bidder_name">
-						<label for="wdm-bidder-name">Name: </label>
-						<input type="text" id="wdm-bidder-name" style="float:right;"/>
-					</div>
-					<br />
-					<div class="wdm_bidder_email">
-						<label for="wdm-bidder-email">Email: </label>
-						<input type="text" id="wdm-bidder-email" style="float:right;"/>
-					</div>
-					<br />
 					<div class="wdm_bid_val" style="float:left;">
 						<label for="wdm-bidder-bidval">Bid Value: </label>
 						<input type="text" id="wdm-bidder-bidval" style="width:85px;" placeholder="<?php echo "in ".$currency_code;?>" />
@@ -203,6 +198,24 @@ function wdm_auction_listing(){
 					</div>
 					
 				</form>
+				<?php
+				   require_once('ajax-actions/place-bid.php'); //file to handle ajax requests related to bid placing form
+				}
+				else{
+				  ?>
+				   <br />
+					<div class="wdm_bid_val" style="float:left;">
+						<label for="wdm-bidder-bidval">Bid Value: </label>
+						<input type="text" id="wdm-bidder-bidval" style="width:85px;" placeholder="<?php echo "in ".$currency_code;?>" />
+						<br /><span class="wdm_enter_val_text" style="float:right;">
+						<small>(Enter <?php echo $inc_price; ?> or more)</small>
+						</span>
+					</div>
+					
+				   <div class="wdm_place_bid" style="float:right;padding-top:6px;">
+					  <a class="wdm-login-to-place-bid" href="<?php echo wp_login_url(site_url( $_SERVER['REQUEST_URI'] )); ?>" title="Login">Place Bid</a>
+				   </div>
+				<?php }?>
 				</div> <!--wdm_place_bid_section ends here-->
 				<?php }?>
 				<br />
@@ -263,7 +276,7 @@ function wdm_auction_listing(){
 			
 		</div> <!--wdm_auction_desc_section ends here-->
 			
-		<?php 	require_once('ajax-actions/place-bid.php'); //file to handle ajax requests related to bid placing form
+		<?php 	
 			require_once('auction-description-tabs.php'); //file to display current auction description tabs section
 		?>
 		<!--script to show small images in main image container-->

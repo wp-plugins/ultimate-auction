@@ -1,7 +1,7 @@
 <?php
 $post_id;
 if(!empty($_POST)){
-    
+    if(isset($_POST['ua_wdm_add_auc']) && wp_verify_nonce($_POST['ua_wdm_add_auc'],'ua_wp_n_f')){
     $auction_title=(!empty($_POST["auction_title"])) ? ($_POST["auction_title"]):'';
     $auction_content=(!empty($_POST["auction_description"])) ? ($_POST["auction_description"]):'';
     
@@ -120,6 +120,10 @@ if(!empty($_POST)){
     <div id="message" class="error"><p><strong>Auction title and Auction description cannot be left blank</strong></p></div>
     <?php
     }
+}
+else{
+    die('Sorry, your nonce did not verify.');
+}
 }
 $wdm_post=$this->wdm_get_post();
 
@@ -252,7 +256,7 @@ $currency_code = substr(get_option('wdm_currency'), -3);
 		<span style="width: 370px;margin-left: -90px;">
 		    Whenever a visitor clicks on 'Buy it Now' button, he is redirected to PayPal where he can make payment for this product/auction.
 		    <br />
-		    When payment is made successfully, the auction should expire. If you set auto-return and return URL inside PayPal, plugin will expire it automatically. Incase you miss it then auction's state would not be correct.
+		    After making payment he is again redirected to your site if return URL has been set into your PayPal account and then only auction can be expired.
 		</span>
 		</a>
 		<br />
@@ -311,7 +315,7 @@ $currency_code = substr(get_option('wdm_currency'), -3);
 	    <div class="ult-auc-settings-tip">Only those methods will be active for which you’ve entered details inside plugin’s settings page.</div>
         </td>
     </tr>
-    
+    </table>
     <?php
     global $post_id;
     if(isset($_GET["edit_auction"]) && !empty($_GET["edit_auction"])){//user came here from manage auction table
@@ -319,8 +323,9 @@ $currency_code = substr(get_option('wdm_currency'), -3);
     }
     else if($post_id != "")//user came here after clicking on submit button
     echo "<input type='hidden' value='".$post_id."' name='update_auction'>";
+    echo wp_nonce_field('ua_wp_n_f','ua_wdm_add_auc');
     ?>
-    </table>
+    
     <?php submit_button(); ?>
 </form>
 
