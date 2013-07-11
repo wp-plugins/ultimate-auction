@@ -1,11 +1,11 @@
 === Wordpress Auction Plugin ===
-Contributors: nitesh_singh
+Contributors: nitesh_singh,WisdmLabs
 Donate link: http://auctionplugin.net/
 Tags: auctions,auction,auction plugin,wp auction,wordpress auction,wp auctions,auction script,ebay,ebay auction,
 Requires at least: 3.4
 Tested up to: 3.5.1
 License: GPLv2 or later
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 
 Awesome plugin to host auctions on your wordpress site and sell anything you want.
 
@@ -75,6 +75,10 @@ This page is responsible for displaying all live auctions. If you click a specif
 == Frequently Asked Questions ==
 
 == Changelog ==
+= 1.0.2 = 
+* Pagination bug resolved
+
+
 = 1.0.1 =
 * New Feature added where only registered users can place bids
 * Major CRLF bug resolved

@@ -5,7 +5,7 @@
   Description: Awesome plugin to host auctions on your wordpress site and sell anything you want.
   Author: Nitesh Singh
   Author URI: http://auctionplugin.net
-  Version: 1.0.1
+  Version: 1.0.2
   License: GPLv2
   Copyright 2013 Nitesh Singh
 */
@@ -212,11 +212,12 @@ function bid_notification_callback()
     
             $c_code = substr(get_option('wdm_currency'), -3);
             
-            $perma_type = get_option('permalink_structure');
-            if(empty($perma_type))
-                $char = "&";
-            else
-                $char = "?";
+            //$perma_type = get_option('permalink_structure');
+            //if(empty($perma_type))
+            //    $char = "&";
+            //else
+            //    $char = "?";
+            $char = $_POST['char'];
                 
             $ret_url = $_POST['auc_url'].$char."ult_auc_id=".$_POST['auction_id'];
             
@@ -265,12 +266,14 @@ add_action('wp_ajax_nopriv_bid_notification', 'bid_notification_callback');
 //private message Ajax callback - Single Auction page
 function private_message_callback()
 {
-        $perma_type = get_option('permalink_structure');
-        if(empty($perma_type))
-            $char = "&";
-        else
-            $char = "?";
-                
+        //$perma_type = get_option('permalink_structure');
+        //if(empty($perma_type))
+        //    $char = "&";
+        //else
+        //    $char = "?";
+        
+        $char = $_POST['p_char'];
+        
         $auc_url = $_POST['p_url'].$char."ult_auc_id=".$_POST['p_auc_id'];
         
         $adm_email = get_option('wdm_auction_email');

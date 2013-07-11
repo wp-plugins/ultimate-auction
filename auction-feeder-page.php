@@ -1,10 +1,9 @@
 <?php
 //auction listing page - pagination
-function auction_pagination($pages = '', $range = 2)
+function auction_pagination($pages = '', $range = 2, $paged)
 {  
      $showitems = ($range * 2)+1;  
 
-     global $paged;
      if(empty($paged)) $paged = 1;
 
      if($pages == '')
@@ -38,8 +37,13 @@ function auction_pagination($pages = '', $range = 2)
          echo "</div>\n";
      }
 }
+
 $wdm_auction_array=array();
-$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+
+if (get_query_var('paged')) { $paged = get_query_var('paged'); }
+elseif (get_query_var('page')) { $paged = get_query_var('page'); }
+else { $paged = 1; }
+
 $args = array(
 		'posts_per_page'=> 20,
 		'post_type'	=> 'ultimate-auction',
@@ -198,7 +202,7 @@ AND ID IN($live_posts)
 AND post_status = 'publish'");
 
 $c=ceil($count_pages/20);
-auction_pagination($c,1);
+auction_pagination($c, 1, $paged);
 ?>
 
 </ul>

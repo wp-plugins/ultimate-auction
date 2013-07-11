@@ -34,11 +34,11 @@ $comp_auc = array(
 
 $completed_auctions = get_posts( $comp_auc );
               
-$perm_type = get_option('permalink_structure');
-if(empty($perm_type))
-        $set_perm = "&";
-else
-        $set_perm = "?";
+//$perm_type = get_option('permalink_structure');
+//if(empty($perm_type))
+//        $set_perm = "&";
+//else
+//        $set_perm = "?";
 	    
 
 foreach($completed_auctions as $ca){

@@ -57,7 +57,8 @@ jQuery(document).ready(function($){
 				    auction_id: "<?php echo $wdm_auction->ID; ?>",
 				    auc_name: "<?php echo esc_js($wdm_auction->post_title); ?>",
 				    auc_desc: "<?php echo esc_js($wdm_auction->post_content); ?>",
-				    auc_url: "<?php echo get_permalink();?>"
+				    auc_url: "<?php echo get_permalink();?>",
+				    char: "<?php echo $set_char;?>"
 			};
 			
 			$.post(ajaxurl, w_data, function(resp) {window.location.reload();});
@@ -74,7 +75,8 @@ jQuery(document).ready(function($){
 				    auction_id: "<?php echo $wdm_auction->ID; ?>",
 				    auc_name: "<?php echo esc_js($wdm_auction->post_title); ?>",
 				    auc_desc: "<?php echo esc_js($wdm_auction->post_content); ?>",
-				    auc_url: "<?php echo get_permalink();?>"
+				    auc_url: "<?php echo get_permalink();?>",
+				    char: "<?php echo $set_char;?>"
 			};
 			
 			$.post(ajaxurl, b_data, function(r) {window.location.reload();});

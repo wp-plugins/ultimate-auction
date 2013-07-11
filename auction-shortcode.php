@@ -7,7 +7,10 @@ function wdm_auction_listing(){
 	
 	//check the permalink from database and append variable to the auction single pages accordingly
 	$perma_type = get_option('permalink_structure');
-	if(empty($perma_type))
+	
+	if(is_front_page() || is_home())
+	$set_char = "?";
+	elseif(empty($perma_type))
 	$set_char = "&";
 	else
 	$set_char = "?";
@@ -47,7 +50,7 @@ function wdm_auction_listing(){
 		
 		<!--main forms container of single auction page-->
 		 <div class="wdm-ultimate-auction-container">
-			
+						
 			<div class="wdm-image-container">
 					<img class="auction-main-img"  src="<?php echo get_post_meta($wdm_auction->ID,'wdm_auction_thumb',true); ?>" width="265" height="210px"/>
 					<img class="auction-small-img" src="<?php echo get_post_meta($wdm_auction->ID,'wdm-image-1',true); ?>" width="60" height="65"/>

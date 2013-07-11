@@ -35,7 +35,8 @@ jQuery(document).ready(function($){
                 p_email: $("#wdm-prv-bidder-email").val(),
                 p_msg: $("#wdm-prv-bidder-msg").val(),
                 p_url: "<?php echo get_permalink(); ?>",
-                p_auc_id: "<?php echo $wdm_auction->ID; ?>"
+                p_auc_id: "<?php echo $wdm_auction->ID; ?>",
+		p_char: "<?php echo $set_char;?>"
 	    };
             
 	    $.post(ajaxurl, data, function(response) {

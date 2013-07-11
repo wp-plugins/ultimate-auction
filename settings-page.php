@@ -162,6 +162,10 @@ if(!class_exists('wdm_settings'))
             ?>
 	</div>
 	<?php
+	
+	if( isset( $_GET['settings-updated'] ) ) {
+	    echo "<div class='updated'><p><strong>Settings saved.</strong></p></div>";
+	} 
     }
     
     //create setting sections under 'Settings' tab to handle plugin configuration options 	
