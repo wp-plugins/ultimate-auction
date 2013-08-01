@@ -16,7 +16,10 @@ The **Ultimate Wordpress Auction** plugin allows easy and quick way to set up a 
 Simple and flexible, Ultimate Wordpress Auction plugin works with any WordPress theme. 
 Lots of features, very configurable.  Easy to setup.  Great support.
 
-Features:
+
+*   [Upgrade to the Pro Version Now!&raquo;](http://auctionplugin.net)
+*   [Paypal Invoice Addon for Free PluginR &raquo;](http://auctionplugin.net/addon)
+
 
  = Core Features =
     1. Registered User can place bids 
