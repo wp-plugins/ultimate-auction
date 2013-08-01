@@ -18,7 +18,7 @@ Lots of features, very configurable.  Easy to setup.  Great support.
 
 
 *   [Upgrade to the Pro Version Now!&raquo;](http://auctionplugin.net)
-*   [Paypal Invoice Addon for Free PluginR &raquo;](http://auctionplugin.net/addon)
+*   [Paypal Invoice Addon for Free Plugin &raquo;](http://auctionplugin.net/addon)
 
 
  = Core Features =
