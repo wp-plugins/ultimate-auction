@@ -90,10 +90,10 @@ if(!empty($_POST)){
         
 	    update_post_meta($post_id, 'wdm-main-image',$_POST["auction_main_image"]);
             update_post_meta($post_id, 'wdm_listing_ends', $_POST["end_date"]);
-            update_post_meta($post_id, 'wdm_opening_bid', $_POST["opening_bid"]);
-            update_post_meta($post_id, 'wdm_lowest_bid', $_POST["lowest_bid"]);
-            update_post_meta($post_id, 'wdm_buy_it_now', $_POST["buy_it_now_price"]);
-            update_post_meta($post_id, 'wdm_incremental_val', $_POST["incremental_value"]);
+            update_post_meta($post_id, 'wdm_opening_bid', round($_POST["opening_bid"], 2));
+            update_post_meta($post_id, 'wdm_lowest_bid', round($_POST["lowest_bid"], 2));
+            update_post_meta($post_id, 'wdm_buy_it_now', round($_POST["buy_it_now_price"], 2));
+            update_post_meta($post_id, 'wdm_incremental_val', round($_POST["incremental_value"], 2));
             update_post_meta($post_id, 'wdm_payment_method', $_POST["payment_method"]);
 			for($im=1; $im<=4; $im++)
 			{

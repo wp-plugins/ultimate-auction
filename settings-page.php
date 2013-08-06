@@ -91,8 +91,9 @@ if(!class_exists('wdm_settings'))
     }
     
     //register menus and submenus
-    public function add_plugin_page(){       
-        add_menu_page( 'Ultimate Auction', 'Ultimate Auction', 'administrator', 'ultimate-auction', array($this, 'create_admin_page'));
+    public function add_plugin_page(){
+	$ua_icon_url = plugins_url('img/favicon.png', __FILE__);
+        add_menu_page( 'Ultimate Auction', 'Ultimate Auction', 'administrator', 'ultimate-auction', array($this, 'create_admin_page'), $ua_icon_url);
 	add_submenu_page( 'ultimate-auction', 'Settings', 'Settings', 'administrator', 'ultimate-auction', array($this, 'create_admin_page') );
 	add_submenu_page( 'ultimate-auction', 'Add Auction', 'Add Auction', 'administrator', 'add-new-auction', array($this, 'create_admin_page') );
         add_submenu_page( 'ultimate-auction', 'Manage Auctions', 'Manage Auctions', 'administrator', 'manage_auctions', array($this, 'create_admin_page') );

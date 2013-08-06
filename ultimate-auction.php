@@ -5,7 +5,7 @@
   Description: Awesome plugin to host auctions on your wordpress site and sell anything you want.
   Author: Nitesh Singh
   Author URI: http://auctionplugin.net
-  Version: 1.0.2
+  Version: 1.0.3
   License: GPLv2
   Copyright 2013 Nitesh Singh
 */
@@ -21,6 +21,7 @@ function wdm_create_bidders_table()
 {
    require(ABSPATH . 'wp-admin/includes/upgrade.php');
    global $wpdb;
+   
    $data_table = $wpdb->prefix."wdm_bidders";
    $sql = "CREATE TABLE IF NOT EXISTS $data_table
   (
@@ -28,12 +29,17 @@ function wdm_create_bidders_table()
    name VARCHAR(45),
    email VARCHAR(45),
    auction_id MEDIUMINT(9),
-   bid MEDIUMINT(9),
+   bid DECIMAL(10,2),
    date datetime,
    PRIMARY KEY (id)
   );";
   
    dbDelta($sql);
+   
+   //for old table (till 'Wordpress Auction Plugin' version 1.0.2) which had 'bid' column as integer(MEDIUMINT)
+   $alt_sql = "ALTER TABLE $data_table MODIFY bid DECIMAL(10,2);";
+   
+   $wpdb->query($alt_sql);
 }
 
 //send email Ajax callback - An automatic activity once an auction has expired
@@ -228,7 +234,7 @@ function bid_notification_callback()
             $adm_msg  = "<strong>Bidder Details - </strong>";
             $adm_msg .= "<br /><br /> Bidder Name: ".$_POST['name'];
             $adm_msg .= "<br /><br /> Bidder Email: ".$_POST['email'];
-            $adm_msg .= "<br /><br /> Bid Value: ".$c_code." ".$_POST['bid'];
+            $adm_msg .= "<br /><br /> Bid Value: ".$c_code." ".round($_POST['bid'], 2);
             $adm_msg .= "<br /><br /><strong>Product Details - </strong>";
             $adm_msg .= "<br /><br /> Product URL: ".$ret_url;
             $adm_msg .= "<br /><br /> Product Name: ".$_POST['auc_name'];
@@ -246,7 +252,7 @@ function bid_notification_callback()
             $bid_msg = "Here are the details - ";
             $bid_msg .= "<br /><br /> Product URL: ". $ret_url;
             $bid_msg .= "<br /><br /> Product Name: ".$_POST['auc_name'];
-            $bid_msg .= "<br /><br /> Bid Value: ".$c_code." ".$_POST['bid'];
+            $bid_msg .= "<br /><br /> Bid Value: ".$c_code." ".round($_POST['bid'], 2);
             $bid_msg .= "<br /><br /> Description: <br />".$_POST['auc_desc']."<br />";
             
             wp_mail($_POST['email'], $bid_sub, $bid_msg, $hdr, '');
@@ -254,7 +260,7 @@ function bid_notification_callback()
             if(isset($_POST['email_type']) && $_POST['email_type'] === 'winner_email')
             {
                 require_once('email-template.php');    
-                ultimate_auction_email_template($_POST['auc_name'], $_POST['auction_id'], $_POST['auc_desc'], $_POST['bid'], $_POST['email'], $ret_url);
+                ultimate_auction_email_template($_POST['auc_name'], $_POST['auction_id'], $_POST['auc_desc'], round($_POST['bid'], 2), $_POST['email'], $ret_url);
             }
                 
 	die();
