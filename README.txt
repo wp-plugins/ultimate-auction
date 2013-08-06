@@ -79,7 +79,8 @@ This page is responsible for displaying all live auctions. If you click a specif
 
 == Changelog ==
 = 1.0.3 = 
-* Decimal Pricing is now possible.
+* Decimal Pricing is now possible. 
+To make this work: Update your plugin to 1.0.3 & then deactivate & re-activate the plugin. 
 
 
 = 1.0.2 = 
