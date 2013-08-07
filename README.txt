@@ -17,8 +17,14 @@ Simple and flexible, Ultimate Wordpress Auction plugin works with any WordPress 
 Lots of features, very configurable.  Easy to setup.  Great support.
 
 
-*   [Upgrade to the Pro Version Now!&raquo;](http://auctionplugin.net)
-*   [Paypal Invoice Addon for Free PluginR &raquo;](http://auctionplugin.net/addon)
+*   [Upgrade to the Pro Version Now! &raquo;](http://auctionplugin.net/?utm_source=wordpress&utm_medium=wp+plugin+repos&utm_campaign=WP+to+Auction+Plugin+Site+)
+*   [Paypal Invoice Addon for Free Plugin &raquo;](http://auctionplugin.net/addon)
+
+ = PRO VERSION Features =
+    1. Admin can charge listing fee to activate user auctions on per auction basis.
+    2. Auction Post Capability for Registered User.
+	3. Admin can charge commission on final bid price on user's auction.
+	4. Integrated Paypal Invoicing for handling payments
 
 
  = Core Features =
@@ -79,7 +85,8 @@ This page is responsible for displaying all live auctions. If you click a specif
 
 == Changelog ==
 = 1.0.3 = 
-* Decimal Pricing is now possible.
+* Decimal Pricing is now possible. 
+To make this work: Update your plugin to 1.0.3 & then deactivate & re-activate the plugin. 
 
 
 = 1.0.2 = 
