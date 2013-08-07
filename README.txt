@@ -21,7 +21,7 @@ Lots of features, very configurable.  Easy to setup.  Great support.
 *   [Paypal Invoice Addon for Free Plugin &raquo;](http://auctionplugin.net/addon)
 
  = PRO VERSION Features =
-    1. Admin can charge listing fee to activate user auctions on per auction basis.
+    1. Admin can charge listing fee for users to post auction.
     2. Auction Post Capability for Registered User.
 	3. Admin can charge commission on final bid price on user's auction.
 	4. Integrated Paypal Invoicing for handling payments
