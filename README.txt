@@ -22,10 +22,10 @@ Lots of features, very configurable.  Easy to setup.  Great support.
 
  = PRO VERSION Features =
     1. Registered Users can add auction to your site.
-    2. Admin can charge listing fee to users to add their auction on his website.
+    2. Admin can charge listing fee to users for adding their auction.
 	3. Admin can also charge commissions on final bid price for user's auction.
-	4. Integrated Paypal Invoicing for handling payments
-	5. Display Enhancement - Multiple tabs to categorize auctions like New Listing, Most Active & Ending Soon
+	4. Integrated Paypal Invoicing for handling payments.
+	5. Multiple Display tabs - New Listing, Most Active & Ending Soon to show auctions.
 
 
  = Core Features =
