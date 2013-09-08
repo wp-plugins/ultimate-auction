@@ -298,6 +298,7 @@ $currency_code = substr(get_option('wdm_currency'), -3);
 	    
 	</td>
     </tr>
+    <?php do_action('ua_add_shipping_cost_input_field'); //SHP-ADD hook to add new price field ?>
     <tr valign="top">
         <th scope="row">
             <label for="payment_method">Payment Method</label>

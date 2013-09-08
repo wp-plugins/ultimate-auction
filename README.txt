@@ -5,7 +5,7 @@ Tags: auctions,auction,auction plugin,wp auction,wordpress auction,wp auctions,a
 Requires at least: 3.4
 Tested up to: 3.6
 License: GPLv2 or later
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 
 Awesome plugin to host auctions on your wordpress site and sell anything you want.
 
@@ -85,6 +85,11 @@ This page is responsible for displaying all live auctions. If you click a specif
 == Frequently Asked Questions ==
 
 == Changelog ==
+= 1.0.4 = 
+* Outbid Email which sends emails to all existing bidders that you have been outbid
+* Code to integrate with Shipping Cost Addon. This lets you add shipping cost in auctions.
+
+
 = 1.0.3 = 
 * Decimal Pricing is now possible. 
 To make this work: Update your plugin to 1.0.3 & then deactivate & re-activate the plugin. 

@@ -5,7 +5,7 @@
   Description: Awesome plugin to host auctions on your wordpress site and sell anything you want.
   Author: Nitesh Singh
   Author URI: http://auctionplugin.net
-  Version: 1.0.3
+  Version: 1.0.4
   License: GPLv2
   Copyright 2013 Nitesh Singh
 */
@@ -154,6 +154,10 @@ function place_bid_now_callback()
     $q="SELECT MAX(bid) FROM ".$wpdb->prefix."wdm_bidders WHERE auction_id =".$_POST['auction_id'];
     $next_bid = $wpdb->get_var($q);
     
+    if(!empty($next_bid)){
+      update_post_meta($_POST['auction_id'], 'wdm_previous_bid_value', $next_bid); //store bid value of the most recent bidder
+    }
+    
     if(empty($next_bid))
          $next_bid = get_post_meta($_POST['auction_id'], 'wdm_opening_bid', true);
          
@@ -256,7 +260,25 @@ function bid_notification_callback()
             $bid_msg .= "<br /><br /> Description: <br />".$_POST['auc_desc']."<br />";
             
             wp_mail($_POST['email'], $bid_sub, $bid_msg, $hdr, '');
+	    
+	    //outbid email
+	    global $wpdb;
+	    $wpdb->hide_errors();
+	    
+	    $prev_bid = get_post_meta($_POST['auction_id'], 'wdm_previous_bid_value', true);
+	    
+	    if(!empty($prev_bid)){
+	       $bidder_email  = "";
+	       $email_qry = "SELECT email FROM ".$wpdb->prefix."wdm_bidders WHERE bid =".$prev_bid." AND auction_id =".$_POST['auction_id'];
+	       $bidder_email = $wpdb->get_var($email_qry);
+	       
+	       if($bidder_email != $_POST['email']){
+		  $outbid_sub = "[".get_bloginfo('name')."] You have been outbid on the product - ".$_POST['auc_name'];
+		  wp_mail($bidder_email, $outbid_sub, $bid_msg, $hdr, '');
+	       }
+	    }
             
+	    //auction won immediately
             if(isset($_POST['email_type']) && $_POST['email_type'] === 'winner_email')
             {
                 require_once('email-template.php');    
@@ -358,6 +380,47 @@ function wdm_set_auction_timezone()
                                                                 alert("Thank you for buying this product.");
                                                                }, 1000);       
                                           </script>';
+					  
+					  //details of a product sold through buy now link
+					  if(is_user_logged_in()){
+					  $curr_user = wp_get_current_user();
+					  $buyer_email = $curr_user->user_email;
+					  $winner_name = $curr_user->user_login;
+					  }
+					  
+					  $auction_email = get_option('wdm_auction_email');
+					  $site_name = get_bloginfo('name');
+					  $site_url = get_bloginfo('url');
+					  $c_code = substr(get_option('wdm_currency'), -3);
+					  $rec_email = get_option('wdm_paypal_address');
+					  $buy_now_price = get_post_meta($single_auction->ID, 'wdm_buy_it_now', true);
+					  
+					  $headers = "";
+					  //$headers  = "From: ". $site_name ." <". $auction_email ."> \r\n";
+					  $headers .= "MIME-Version: 1.0\r\n";
+					  $headers .= "Content-type:text/html;charset=iso-8859-1" . "\r\n";
+					  
+					  $return_url = "";
+					  $return_url = strstr($_SERVER['REQUEST_URI'], 'ult_auc_id', true);
+					  $return_url = $site_url.$return_url."ult_auc_id=".$_GET["ult_auc_id"];
+					  
+					  $auction_data = array('auc_id' => $single_auction->ID,
+								 'auc_name' => $single_auction->post_title,
+								 'auc_desc' => $single_auction->post_content,
+								 'auc_price' => $buy_now_price,
+								 'auc_currency' => $c_code,
+								 'seller_paypal_email' => $rec_email,
+								 'winner_email' => $buyer_email,
+								 'seller_email' => $auction_email,
+								 'winner_name' => $winner_name,
+								 'pay_method' => 'method_paypal',
+								 'site_name' => $site_name,
+								 'site_url' => $site_url,
+								 'product_url' => $return_url,
+								 'header' => $headers
+					  );
+					  
+					  do_action('ua_shipping_data_email', $auction_data);
                                         }
                                     }
                               

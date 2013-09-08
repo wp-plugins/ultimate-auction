@@ -30,6 +30,10 @@ function ultimate_auction_email_template($auction_name, $auction_id, $auction_de
 	//$paypal_link .= "&lc=US";
 	$paypal_link .= "&item_name=".urlencode($auction_name);
 	$paypal_link .= "&amount=".urlencode($winner_bid);
+	//shipping field hooks
+	$shipping_link = '';
+	$paypal_link .= apply_filters('ua_product_shipping_cost_link', $shipping_link, $auction_id, $winner_email); //SHP-ADD hook shipping cost link
+	//end shipping
 	$paypal_link .= "&currency_code=".urlencode($cur_code);
 	$paypal_link .= "&return=".urlencode($return_url);
 	$paypal_link .= "&button_subtype=services";
@@ -44,9 +48,11 @@ function ultimate_auction_email_template($auction_name, $auction_id, $auction_de
 	
 	$pay_amt = "<strong>".$cur_code." ".$winner_bid."</strong>";
 	
+	$auction_data = array();
+	
 	if($check_method === 'method_paypal')
 	{
-	    $auction_data = array();
+	    //$auction_data = array();
 	
 	    $auction_data = array( 'auc_id' => $auction_id,
 				'auc_name' => $auction_name,
@@ -90,6 +96,25 @@ function ultimate_auction_email_template($auction_name, $auction_id, $auction_de
 	{   
             update_post_meta( $auction_id, 'auction_email_sent', 'sent' );
 	}
+	
+	$data_to_seller = array();
+	$data_to_seller = array('auc_id' => $auction_id,
+				'auc_name' => $auction_name,
+				'auc_desc' => $auction_desc,
+				'auc_price' => $winner_bid,
+				'auc_currency' => $cur_code,
+				'seller_paypal_email' => $rec_email,
+				'winner_email' => $winner_email,
+				'seller_email' => $auction_email,
+				'winner_name' => $winner_name,
+				'pay_method' => $check_method,
+				'site_name' => $site_name,
+				'site_url' => $site_url,
+				'product_url' => $return_url,
+				'header' => $headers
+			      );
+	 
+	do_action('ua_shipping_data_email', $data_to_seller);
 	
 	return $email_sent;
 }

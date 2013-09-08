@@ -87,14 +87,14 @@ text-decoration: underline;
 .wdm_single_prod_desc
 {
     float: left;
-    width: 270px;
+    width: 285px;
 }
 
 #wdm_place_bid_section form{
     margin-top: 15px;
 }
 
-#wdm_buy_now_section form
+#wdm_buy_now_section form, .wdm-login-to-buy-now
 {
     float: right;
     margin-top: 15px;
@@ -248,7 +248,7 @@ width: 17%;
     text-decoration: none !important;
 }
 
-#wdm_buy_now_section  input[type="submit"]{
+#wdm_buy_now_section  input[type="submit"], .wdm-login-to-buy-now{
     background-color: #06C !important;
     color: #FFF !important;
     background-size: 100%;
@@ -266,6 +266,7 @@ width: 17%;
     text-shadow: none;
     font-weight: normal;
     font-size: 15px;
+    text-decoration: none !important;
 }
 
 #wdm_buy_now_section  input[type="submit"]:hover{

@@ -231,7 +231,7 @@ function wdm_auction_listing(){
 					  $pp_link  = "https://sandbox.paypal.com/cgi-bin/webscr";
 				   else
 					  $pp_link  = "https://www.paypal.com/cgi-bin/webscr";
-				   ?>
+				   if(is_user_logged_in()){?>
 				<!--buy now button-->
 				<div id="wdm_buy_now_section">
 					<div id="wdm-buy-line-above" >
@@ -242,6 +242,9 @@ function wdm_auction_listing(){
 				<!--<input type="hidden" name="lc" value="US">-->
 				<input type="hidden" name="item_name" value="<?php echo $wdm_auction->post_title;?>">
 				<input type="hidden" name="amount" value="<?php echo $buy_now_price; ?>">
+				<?php $shipping_field = '';
+				      echo apply_filters('ua_product_shipping_cost_field', $shipping_field, $wdm_auction->ID);
+				?>
 				<input type="hidden" name="currency_code" value="<?php echo $currency_code; ?>">
 				<input type="hidden" name="return" value="<?php echo get_permalink().$set_char."ult_auc_id=".$wdm_auction->ID; ?>">
 				<input type="hidden" name="button_subtype" value="services">
@@ -261,9 +264,19 @@ function wdm_auction_listing(){
 		
 			    });
 			       </script>
-				<?php }?>
-			
-				<?php
+				<?php }
+				else{?>
+				   <div id="wdm_buy_now_section">
+					  <div id="wdm-buy-line-above" >
+					  <a class="wdm-login-to-buy-now" href="<?php echo wp_login_url(site_url( $_SERVER['REQUEST_URI'] )); ?>" title="Login">
+						 Buy it now for <?php echo $currency_code." ".$buy_now_price;?>
+					  </a>
+					  </div>
+				   </div>
+				   <?php
+				   }
+				}
+				   do_action('ua_add_shipping_cost_view_field', $wdm_auction->ID); //SHP-ADD hook to add new product data
 				}
 				?>
 			    </div> <!--wdm_single_prod_desc ends here-->
