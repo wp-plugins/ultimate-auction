@@ -5,7 +5,7 @@ Tags: auctions,auction,auction plugin,wp auction,wordpress auction,wp auctions,a
 Requires at least: 3.4
 Tested up to: 3.6
 License: GPLv2 or later
-Stable tag: 1.0.4
+Stable tag: trunk
 
 Awesome plugin to host auctions on your wordpress site and sell anything you want.
 
