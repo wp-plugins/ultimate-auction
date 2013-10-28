@@ -172,7 +172,7 @@ function wdm_auction_listing(){
 				?>
 				<br />
 				<div class="wdm_reserved_note wdm-mark-green" style="float:left;">
-					<em>Reserve price has met.</em>
+					<em>Reserve price has been met.</em>
 				</div>
 				<?php }
 				else{
