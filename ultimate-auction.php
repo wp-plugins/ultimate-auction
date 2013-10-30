@@ -163,7 +163,7 @@ function place_bid_now_callback()
          
     $next_bid = $next_bid + get_post_meta($_POST['auction_id'],'wdm_incremental_val',true);
     
-    if($_POST['bid'] < $next_bid)
+    if($_POST['ab_bid'] < $next_bid)
     {
        echo "inv_bid".$next_bid;
     }
@@ -172,10 +172,10 @@ function place_bid_now_callback()
         $palce_bid = $wpdb->insert( 
 	$wpdb->prefix.'wdm_bidders', 
 	array( 
-		'name' => $_POST['name'], 
-		'email' => $_POST['email'],
+		'name' => $_POST['ab_name'], 
+		'email' => $_POST['ab_email'],
                 'auction_id' => $_POST['auction_id'],
-                'bid' => $_POST['bid'],
+                'bid' => $_POST['ab_bid'],
                 'date' => date("Y-m-d H:i:s", time())
 	), 
 	array( 
@@ -193,7 +193,7 @@ function place_bid_now_callback()
 		$total_bids = $wpdb->get_var($qry);
 		$buy_price = get_post_meta($_POST['auction_id'], 'wdm_buy_it_now', true);
                 
-		if(!empty($buy_price) && $_POST['bid'] >= $buy_price)
+		if(!empty($buy_price) && $_POST['ab_bid'] >= $buy_price)
 		{
 			update_post_meta($_POST['auction_id'], 'wdm_listing_ends', date("Y-m-d H:i:s", time()));
 			$check_term = term_exists('expired', 'auction-status');
@@ -227,7 +227,7 @@ function bid_notification_callback()
             //    $char = "&";
             //else
             //    $char = "?";
-            $char = $_POST['char'];
+            $char = $_POST['ab_char'];
                 
             $ret_url = $_POST['auc_url'].$char."ult_auc_id=".$_POST['auction_id'];
             
@@ -236,9 +236,9 @@ function bid_notification_callback()
             $adm_sub = "[".get_bloginfo('name')."]  A bidder has placed a bid on the product - ".$_POST['auc_name'];
             $adm_msg = "";
             $adm_msg  = "<strong>Bidder Details - </strong>";
-            $adm_msg .= "<br /><br /> Bidder Name: ".$_POST['name'];
-            $adm_msg .= "<br /><br /> Bidder Email: ".$_POST['email'];
-            $adm_msg .= "<br /><br /> Bid Value: ".$c_code." ".round($_POST['bid'], 2);
+            $adm_msg .= "<br /><br /> Bidder Name: ".$_POST['ab_name'];
+            $adm_msg .= "<br /><br /> Bidder Email: ".$_POST['ab_email'];
+            $adm_msg .= "<br /><br /> Bid Value: ".$c_code." ".round($_POST['ab_bid'], 2);
             $adm_msg .= "<br /><br /><strong>Product Details - </strong>";
             $adm_msg .= "<br /><br /> Product URL: ".$ret_url;
             $adm_msg .= "<br /><br /> Product Name: ".$_POST['auc_name'];
@@ -256,10 +256,10 @@ function bid_notification_callback()
             $bid_msg = "Here are the details - ";
             $bid_msg .= "<br /><br /> Product URL: ". $ret_url;
             $bid_msg .= "<br /><br /> Product Name: ".$_POST['auc_name'];
-            $bid_msg .= "<br /><br /> Bid Value: ".$c_code." ".round($_POST['bid'], 2);
+            $bid_msg .= "<br /><br /> Bid Value: ".$c_code." ".round($_POST['ab_bid'], 2);
             $bid_msg .= "<br /><br /> Description: <br />".$_POST['auc_desc']."<br />";
             
-            wp_mail($_POST['email'], $bid_sub, $bid_msg, $hdr, '');
+            wp_mail($_POST['ab_email'], $bid_sub, $bid_msg, $hdr, '');
 	    
 	    //outbid email
 	    global $wpdb;
@@ -272,7 +272,7 @@ function bid_notification_callback()
 	       $email_qry = "SELECT email FROM ".$wpdb->prefix."wdm_bidders WHERE bid =".$prev_bid." AND auction_id =".$_POST['auction_id'];
 	       $bidder_email = $wpdb->get_var($email_qry);
 	       
-	       if($bidder_email != $_POST['email']){
+	       if($bidder_email != $_POST['ab_email']){
 		  $outbid_sub = "[".get_bloginfo('name')."] You have been outbid on the product - ".$_POST['auc_name'];
 		  wp_mail($bidder_email, $outbid_sub, $bid_msg, $hdr, '');
 	       }
@@ -282,7 +282,7 @@ function bid_notification_callback()
             if(isset($_POST['email_type']) && $_POST['email_type'] === 'winner_email')
             {
                 require_once('email-template.php');    
-                ultimate_auction_email_template($_POST['auc_name'], $_POST['auction_id'], $_POST['auc_desc'], round($_POST['bid'], 2), $_POST['email'], $ret_url);
+                ultimate_auction_email_template($_POST['auc_name'], $_POST['auction_id'], $_POST['auc_desc'], round($_POST['ab_bid'], 2), $_POST['ab_email'], $ret_url);
             }
                 
 	die();

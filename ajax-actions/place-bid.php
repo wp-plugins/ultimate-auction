@@ -17,11 +17,12 @@ jQuery(document).ready(function($){
 	}
 	else
 	{
+	    
 	     var data = {
 		action: 'place_bid_now',
-		name: "<?php echo esc_js($auction_bidder_name);?>",
-                email: "<?php echo $auction_bidder_email;?>",
-                bid: $("#wdm-bidder-bidval").val(),
+		ab_name: "<?php echo esc_js($auction_bidder_name);?>",
+                ab_email: "<?php echo $auction_bidder_email;?>",
+                ab_bid: $("#wdm-bidder-bidval").val(),
                 auction_id: "<?php echo $wdm_auction->ID; ?>"
 	    };
 	    $.post(ajaxurl, data, function(response) {
@@ -51,14 +52,14 @@ jQuery(document).ready(function($){
 		    var w_data = {
 				    action: 'bid_notification',
 				    email_type: 'winner_email',
-				    name: "<?php echo esc_js($auction_bidder_name);?>",
-				    email: "<?php echo $auction_bidder_email;?>",
-				    bid: $("#wdm-bidder-bidval").val(),
+				    ab_name: "<?php echo esc_js($auction_bidder_name);?>",
+				    ab_email: "<?php echo $auction_bidder_email;?>",
+				    ab_bid: $("#wdm-bidder-bidval").val(),
 				    auction_id: "<?php echo $wdm_auction->ID; ?>",
 				    auc_name: "<?php echo esc_js($wdm_auction->post_title); ?>",
 				    auc_desc: "<?php echo esc_js($wdm_auction->post_content); ?>",
 				    auc_url: "<?php echo get_permalink();?>",
-				    char: "<?php echo $set_char;?>"
+				    ab_char: "<?php echo $set_char;?>"
 			};
 			
 			$.post(ajaxurl, w_data, function(resp) {window.location.reload();});
@@ -69,14 +70,14 @@ jQuery(document).ready(function($){
 		    
 		    var b_data = {
 				    action: 'bid_notification',
-				    name: "<?php echo esc_js($auction_bidder_name);?>",
-				    email: "<?php echo $auction_bidder_email;?>",
-				    bid: $("#wdm-bidder-bidval").val(),
+				    ab_name: "<?php echo esc_js($auction_bidder_name);?>",
+				    ab_email: "<?php echo $auction_bidder_email;?>",
+				    ab_bid: $("#wdm-bidder-bidval").val(),
 				    auction_id: "<?php echo $wdm_auction->ID; ?>",
 				    auc_name: "<?php echo esc_js($wdm_auction->post_title); ?>",
 				    auc_desc: "<?php echo esc_js($wdm_auction->post_content); ?>",
 				    auc_url: "<?php echo get_permalink();?>",
-				    char: "<?php echo $set_char;?>"
+				    ab_char: "<?php echo $set_char;?>"
 			};
 			
 			$.post(ajaxurl, b_data, function(r) {window.location.reload();});

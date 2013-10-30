@@ -1,11 +1,11 @@
-	=== Wordpress Auction Plugin ===
+=== Wordpress Auction Plugin ===
 Contributors: nitesh_singh,WisdmLabs
 Donate link: http://auctionplugin.net/
-Tags: auctions,auction,auction plugin,wp auction,wordpress auction,wp auctions,auction script,ebay,ebay auction,
+Tags: auctions,auction,auction plugin,wp auction,wordpress auction,wp auctions,auction script,ebay,ebay auction,bidding
 Requires at least: 3.4
 Tested up to: 3.6
 License: GPLv2 or later
-Stable tag: trunk
+Stable tag: 1.0.4
 
 Awesome plugin to host auctions on your wordpress site and sell anything you want.
 
@@ -18,14 +18,13 @@ Lots of features, very configurable.  Easy to setup.  Great support.
 
 
 *   [Upgrade to the Pro Version Now! &raquo;](http://auctionplugin.net/?utm_source=wordpress&utm_medium=wp+plugin+repos&utm_campaign=WP+to+Auction+Plugin+Site+)
-*   [Addon to Free Plugin - Paypal Invoice: Send professional invoice to bidders to get payment &raquo;](http://auctionplugin.net/addon)
+*   [Paypal Invoice Addon for Free Plugin &raquo;](http://auctionplugin.net/addon)
 
  = PRO VERSION Features =
-    1. Registered Users can add auction to your site.
-    2. Admin can charge listing fee to users for adding their auction.
-	3. Admin can also charge commissions on final bid price for user's auction.
-	4. Integrated Paypal Invoicing for handling payments.
-	5. New Listing, Most Active & Ending Soon tabs to show auctions.
+    1. Admin can charge listing fee for users to post auction.
+    2. Auction Post Capability for Registered User.
+	3. Admin can charge commission on final bid price on user's auction.
+	4. Integrated Paypal Invoicing for handling payments
 
 
  = Core Features =
@@ -43,6 +42,7 @@ Lots of features, very configurable.  Easy to setup.  Great support.
 	12. Email notifications to bidders for placing bids
     13. Email notification to Admin for all activity
     14. Email Sent for Payment Alerts
+	15. Outbid Email sent to all bidders who has been outbidded.
     and Much more...
 	
  = Display Features =

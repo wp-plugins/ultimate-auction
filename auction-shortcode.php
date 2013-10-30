@@ -1,6 +1,6 @@
 <?php
 function wdm_auction_listing(){
-	
+	ob_start();
 	//enqueue css file for front end style
 	wp_enqueue_style('wdm_auction_front_end_styling',plugins_url('css/ua-front-end.css', __FILE__));
 	wp_enqueue_script('wdm-custom-js', plugins_url('js/wdm-custom-js.js', __FILE__), array('jquery'));
@@ -46,7 +46,7 @@ function wdm_auction_listing(){
 		
 		//get currency code
 		$currency_code = substr(get_option('wdm_currency'), -3);
-		?>
+	        ?>
 		
 		<!--main forms container of single auction page-->
 		 <div class="wdm-ultimate-auction-container">
@@ -310,7 +310,13 @@ function wdm_auction_listing(){
 	else{
 		//file auction listing page
 		require_once('auction-feeder-page.php');	
-	}	
+	}
+	
+	$auc_sc = ob_get_contents();
+	
+	ob_end_clean();
+	
+	return $auc_sc;
 }
 //shortcode to display entire auction posts on the site
 add_shortcode('wdm_auction_listing', 'wdm_auction_listing');
