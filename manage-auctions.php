@@ -45,7 +45,7 @@ class Auctions_List_Table extends WP_List_Table {
             $row['title']=$single_auction->post_title;
             $end_date = get_post_meta($single_auction->ID,'wdm_listing_ends', true);
             $row['date_created']= "<strong> Creation Date:</strong> <br />".get_post_meta($single_auction->ID, 'wdm_creation_time', true)." <br /><br /> <strong> Ending Date:</strong> <br />".$end_date;
-            $row['image_1']="<img src='".get_post_meta($single_auction->ID,'wdm_auction_thumb', true)."' width='90'";
+            $row['image_1']="<input class='wdm_chk_auc_act' value=".$single_auction->ID." type='checkbox' style='margin: 0 5px 0 0;' />"."<img src='".get_post_meta($single_auction->ID,'wdm_auction_thumb', true)."' width='90'";
             
             if($this->auction_type=="live")
             {
@@ -160,6 +160,9 @@ class Auctions_List_Table extends WP_List_Table {
             
             require('ajax-actions/delete-auction.php');
         }
+	
+	require_once('ajax-actions/multi-delete.php');
+	
         $this->allData=$data_array;
         return $data_array;            
     }               
@@ -168,7 +171,7 @@ class Auctions_List_Table extends WP_List_Table {
     if($this->auction_type=="live")
     $columns =   array(
     //'ID'        => 'Auction ID',
-    'image_1'   => 'Image',
+    'image_1'   => '<input class="wdm_select_all_chk" type="checkbox" style="margin: 0 5px 0 0;" /> Image',
     'title' => 'Title',
     'date_created' => 'Creation / Ending Date',
     'current_price' => 'Starting / Current Price',
@@ -178,7 +181,7 @@ class Auctions_List_Table extends WP_List_Table {
     else
     $columns =   array(
     //'ID'        => 'Auction ID',
-    'image_1'   => 'Image',
+    'image_1'   => '<input class="wdm_select_all_chk" type="checkbox" style="margin: 0 5px 0 0;" /> Image',
     'title' => 'Title',
     'date_created' => 'Creation / Ending Date',
     'final_price' => 'Starting / Final Price',
@@ -261,7 +264,12 @@ $manage_auction_tab = 'live';
     <li><a href="?page=manage_auctions&auction_type=live" class="<?php echo $manage_auction_tab == 'live' ? 'current' : ''; ?>">Live Auctions</a>|</li>
     <li><a href="?page=manage_auctions&auction_type=expired" class="<?php echo $manage_auction_tab == 'expired' ? 'current' : ''; ?>">Expired Auctions</a></li>
 </ul>
-<br class="clear">
+<br class="clear"><br class="clear">
+<div style="float:left;">
+    <select id="wdmua_del_all" style="float:left;margin-right: 10px;"><option value="del_all_wdm">Delete</option></select>
+    <input type="button" id="wdm_mult_chk_del" class="wdm_ua_act_links button-secondary" value="Apply" />
+    <span class="wdmua_del_stats"></span>
+</div>
 <?php
 $myListTable = new Auctions_List_Table();
 $myListTable->prepare_items();

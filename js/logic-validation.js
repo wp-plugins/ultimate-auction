@@ -25,7 +25,7 @@ jQuery(document).ready(
                             var tl,ds,edt;
                             
                             tl = jQuery("#wdm-add-auction-form #auction_title").val();
-                            ds = jQuery("#wdm-add-auction-form #auction_description").val();
+                            //ds = jQuery("#wdm-add-auction-form #auction_description").val();
                             bn = jQuery("#wdm-add-auction-form #buy_it_now_price").val();
                             ob = jQuery("#wdm-add-auction-form #opening_bid").val();
                             lb = jQuery("#wdm-add-auction-form #lowest_bid").val();
@@ -40,11 +40,11 @@ jQuery(document).ready(
                                     return false; 
                             }
                             
-                            if(!ds)
-                            {
-                                    alert("Please enter Product Description.");
-                                    return false; 
-                            }
+                            //if(!ds)
+                            //{
+                            //        alert("Please enter Product Description.");
+                            //        return false; 
+                            //}
                             
                             if(!edt)
                             {

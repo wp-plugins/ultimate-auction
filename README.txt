@@ -3,9 +3,9 @@ Contributors: nitesh_singh,WisdmLabs
 Donate link: http://auctionplugin.net/
 Tags: auctions,auction,auction plugin,wp auction,wordpress auction,wp auctions,auction script,ebay,ebay auction,bidding
 Requires at least: 3.4
-Tested up to: 3.6
+Tested up to: 3.8
 License: GPLv2 or later
-Stable tag: 1.0.4
+Stable tag: trunk
 
 Awesome plugin to host auctions on your wordpress site and sell anything you want.
 
@@ -85,6 +85,14 @@ This page is responsible for displaying all live auctions. If you click a specif
 == Frequently Asked Questions ==
 
 == Changelog ==
+= 1.0.5 = 
+* HTML editor added for Product description field.
+* Bulk delete feature added for Manage Auction.
+* Feed page Shortcode Issue resolved: Use your own text below and above shortcode.
+* Resolved plugin conflicts: Renamed common variables which causes issues with other loosely coded plugins.
+* Bug Resolved pertaining to End Auction when 2 bidders are competing for auction till last minute.
+
+
 = 1.0.4 = 
 * Outbid Email which sends emails to all existing bidders that you have been outbid
 * Code to integrate with Shipping Cost Addon. This lets you add shipping cost in auctions.

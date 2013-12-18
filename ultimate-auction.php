@@ -5,7 +5,7 @@
   Description: Awesome plugin to host auctions on your wordpress site and sell anything you want.
   Author: Nitesh Singh
   Author URI: http://auctionplugin.net
-  Version: 1.0.4
+  Version: 1.0.5
   License: GPLv2
   Copyright 2013 Nitesh Singh
 */
@@ -101,6 +101,44 @@ function delete_auction_callback()
 add_action('wp_ajax_delete_auction', 'delete_auction_callback');
 add_action('wp_ajax_nopriv_delete_auction', 'delete_auction_callback');
 
+//multiple delete auction Ajax callback
+function multi_delete_auction_callback()
+{
+   global $wpdb;
+   
+   if($_POST["force_del"] === 'yes')
+        $force = true;
+   else
+        $force = false;
+
+   $all_aucs = explode(',', $_POST['del_ids']);
+   
+   foreach($all_aucs as $aa){
+     
+        $del_auc = wp_delete_post($aa, false);
+        
+        $wpdb->query( 
+	$wpdb->prepare( 
+		"
+                DELETE FROM ".$wpdb->prefix."wdm_bidders
+		 WHERE auction_id = %d
+		",
+	        $aa
+        )
+    );
+   }
+    if($del_auc)
+    {
+        _e("Auctions deleted successfully.");
+    }
+    else
+        _e("Sorry, the auctions cannot be deleted.");
+    die();
+}
+
+add_action('wp_ajax_multi_delete_auction', 'multi_delete_auction_callback');
+add_action('wp_ajax_nopriv_multi_delete_auction', 'multi_delete_auction_callback');
+
 //end auction Ajax callback - 'End Auction' link on 'Manage Auctions' page
 function end_auction_callback()
 {
@@ -163,13 +201,25 @@ function place_bid_now_callback()
          
     $next_bid = $next_bid + get_post_meta($_POST['auction_id'],'wdm_incremental_val',true);
     
+    $terms = wp_get_post_terms($_POST['auction_id'], 'auction-status',array("fields" => "names"));
+    
     if($_POST['ab_bid'] < $next_bid)
     {
        echo "inv_bid".$next_bid;
     }
+    elseif(in_array('expired',$terms))
+    {
+      echo "Expired"; 
+    }
     else
     {
-        $palce_bid = $wpdb->insert( 
+         $buy_price = get_post_meta($_POST['auction_id'], 'wdm_buy_it_now', true);
+         
+         if(!empty($buy_price) && $_POST['ab_bid'] >= $buy_price){
+            add_post_meta($_POST['auction_id'], 'wdm_this_auction_winner', $_POST['ab_email'], true);
+            
+            if(get_post_meta($_POST['auction_id'], 'wdm_this_auction_winner', true) === $_POST['ab_email']){
+               $place_bid = $wpdb->insert( 
 	$wpdb->prefix.'wdm_bidders', 
 	array( 
 		'name' => $_POST['ab_name'], 
@@ -186,25 +236,43 @@ function place_bid_now_callback()
                 '%s'
 	) 
         );
-    
-	if($palce_bid)
-	{
-		$qry="SELECT COUNT(bid) FROM ".$wpdb->prefix."wdm_bidders WHERE auction_id =".$_POST['auction_id'];
-		$total_bids = $wpdb->get_var($qry);
-		$buy_price = get_post_meta($_POST['auction_id'], 'wdm_buy_it_now', true);
-                
-		if(!empty($buy_price) && $_POST['ab_bid'] >= $buy_price)
-		{
-			update_post_meta($_POST['auction_id'], 'wdm_listing_ends', date("Y-m-d H:i:s", time()));
-			$check_term = term_exists('expired', 'auction-status');
-			wp_set_post_terms($_POST['auction_id'], $check_term["term_id"], 'auction-status');
-                        update_post_meta($_POST['auction_id'], 'email_sent_imd', 'sent_imd');
-			echo "Won";
-		}
-		else
-			echo "Placed";
+               
+            if($place_bid){
+		     update_post_meta($_POST['auction_id'], 'wdm_listing_ends', date("Y-m-d H:i:s", time()));
+		     $check_term = term_exists('expired', 'auction-status');
+		     wp_set_post_terms($_POST['auction_id'], $check_term["term_id"], 'auction-status');
+                     update_post_meta($_POST['auction_id'], 'email_sent_imd', 'sent_imd');
                         
-	}
+                     echo "Won";
+               }
+            }
+            else{
+                  echo "Sold";
+            }
+         }
+         else{
+            $place_bid = $wpdb->insert( 
+	$wpdb->prefix.'wdm_bidders', 
+	array( 
+		'name' => $_POST['ab_name'], 
+		'email' => $_POST['ab_email'],
+                'auction_id' => $_POST['auction_id'],
+                'bid' => $_POST['ab_bid'],
+                'date' => date("Y-m-d H:i:s", time())
+	), 
+	array( 
+		'%s', 
+		'%s',
+                '%d',
+                '%f',
+                '%s'
+	) 
+        );
+               
+            if($place_bid){
+               echo "Placed";
+            }
+         }
     }
 }
 else{

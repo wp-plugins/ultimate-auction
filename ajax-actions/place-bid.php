@@ -44,6 +44,16 @@ jQuery(document).ready(function($){
 		    }
 		    window.location.reload();
 		}
+		else if(response.indexOf("Expired") != -1)
+		{
+		    alert("Sorry, this auction has been sold.");
+		    window.location.reload();
+		}
+		else if(response.indexOf("Sold") != -1)
+		{
+		    alert("Sorry, your bid can not be placed. It seems that either a bidder has outbid you or the auction has been expired recently.");
+		    window.location.reload();
+		}
 		else if(response.indexOf("Won") != -1)
 		{
 		    alert("Your Bid Placed Successfully!");

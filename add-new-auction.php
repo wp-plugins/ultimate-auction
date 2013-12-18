@@ -153,8 +153,15 @@ $currency_code = substr(get_option('wdm_currency'), -3);
             <label for="auction_description">Product Description</label>
         </th>
         <td>
-            <textarea name="auction_description" type="text" id="auction_description" cols="50" rows="10" class="large-text code"><?php echo $wdm_post["content"];?></textarea>
-        </td>
+            <!--<textarea name="auction_description" type="text" id="auction_description" cols="50" rows="10" class="large-text code"><?php echo $wdm_post["content"];?></textarea>-->
+	    <?php
+	    $args = array(
+			    'media_buttons' => false,
+			    'textarea_name' => 'auction_description',
+			    'textarea_rows' => 10,
+		    );
+	    wp_editor($wdm_post["content"], 'auction_description', $args);?>
+	</td>
     </tr>
 	<?php for($p=1; $p<=4; $p++)
 	{

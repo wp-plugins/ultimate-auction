@@ -156,3 +156,5 @@ outline: none !important;
 #ultimate-auction-banner{
     padding: 10px;
 }
+
+#auction_description_tbl td{padding-top: 4px !important;}
