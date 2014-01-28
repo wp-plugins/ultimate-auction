@@ -3,7 +3,7 @@ jQuery(document).ready(function($){
        var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
        $('#auction-resend-<?php echo $single_auction->ID;?>').click(function(){
        
-       $('#auction-resend-<?php echo $single_auction->ID;?>').html("Sending <img src='<?php echo plugins_url('/img/ajax-loader.gif', dirname(__FILE__));?>' />");
+       $('#auction-resend-<?php echo $single_auction->ID;?>').html("<?php _e('Sending', 'wdm-ultimate-auction'); ?> <img src='<?php echo plugins_url('/img/ajax-loader.gif', dirname(__FILE__));?>' />");
 	
 	var data = {
 		action:'resend_auction_email',
@@ -15,7 +15,7 @@ jQuery(document).ready(function($){
 		a_url: '<?php echo get_post_meta($single_auction->ID, 'current_auction_permalink',true);?>'
 	    };
 	    $.post(ajaxurl, data, function(response) {
-	      $('#auction-resend-<?php echo $single_auction->ID;?>').html("Resend");
+	      $('#auction-resend-<?php echo $single_auction->ID;?>').html('<?php _e("Resend", "wdm-ultimate-auction");?>');
 	      alert(response);
 	      window.location.reload();
 	    });

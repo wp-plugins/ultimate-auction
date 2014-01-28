@@ -62,22 +62,22 @@ if(!empty($_POST)){
 	    }
 	    
             echo '<div id="message" class="updated fade">';
-            echo "<p><strong>Auction ";
+            echo "<p><strong>";
             if($is_update)
-		echo "updated";
+		_e("Auction updated successfully.", "wdm-ultimate-auction");
             elseif($reactivate)
 	    {
-		echo "reactivated";
+		printf(__("Auction reactivated successfully. Auction id is %d", "wdm-ultimate-auction"), $post_id);
 		update_post_meta($post_id, 'wdm-auth-key',md5(time().rand()));
 		add_post_meta($post_id, 'wdm_creation_time', date("Y-m-d H:i:s", time()));
 	    }
             else
 	    {
-		echo "created";
+		printf(__("Auction created successfully. Auction id is %d", "wdm-ultimate-auction"), $post_id);
 		update_post_meta($post_id, 'wdm-auth-key',md5(time().rand()));
 		add_post_meta($post_id, 'wdm_creation_time', date("Y-m-d H:i:s", time()));
 	    }
-            echo " successfully. Auction id is ".$post_id."</strong></p></div>";
+            echo "</strong></p></div>";
             
             $temp = term_exists('live', 'auction-status');
             wp_set_post_terms($post_id, $temp["term_id"], 'auction-status');
@@ -110,19 +110,19 @@ if(!empty($_POST)){
     {
 		
     ?>	<div id="message" class="error">
-	    <p><strong>Please enter a future date/time.</strong></p>
+	    <p><strong><?php _e("Please enter a future date/time.", "wdm-ultimate-auction");?></strong></p>
 	</div>
     <?php
 	
     }
     else{
     ?> 
-    <div id="message" class="error"><p><strong>Auction title and Auction description cannot be left blank</strong></p></div>
+    <div id="message" class="error"><p><strong><?php _e("Auction title and Auction description cannot be left blank.", "wdm-ultimate-auction");?></strong></p></div>
     <?php
     }
 }
 else{
-    die('Sorry, your nonce did not verify.');
+    die(__('Sorry, your nonce did not verify.', 'wdm-ultimate-auction'));
 }
 }
 $wdm_post=$this->wdm_get_post();
@@ -135,14 +135,14 @@ $currency_code = substr(get_option('wdm_currency'), -3);
 <form id="wdm-add-auction-form" class="auction_settings_section_style" action="" method="POST">
     <?php
     if($wdm_post["title"]!="")
-    echo "<h3>Update Auction</h3>";
+    echo "<h3>".__("Update Auction", "wdm-ultimate-auction")."</h3>";
     else
-    echo "<h3>Add New Auction</h3>";
+    echo "<h3>".__("Add New Auction", "wdm-ultimate-auction")."</h3>";
     ?>
     <table class="form-table">
     <tr valign="top">
         <th scope="row">
-            <label for="auction_title">Product Title</label>
+            <label for="auction_title"><?php _e("Product Title", "wdm-ultimate-auction");?></label>
         </th>
         <td>
             <input name="auction_title" type="text" id="auction_title" class="regular-text" value="<?php echo $wdm_post["title"];?>"/>
@@ -150,7 +150,7 @@ $currency_code = substr(get_option('wdm_currency'), -3);
     </tr>
     <tr valign="top">
         <th scope="row">
-            <label for="auction_description">Product Description</label>
+            <label for="auction_description"><?php _e("Product Description", "wdm-ultimate-auction");?></label>
         </th>
         <td>
             <!--<textarea name="auction_description" type="text" id="auction_description" cols="50" rows="10" class="large-text code"><?php echo $wdm_post["content"];?></textarea>-->
@@ -158,22 +158,27 @@ $currency_code = substr(get_option('wdm_currency'), -3);
 	    $args = array(
 			    'media_buttons' => false,
 			    'textarea_name' => 'auction_description',
-			    'textarea_rows' => 10,
+			    'textarea_rows' => 10
 		    );
 	    wp_editor($wdm_post["content"], 'auction_description', $args);?>
 	</td>
     </tr>
-	<?php for($p=1; $p<=4; $p++)
+    <?php
+	    $after_thumb = '';
+	    $after_thumb = apply_filters('wdm_ua_after_product_desc', $after_thumb);
+	    echo $after_thumb;
+	    
+	for($p=1; $p<=4; $p++)
 	{
 		$single_img = $this->wdm_post_meta("wdm-image-".$p);
 		
 		echo '<tr valign="top">
         <th scope="row">
-            <label for="auction_image_'.$p.'">Product Image '.$p.'</label>
+            <label for="auction_image_'.$p.'">'.__("Product Image/Video", "wdm-ultimate-auction").' '.$p.'</label>
         </th>
         <td>
             <input name="auction_image_'.$p.'" type="text" id="auction_image_'.$p.'" class="regular-text wdm_image_'.$p.'_url url" value="'.$single_img.'"/>
-            <input name="wdm_upload_image_'.$p.'_button" id="wdm_image_'.$p.'_url" class="button wdm_auction_image_upload" type="button" value="Select File"/>
+            <input name="wdm_upload_image_'.$p.'_button" id="wdm_image_'.$p.'_url" class="button wdm_auction_image_upload" type="button" value="'.__('Select File', 'wdm-ultimate-auction').'"/>
         </td>
     </tr>';
 	}
@@ -181,23 +186,23 @@ $currency_code = substr(get_option('wdm_currency'), -3);
     
 	    <tr valign="top">
         <th scope="row">
-            <label for="auction_main_image">Thumbnail Image</label>
+            <label for="auction_main_image"><?php _e("Thumbnail Image", "wdm-ultimate-auction");?></label>
         </th>
         <td>
             <select id="auction_main_image" name="auction_main_image">
                 <?php for($m=1; $m<=4; $m++)
 				{
 				?>
-				<option value="main_image_<?php echo $m;?>" <?php echo $this->wdm_post_meta("wdm-main-image") == "main_image_".$m ? "selected" : "";?>>Product Image <?php echo $m;?></option>
+				<option value="main_image_<?php echo $m;?>" <?php echo $this->wdm_post_meta("wdm-main-image") == "main_image_".$m ? "selected" : "";?>><?php _e("Product Image/Video", "wdm-ultimate-auction"); echo " ".$m;?></option>
 				<?php 
 				}
 				?>
             </select>
         </td>
-    </tr>
+    </tr>   
     <tr valign="top">
         <th scope="row">
-            <label for="opening_bid">Opening Bid</label>
+            <label for="opening_bid"><?php _e("Opening Bid", "wdm-ultimate-auction");?></label>
         </th>
         <td>
             <?php echo $currency_code;?>
@@ -206,17 +211,17 @@ $currency_code = substr(get_option('wdm_currency'), -3);
     </tr>
     <tr valign="top">
         <th scope="row">
-            <label for="lowest_bid">Lowest Price to Accept</label>
+            <label for="lowest_bid"><?php _e("Lowest Price to Accept", "wdm-ultimate-auction");?></label>
         </th>
         <td>
             <?php echo $currency_code;?>
             <input name="lowest_bid" type="text" id="lowest_bid" class="small-text number" min="0" value="<?php echo $this->wdm_post_meta('wdm_lowest_bid');?>"/>
 	    <div>
-		<span class="ult-auc-settings-tip">Set Reserve price for your auction.</span>
+		<span class="ult-auc-settings-tip"><?php _e("Set Reserve price for your auction.", "wdm-ultimate-auction");?></span>
 	    <a href="" class="auction_fields_tooltip"><strong>?</strong>
-	    <span>A reserve price is the lowest price at which you are willing to sell your item. If you don’t want to sell your item below a certain price, you can a set a reserve price. The amount of your reserve price is not disclosed to your bidders, but they will see that your auction has a reserve price and whether or not the reserve has been met. If a bidder does not meet that price, you're not obligated to sell your item.
-	    <br /><strong>Why have a reserve price?</strong><br />
-	    Many sellers have found that too high a starting price discourages interest in their item, while an attractively low starting price makes them vulnerable to selling at an unsatisfactorily low price. A reserve price helps with this.
+	    <span><?php _e("A reserve price is the lowest price at which you are willing to sell your item. If you don't want to sell your item below a certain price, you can a set a reserve price. The amount of your reserve price is not disclosed to your bidders, but they will see that your auction has a reserve price and whether or not the reserve has been met. If a bidder does not meet that price, you're not obligated to sell your item.", "wdm-ultimate-auction");?>
+	    <br /><strong><?php _e("Why have a reserve price?", "wdm-ultimate-auction");?></strong><br />
+	    <?php _e("Many sellers have found that too high a starting price discourages interest in their item, while an attractively low starting price makes them vulnerable to selling at an unsatisfactorily low price. A reserve price helps with this.", "wdm-ultimate-auction");?>
 	    </span>
 	    </a>
 	    </div>
@@ -224,91 +229,93 @@ $currency_code = substr(get_option('wdm_currency'), -3);
     </tr>
         <tr valign="top">
         <th scope="row">
-            <label for="incremental_value">Incremental Value</label>
+            <label for="incremental_value"><?php _e("Incremental Value", "wdm-ultimate-auction");?></label>
         </th>
         <td>
             <?php echo $currency_code;?>
             <input name="incremental_value" type="text" id="incremental_value" class="small-text number" min="0" value="<?php echo $this->wdm_post_meta('wdm_incremental_val');?>"/>
-	    <div class="ult-auc-settings-tip">Set an amount from which next bid should start.</div>
+	    <div class="ult-auc-settings-tip"><?php _e("Set an amount from which next bid should start.", "wdm-ultimate-auction");?></div>
 	</td>
     </tr>
     <tr valign="top">
         <th scope="row">
-            <label for="end_date">Ending Date</label>
+            <label for="end_date"><?php _e("Ending Date", "wdm-ultimate-auction");?></label>
         </th>
         <td>
             <input name="end_date" type="text" id="end_date" class="regular-text" readOnly  value="<?php echo $this->wdm_post_meta('wdm_listing_ends');?>"/>
 	    <?php $def_timezone = get_option('wdm_time_zone');
-	    if(!empty($def_timezone))
-		echo 'Current blog time is <strong>'.date("Y-m-d H:i:s", time()).'</strong> Timezone: <strong>'.$def_timezone.'</strong>';
-	    else 
-		echo 'Please select your Timezone at <a href="'.admin_url('admin.php?page=ultimate-auction').'">Settings </a> Tab of the plugin.';
+	    if(!empty($def_timezone)){
+		printf(__('Current blog time is %s', 'wdm-ultimate-auction'),'<strong>'.date("Y-m-d H:i:s", time()).'</strong> ');
+		echo __('Timezone:', 'wdm-ultimate-auction').' <strong>'.$def_timezone.'</strong>';
+	    }
+	    else
+		printf(__('Please select your Timezone at %s Tab of the plugin.', 'wdm-ultimate-auction'), '<a href="'.admin_url('admin.php?page=ultimate-auction').'">'.__('Settings', 'wdm-ultimate-auction').'</a>');
 	    ?> 
         </td>
     </tr>
     <tr valign="top">
         <th scope="row">
-            <label for="buy_it_now_price">Buy Now Price</label>
+            <label for="buy_it_now_price"><?php _e("Buy Now Price", "wdm-ultimate-auction");?></label>
         </th>
         <td>
 	    <div class="paypal-config-note-text" style="float: right;width: 530px;">
 		
-		<span class="pp-please-note">Please note:</span> <br />
+		<span class="pp-please-note"><?php _e("Mandatory Settings:", "wdm-ultimate-auction");?></span> <br />
 		
 		<span class="pp-url-notification">
-		    It is mandatory to set an auto return URL (if not already set) in your PayPal account for proper functioning of this feature.
+		    <?php printf(__('It is mandatory to set %1$s (if not already set) in your PayPal account for proper functioning of payment related features.', 'wdm-ultimate-auction'),"<strong>Auto Return URL</strong>");?>
 		</span>
 		
-		<a href="" class="auction_fields_tooltip"><strong>?</strong>
-		<span style="width: 370px;margin-left: -90px;">
-		    Whenever a visitor clicks on 'Buy it Now' button, he is redirected to PayPal where he can make payment for this product/auction.
-		    <br />
-		    After making payment he is again redirected to your site if return URL has been set into your PayPal account and then only auction can be expired.
-		</span>
+		<a href="" class="auction_fields_tooltip"><strong><?php _e("?", "wdm-ultimate-auction");?></strong>
+		<span style="width: 300px;margin-left: -90px;">
+		    <?php printf(__("Whenever a visitor clicks on 'Buy it Now' button of a product/auction, he is redirected to PayPal where he can make payment for that product/auction.", "wdm-ultimate-auction"));?>
+		  <br />
+		    <?php printf(__("After making payment he is again redirected automatically (if the %s has been set) to this site and then the auction expires.", "wdm-ultimate-auction"),"Auto Return URL");?>
+                </span>
 		</a>
 		<br />
-		<a href="" id="how-set-pp-auto-return">How to set return URL?</a>
-		<br />
-		<div id="wdm-steps-to-be-followed" style="display: none;">
-		<br />
-		    1. i) Log in to your PayPal account <a href='https://www.paypal.com/us/cgi-bin/webscr?cmd=_account' target='_blank'>Live</a>
-		    / <a href='https://sandbox.paypal.com/us/cgi-bin/webscr?cmd=_account' target='_blank'>Sandbox</a>.<br />
-		    ii) Click the <strong>Profile</strong> subtab under <strong>My Account</strong>.<br />
-		    iii) Click the <strong>My Selling Tools</strong> link in the left column.<br />
-		    iv) Under the <strong>Selling Online</strong> section, click the <strong>Update</strong> link in the row for <strong>Website Preferences</strong>.<br />
-		    
-		    OR
-		    
-		    <br />
-		   
-		    If you are unable to find/open above section in your account, click on the following link to directly open above page -
-		    <span class="pp-url-notification">
-			(Please make sure that you have logged into your account before clicking the link since if you log in after clicking it, you might be redirected to main Profile page)
-		    </span>
-		    
-		    <a href='https://www.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-payments' target='_blank'>Live</a>
-		    / <a href='https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-payments' target='_blank'>Sandbox</a>
-		    
-		   <br />
-		   <br />
-		   2. The <strong>Website Payment Preferences</strong> page appears, click the <strong>On</strong> radio button to enable <strong>Auto Return</strong>.<br />
-		   <br />
-		   3. Set an URL in <strong>Return URL</strong> box. e.g. you can set URL of your current site i.e. <?php echo get_bloginfo('url');?><br />
-		    <span class="pp-url-notification">(If the URL is not properly formatted or cannot be validated, PayPal will not activate Auto Return)</span> <br />
-		   <br /> 4. Scroll down and click the <strong>Save</strong> button.
-		</div>
-		
-	    </div>
+      <a href="" id="how-set-pp-auto-return"><?php _e("How to do these settings?", "wdm-ultimate-auction");?></a>
+      <br />
+      <div id="wdm-steps-to-be-followed" style="display:none;">
+      <br />
+         <?php printf(__("1. i) Log in to your PayPal account", "wdm-ultimate-auction"));?>- <a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_account" target="_blank">Live</a>
+         / <a href="https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_account" target="_blank">Sandbox</a><br />
+         <?php printf(__('ii) Click the %1$s subtab under %2$s.', 'wdm-ultimate-auction'),"<strong>Profile</strong>","<strong>My Account</strong>");?><br />
+         <?php printf(__("iii) Click the %s link in the left column.", "wdm-ultimate-auction"),"<strong>My Selling Tools</strong>");?><br />
+         <?php printf(__('iv) Under the %1$s section, click the %2$s link in the row for %3$s.', 'wdm-ultimate-auction'),"<strong>Selling Online</strong>","<strong>Update</strong>","<strong>Website Preferences</strong>");?><br />
+         
+         <?php _e("OR", "wdm-ultimate-auction");?>
+         
+         <br />
+         
+         <?php _e("If you are unable to find/open above section in your account, click on the following link to directly open above page", "wdm-ultimate-auction");?> -
+         <span class="pp-url-notification">
+            <?php printf(__("(Please make sure that you have logged into your account before clicking the link since if you log in after clicking it, you might be redirected to main %s page)", "wdm-ultimate-auction"),"Profile");?>
+         </span>
+         
+         <a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-payments" target="_blank">Live</a>
+         / <a href="https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-payments" target="_blank">Sandbox</a>
+         
+         <br />
+         <br />
+         <?php printf(__('2. The %1$s page appears, click the %2$s radio button to enable %3$s.', 'wdm-ultimate-auction'),"<strong>Website Payment Preferences</strong>","<strong>On</strong>","<strong>Auto Return</strong>");?><br />
+         <br />
+         <?php printf(__('3. Set a URL in %1$s box. e.g. you can set URL of your current site i.e. %2$s', 'wdm-ultimate-auction'),"<strong>Return URL</strong>",get_bloginfo("url"));?><br />
+         <span class="pp-url-notification"><?php printf(__('(If the %1$s is not properly formatted or cannot be validated, PayPal will not activate %2$s)', 'wdm-ultimate-auction'),"Return URL","Auto Return");?></span> <br /><br />
+         
+        <?php printf(__("4. Scroll down and click the %s button.", "wdm-ultimate-auction"),"<strong>Save</strong>");?>
+      </div>
+      </div>
             <?php echo $currency_code;?>
             <input name="buy_it_now_price" type="text" id="buy_it_now_price" class="small-text number" min="1" value="<?php echo $this->wdm_post_meta('wdm_buy_it_now');?>"/>
-            <div class="ult-auc-settings-tip" >Visitors can buy your auction by making payments via PayPal.</div>
+            <div class="ult-auc-settings-tip" ><?php _e("Visitors can buy your auction by making payments via PayPal.", "wdm-ultimate-auction");?></div>
 	    
 	</td>
     </tr>
     <?php do_action('ua_add_shipping_cost_input_field'); //SHP-ADD hook to add new price field ?>
     <tr valign="top">
         <th scope="row">
-            <label for="payment_method">Payment Method</label>
+            <label for="payment_method"><?php _e("Payment Method", "wdm-ultimate-auction");?></label>
         </th>
         <td>
             <?php   $paypal_enabled = get_option('wdm_paypal_address');
@@ -320,7 +327,7 @@ $currency_code = substr(get_option('wdm_currency'), -3);
                 <option id="wdm_method_wire_transfer" value="method_wire_transfer" <?php if($this->wdm_post_meta('wdm_payment_method') == "method_wire_transfer") echo "selected"; if(empty($wire_enabled)) echo "disabled='disabled'";?>>Wire Transfer</option>
                 <option id="wdm_method_mailing" value="method_mailing" <?php if($this->wdm_post_meta('wdm_payment_method') == "method_mailing") echo "selected"; if(empty($mailing_enabled)) echo "disabled='disabled'";?>>By Cheque</option>
             </select>
-	    <div class="ult-auc-settings-tip">Only those methods will be active for which you’ve entered details inside plugin’s settings page.</div>
+	    <div class="ult-auc-settings-tip"><?php _e("Only those methods will be active for which you've entered details inside plugin's settings page.", "wdm-ultimate-auction");?></div>
         </td>
     </tr>
     </table>
@@ -334,7 +341,7 @@ $currency_code = substr(get_option('wdm_currency'), -3);
     echo wp_nonce_field('ua_wp_n_f','ua_wdm_add_auc');
     ?>
     
-    <?php submit_button(); ?>
+    <?php submit_button(__('Save Changes', 'wdm-ultimate-auction')); ?>
 </form>
 
 <!--script to handle image upload and date picker functionality-->

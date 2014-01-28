@@ -31,14 +31,14 @@ jQuery(document).ready(function($){
 	
         var aaucs = all_auc.join();
         if(aaucs == '' || aaucs == null){
-            alert('<?php _e("Please select auction(s) to delete.");?>');
+            alert('<?php _e("Please select auction(s) to delete.", "wdm-ultimate-auction");?>');
             return false;
         }
         else
-            var cnf = confirm('<?php _e("Are you sure to delete selected auctions? All data related to the auctions (including bids) will be deleted.");?>');
+            var cnf = confirm('<?php _e("Are you sure to delete selected auctions? All data related to the auctions (including bids) will be deleted.", "wdm-ultimate-auction");?>');
         
         if(cnf == true){
-        $('.wdmua_del_stats').html("<?php _e('Deleting'); echo ' ';?> <img src='<?php echo plugins_url('/img/ajax-loader.gif', dirname(__FILE__) );?>' />");       
+        $('.wdmua_del_stats').html("<?php _e('Deleting', 'wdm-ultimate-auction'); echo ' ';?> <img src='<?php echo plugins_url('/img/ajax-loader.gif', dirname(__FILE__) );?>' />");       
 	var data = {
 		action:'multi_delete_auction',
                 del_ids:aaucs,

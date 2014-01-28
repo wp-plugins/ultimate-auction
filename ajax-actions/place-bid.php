@@ -9,11 +9,11 @@ jQuery(document).ready(function($){
 	
 	if(!bid_val)
 	{
-	    alert('Please enter your Bid Amount');
+	    alert('<?php _e("Please enter your Bid Amount", "wdm-ultimate-auction");?>');
 	}
 	else if( bid_val && isNaN(bid_val))
 	{
-	    alert('Please enter a numeric value');
+	    alert('<?php _e("Please enter a numeric value", "wdm-ultimate-auction");?>');
 	}
 	else
 	{
@@ -36,28 +36,28 @@ jQuery(document).ready(function($){
 		    latest_bid = response.replace("inv_bid","");
 		    
 		    if(Number(bid_val) >= Number(curr_next_bid))
-			alert("Sorry, an another bidder has bid on the previous bid amount. Please enter a bid amount greater than or equal to " + latest_bid);
+			alert('<?php printf(__("Sorry, an another bidder has bid on the previous bid amount. Please enter a bid amount greater than or equal to %s", "wdm-ultimate-auction"), "" );?> ' + latest_bid);
 		    else
 		    {
-			alert("Please enter a bid amount greater than or equal to " + latest_bid);
+			alert('<?php printf(__("Please enter a bid amount greater than or equal to %s", "wdm-ultimate-auction"), "" );?>' + latest_bid);
 			return false;
 		    }
 		    window.location.reload();
 		}
 		else if(response.indexOf("Expired") != -1)
 		{
-		    alert("Sorry, this auction has been sold.");
+		    alert('<?php _e("Sorry, this auction has been expired.", "wdm-ultimate-auction");?>');
 		    window.location.reload();
 		}
 		else if(response.indexOf("Sold") != -1)
 		{
-		    alert("Sorry, your bid can not be placed. It seems that either a bidder has outbid you or the auction has been expired recently.");
+		    alert('<?php _e("Sorry, your bid can not be placed. It seems that either a bidder has outbid you or the auction has been expired recently.", "wdm-ultimate-auction");?>');
 		    window.location.reload();
 		}
 		else if(response.indexOf("Won") != -1)
 		{
-		    alert("Your Bid Placed Successfully!");
-		    alert("Congratulations! You have won this auction since your bid value has reached the 'Buy Now' price.");
+		    alert('<?php _e("Your Bid Placed Successfully!", "wdm-ultimate-auction");?>');
+		    alert("<?php _e("Congratulations! You have won this auction since your bid value has reached the 'Buy it Now' price.", "wdm-ultimate-auction");?>");
 		    
 		    var w_data = {
 				    action: 'bid_notification',
@@ -76,7 +76,7 @@ jQuery(document).ready(function($){
 		}
 		else if(response.indexOf("Placed") != -1)
 		{
-		    alert("Your Bid Placed Successfully!");
+		    alert('<?php _e("Your Bid Placed Successfully!", "wdm-ultimate-auction");?>');
 		    
 		    var b_data = {
 				    action: 'bid_notification',
@@ -94,7 +94,7 @@ jQuery(document).ready(function($){
 		}
 		else
 		{
-		   alert("Sorry, your bid could not be placed");
+		   alert('<?php _e("Sorry, your bid can not be placed", "wdm-ultimate-auction");?>');
 		   window.location.reload();
 		}
 		

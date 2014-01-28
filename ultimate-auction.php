@@ -5,10 +5,12 @@
   Description: Awesome plugin to host auctions on your wordpress site and sell anything you want.
   Author: Nitesh Singh
   Author URI: http://auctionplugin.net
-  Version: 1.0.5
+  Version: 2.0.0
   License: GPLv2
-  Copyright 2013 Nitesh Singh
+  Copyright 2014 Nitesh Singh
 */
+
+load_plugin_textdomain('wdm-ultimate-auction', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
 require_once('settings-page.php');
 require_once('auction-shortcode.php');
@@ -66,9 +68,9 @@ function resend_auction_email_callback()
     $res_email = ultimate_auction_email_template($_POST['a_title'], $_POST['a_id'], $_POST['a_cont'], $_POST['a_bid'], $_POST['a_em'], $_POST['a_url']);
     
     if($res_email)
-        echo "Email sent successfully";
+        _e("Email sent successfully.", "wdm-ultimate-auction");
     else
-        echo "Sorry, email cannot be sent";
+        _e("Sorry, the email could not sent.", "wdm-ultimate-auction");
     
     die();
 }
@@ -91,10 +93,10 @@ function delete_auction_callback()
     
     if($del_auc)
     {
-        echo "Auction '".$_POST['auc_title']."' deleted successfully";
+        printf(__("Auction %s deleted successfully.", "wdm-ultimate-auction"), $_POST['auc_title']);
     }
     else
-        echo "Sorry, this auction cannot be deleted";
+        _e("Sorry, this auction cannot be deleted.", "wdm-ultimate-auction");
     die();
 }
 
@@ -129,10 +131,10 @@ function multi_delete_auction_callback()
    }
     if($del_auc)
     {
-        _e("Auctions deleted successfully.");
+        printf(__("Auctions deleted successfully.", "wdm-ultimate-auction"));
     }
     else
-        _e("Sorry, the auctions cannot be deleted.");
+        _e("Sorry, the auctions cannot be deleted.", "wdm-ultimate-auction");
     die();
 }
 
@@ -148,9 +150,9 @@ function end_auction_callback()
     wp_set_post_terms($_POST['end_id'], $check_term["term_id"], 'auction-status');
     
     if($end_auc)
-        echo "Auction '".$_POST['end_title']."' ended successfully";
+        printf(__("Auction %s ended successfully.", "wdm-ultimate-auction"), $_POST['end_title']);
     else
-        echo "Sorry, this auction cannot be ended";
+        _e("Sorry, this auction cannot be ended.", "wdm-ultimate-auction");
     die();
 }
 
@@ -172,10 +174,11 @@ function cancel_last_bid_callback()
         )
     );
     
-    if($cancel_bid)
-        echo $_POST['bidder_name']."'s bid entry removed successfully";
+   if($cancel_bid)
+        printf(__("Bid entry of %s was removed successfully.", "wdm-ultimate-auction"), $_POST['bidder_name']);
     else
-        echo "Sorry, bid entry cannot be removed";
+        _e("Sorry, bid entry cannot be removed.", "wdm-ultimate-auction");
+        
     die();
 }
 
@@ -301,31 +304,31 @@ function bid_notification_callback()
             
             $adm_email = get_option("wdm_auction_email");
             
-            $adm_sub = "[".get_bloginfo('name')."]  A bidder has placed a bid on the product - ".$_POST['auc_name'];
+            $adm_sub = "[".get_bloginfo('name')."]  ".__("A bidder has placed a bid on the product", "wdm-ultimate-auction")." - ".$_POST['auc_name'];
             $adm_msg = "";
-            $adm_msg  = "<strong>Bidder Details - </strong>";
-            $adm_msg .= "<br /><br /> Bidder Name: ".$_POST['ab_name'];
-            $adm_msg .= "<br /><br /> Bidder Email: ".$_POST['ab_email'];
-            $adm_msg .= "<br /><br /> Bid Value: ".$c_code." ".round($_POST['ab_bid'], 2);
-            $adm_msg .= "<br /><br /><strong>Product Details - </strong>";
-            $adm_msg .= "<br /><br /> Product URL: ".$ret_url;
-            $adm_msg .= "<br /><br /> Product Name: ".$_POST['auc_name'];
-            $adm_msg .= "<br /><br /> Description: <br />".$_POST['auc_desc']."<br />";
+            $adm_msg  = "<strong> ".__('Bidder Details', 'wdm-ultimate-auction')." - </strong>";
+            $adm_msg .= "<br /><br /> ".__('Bidder Name', 'wdm-ultimate-auction').": ".$_POST['ab_name'];
+            $adm_msg .= "<br /><br /> ".__('Bidder Email', 'wdm-ultimate-auction').": ".$_POST['ab_email'];
+            $adm_msg .= "<br /><br /> ".__('Bid Value', 'wdm-ultimate-auction').": ".$c_code." ".round($_POST['ab_bid'], 2);
+            $adm_msg .= "<br /><br /><strong>".__('Product Details', 'wdm-ultimate-auction')." - </strong>";
+            $adm_msg .= "<br /><br /> ".__('Product URL', 'wdm-ultimate-auction').": ".$ret_url;
+            $adm_msg .= "<br /><br /> ".__('Product Name', 'wdm-ultimate-auction').": ".$_POST['auc_name'];
+            $adm_msg .= "<br /><br /> ".__('Description', 'wdm-ultimate-auction').": <br />".$_POST['auc_desc']."<br />";
             
             $hdr = "";
             //$hdr  = "From: ". get_bloginfo('name') ." <". $adm_email ."> \r\n";
             $hdr .= "MIME-Version: 1.0\r\n";
-            $hdr .= "Content-type:text/html;charset=iso-8859-1" . "\r\n";
+            $hdr .= "Content-type:text/html;charset=UTF-8" . "\r\n";
             
 	    wp_mail($adm_email, $adm_sub, $adm_msg, $hdr, '');
             
-            $bid_sub = "[".get_bloginfo('name')."] You recently placed a bid on the product - ".$_POST['auc_name'];
+            $bid_sub = "[".get_bloginfo('name')."] ".__('You recently placed a bid on the product', 'wdm-ultimate-auction')." - ".$_POST['auc_name'];
             $bid_msg = "";
-            $bid_msg = "Here are the details - ";
-            $bid_msg .= "<br /><br /> Product URL: ". $ret_url;
-            $bid_msg .= "<br /><br /> Product Name: ".$_POST['auc_name'];
-            $bid_msg .= "<br /><br /> Bid Value: ".$c_code." ".round($_POST['ab_bid'], 2);
-            $bid_msg .= "<br /><br /> Description: <br />".$_POST['auc_desc']."<br />";
+            $bid_msg = __('Here are the details', 'wdm-ultimate-auction')." - ";
+            $bid_msg .= "<br /><br /> ".__('Product URL', 'wdm-ultimate-auction').": ". $ret_url;
+            $bid_msg .= "<br /><br /> ".__('Product Name', 'wdm-ultimate-auction').": ".$_POST['auc_name'];
+            $bid_msg .= "<br /><br /> ".__('Bid Value', 'wdm-ultimate-auction').": ".$c_code." ".round($_POST['ab_bid'], 2);
+            $bid_msg .= "<br /><br /> ".__('Description', 'wdm-ultimate-auction').": <br />".$_POST['auc_desc']."<br />";
             
             wp_mail($_POST['ab_email'], $bid_sub, $bid_msg, $hdr, '');
 	    
@@ -341,7 +344,7 @@ function bid_notification_callback()
 	       $bidder_email = $wpdb->get_var($email_qry);
 	       
 	       if($bidder_email != $_POST['ab_email']){
-		  $outbid_sub = "[".get_bloginfo('name')."] You have been outbid on the product - ".$_POST['auc_name'];
+		  $outbid_sub = "[".get_bloginfo('name')."] ".__('You have been outbid on the product', 'wdm-ultimate-auction')." - ".$_POST['auc_name'];
 		  wp_mail($bidder_email, $outbid_sub, $bid_msg, $hdr, '');
 	       }
 	    }
@@ -374,25 +377,25 @@ function private_message_callback()
         
         $adm_email = get_option('wdm_auction_email');
             
-        $p_sub = "[".get_bloginfo('name')."] You have a private message from a site visitor";
+        $p_sub = "[".get_bloginfo('name')."] ".__("You have a private message from a site visitor", "wdm-ultimate-auction");
         
         $msg = "";
-        $msg = "Name: ".$_POST['p_name']."<br /><br />";
-        $msg .= "Email: ".$_POST['p_email']."<br /><br />";
-        $msg .= "Message: <br />".$_POST['p_msg']."<br /><br />";
-        $msg .= "Product URL: ".$auc_url."<br />";
+        $msg = __('Name', 'wdm-ultimate-auction').": ".$_POST['p_name']."<br /><br />";
+        $msg .= __('Email', 'wdm-ultimate-auction').": ".$_POST['p_email']."<br /><br />";
+        $msg .= __('Message', 'wdm-ultimate-auction').": <br />".$_POST['p_msg']."<br /><br />";
+        $msg .= __('Product URL', 'wdm-ultimate-auction').": ".$auc_url."<br />";
         
         $hdr = "";
         //$hdr  = "From: ". get_bloginfo('name') ." <". $adm_email ."> \r\n";
         $hdr .= "MIME-Version: 1.0\r\n";
-        $hdr .= "Content-type:text/html;charset=iso-8859-1" . "\r\n";
+        $hdr .= "Content-type:text/html;charset=UTF-8" . "\r\n";
         
         $sent = wp_mail($adm_email, $p_sub, $msg, $hdr, '');
         
         if($sent)
-            echo "Email sent successfully";
+            _e("Email sent successfully.", "wdm-ultimate-auction");
         else
-            echo "Sorry, email could not be sent";
+            _e("Sorry, the email could not sent.", "wdm-ultimate-auction");
         
 	die();
 }
@@ -412,7 +415,7 @@ function wdm_plugin_credit_link()
     if($check_credit == "Yes")
     {
         if(!is_admin())
-        echo "<center><div id='ult-auc-footer-credit'><a href='http://auctionplugin.net' target='_blank'>Powered By Ultimate Auction</a></div></center>";
+        echo "<center><div id='ult-auc-footer-credit'><a href='http://auctionplugin.net' target='_blank'>".__("Powered By Ultimate Auction", "wdm-ultimate-auction")."</a></div></center>";
     }
 }
 
@@ -445,7 +448,7 @@ function wdm_set_auction_timezone()
                                           update_post_meta($single_auction->ID, 'auction_bought_status', 'bought');
                                           echo '<script type="text/javascript">
                                           setTimeout(function() {
-                                                                alert("Thank you for buying this product.");
+                                                                alert("'.__("Thank you for buying this product.", "wdm-ultimate-auction").'");
                                                                }, 1000);       
                                           </script>';
 					  
@@ -466,7 +469,7 @@ function wdm_set_auction_timezone()
 					  $headers = "";
 					  //$headers  = "From: ". $site_name ." <". $auction_email ."> \r\n";
 					  $headers .= "MIME-Version: 1.0\r\n";
-					  $headers .= "Content-type:text/html;charset=iso-8859-1" . "\r\n";
+					  $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 					  
 					  $return_url = "";
 					  $return_url = strstr($_SERVER['REQUEST_URI'], 'ult_auc_id', true);
@@ -508,28 +511,38 @@ function wdm_ending_time_calculator($seconds)
 					
    $rem_tm = "";
 					
-   if($days > 1)
-      $rem_tm = $days ." days ";
-   elseif($days == 1)
-      $rem_tm = $days ." day ";	
-					
-   if($hours > 1)
-      $rem_tm .= $hours ." hrs ";
-   elseif($hours == 1)
-      $rem_tm .= $hours ." hr ";
-						
-   if($minutes > 1)
-      $rem_tm .= $minutes ." mins ";
-   elseif($minutes == 1)
-      $rem_tm .= $minutes ." min ";
-	
-   if($seconds > 1)
-      $rem_tm .= $seconds ." secs";
-   elseif($seconds == 1)
-      $rem_tm .= $seconds ." sec";
+
+   if($days == 1 || $days == -1)
+      $rem_tm = "<span class='wdm_datetime' id='wdm_days'>".$days."</span><span id='wdm_days_text'> ".__('day', 'wdm-ultimate-auction')." </span>";
+   elseif($days == 0)
+      $rem_tm = "<span class='wdm_datetime' id='wdm_days' style='display:none;'>".$days."</span><span id='wdm_days_text'></span>";
+   else
+      $rem_tm = "<span class='wdm_datetime' id='wdm_days'>".$days."</span><span id='wdm_days_text'> ".__('days', 'wdm-ultimate-auction')." </span>";
+   
+   if($hours == 1 || $hours == -1)
+      $rem_tm .= "<span class='wdm_datetime' id='wdm_hours'>".$hours."</span><span id='wdm_hrs_text'> ".__('hour', 'wdm-ultimate-auction')." </span>";
+   elseif($hours == 0)
+      $rem_tm .= "<span class='wdm_datetime' id='wdm_hours' style='display:none;'>".$hours."</span><span id='wdm_hrs_text'></span>";
+   else 
+      $rem_tm .= "<span class='wdm_datetime' id='wdm_hours'>".$hours."</span><span id='wdm_hrs_text'> ".__('hours', 'wdm-ultimate-auction')." </span>";
+
+   if($minutes == 1 || $minutes == -1)
+      $rem_tm .= "<span class='wdm_datetime' id='wdm_minutes'>".$minutes."</span><span id='wdm_mins_text'> ".__('minute', 'wdm-ultimate-auction')." </span>";
+   elseif($minutes == 0)
+      $rem_tm .= "<span class='wdm_datetime' id='wdm_minutes' style='display:none;'>".$minutes."</span><span id='wdm_mins_text'></span>"; 
+   else
+      $rem_tm .= "<span class='wdm_datetime' id='wdm_minutes'>".$minutes."</span><span id='wdm_mins_text'> ".__('minutes', 'wdm-ultimate-auction')." </span>";
+
+   if($seconds == 1 || $seconds == -1)
+      $rem_tm .= "<span class='wdm_datetime' id='wdm_seconds'>".$seconds."</span><span id='wdm_secs_text'> ".__('second', 'wdm-ultimate-auction')."</span>";
+   elseif($seconds == 0)
+      $rem_tm .= "<span class='wdm_datetime' id='wdm_seconds' style='display:none;'>".$seconds."</span><span id='wdm_secs_text'></span>";
+   else
+      $rem_tm .= "<span class='wdm_datetime' id='wdm_seconds'>".$seconds."</span><span id='wdm_secs_text'> ".__('seconds', 'wdm-ultimate-auction')."</span>";
       
       return $rem_tm;
 }
+
 add_filter('comment_post_redirect', 'redirect_after_comment');
 function redirect_after_comment($location)
 {

@@ -10,14 +10,14 @@ jQuery(document).ready(function($) {
 	    show_rows=-1;
 	    $(this).removeClass('showing-top-5');
 	    $(this).addClass('showing-all');
-	    label_text=" Showing All";
+	    label_text= ' '+wdm_ua_obj_l10n1.msg1;
 	}
 	else{
 	    show_rows=5;
 	    
 	    $(this).removeClass('showing-all');
 	    $(this).addClass('showing-top-5');
-	    label_text=" Showing Top 5";
+	    label_text= ' '+wdm_ua_obj_l10n1.msg2;
 	}
 	
 	var data = {

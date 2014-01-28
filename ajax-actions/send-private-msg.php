@@ -10,23 +10,23 @@ jQuery(document).ready(function($){
 	
 	if($("#wdm-prv-bidder-name").val() == '')
 	{
-	    alert('Please enter your Name');
+	    alert('<?php _e("Please enter your Name", "wdm-ultimate-auction");?>');
 	}
 	else if(pe == '')
 	{
-	    alert('Please enter your Email ID');
+	    alert('<?php _e("Please enter your Email address", "wdm-ultimate-auction");?>');
 	}
 	else if(pe != '' && !pattern.test(pe))
 	{
-	   alert('Please enter a valid Email ID');
+	   alert('<?php _e("Please enter a valid Email address", "wdm-ultimate-auction");?>');
 	}
 	else if($("#wdm-prv-bidder-msg").val() == '')
 	{
-	    alert('Please enter a message');
+	    alert('<?php _e("Please enter a message", "wdm-ultimate-auction");?>');
 	}
 	else
 	{
-            $("#ult-auc-prv-msg").val("Sending ");
+            $("#ult-auc-prv-msg").val("<?php _e('Sending', 'wdm-ultimate-auction'); echo ' ';?>");
             $("#ult-auc-prv-msg").after(" <span class='priv_btn_status'><img src='<?php echo plugins_url('/img/ajax-loader.gif', dirname(__FILE__));?>' /></span>");
             
 	     var data = {
@@ -41,7 +41,7 @@ jQuery(document).ready(function($){
             
 	    $.post(ajaxurl, data, function(response) {
 		
-                $("#ult-auc-prv-msg").val("Send");
+                $("#ult-auc-prv-msg").val('<?php _e("Send", "wdm-ultimate-auction");?>');
                 $(".priv_btn_status").html("");
                 
                 alert(response);

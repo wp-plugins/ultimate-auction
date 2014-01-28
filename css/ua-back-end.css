@@ -13,7 +13,7 @@ label.error{
 .auction_settings_section_style #submit{
     font-size: 14px;
     height: 35px;
-    width: 130px;
+    min-width: 130px;
 }
 
 .wdm-auction-bought
@@ -158,3 +158,5 @@ outline: none !important;
 }
 
 #auction_description_tbl td{padding-top: 4px !important;}
+
+#wdm_auction_setID table th{padding: 10px !important;}

@@ -20,7 +20,7 @@ function auction_pagination($pages = '', $range = 2, $paged)
      if(1 != $pages)
      {
          echo "<div class='pagination'>";
-         echo "<span class=''>Page ".$paged." of ".$pages." </span>";
+         printf('<span>'.__('Page %1$s of %2$s', 'wdm-ultimate-auction').'</span>', $paged, $pages);
          if($paged > 2 && $paged > $range+1 && $showitems < $pages) echo "<a href='".get_pagenum_link(1)."'>&laquo;</a>";
          if($paged > 1 && $showitems < $pages) echo "<a href='".get_pagenum_link($paged - 1)."'>&lsaquo;</a>";
 
@@ -54,17 +54,20 @@ $args = array(
 
 	$wdm_auction_array = get_posts($args);
         
+		$show_content = '';
+		$show_content = apply_filters('wdm_ua_before_auctions_listing', $show_content);
+		echo $show_content;
 		?>
-		<div class="wdm-auction-listing-container">
 		
+		<div class="wdm-auction-listing-container">
 			<ul class="wdm_auctions_list">
 			<li class="auction-list-menus">
 				<ul>
-					<li class="wdm-apn auc_single_list"><strong>Product</strong></li>
+					<li class="wdm-apn auc_single_list"><strong><?php _e('Product', 'wdm-ultimate-auction');?></strong></li>
 					<li class="wdm-apt auc_single_list"><strong></strong></li>
-					<li class="wdm-app auc_single_list"><strong>Current Price</strong></li>
-					<li class="wdm-apb auc_single_list"><strong>Bids Placed</strong></li>
-					<li class="wdm-ape auc_single_list"><strong>Ending</strong></li>
+					<li class="wdm-app auc_single_list"><strong><?php _e('Current Price', 'wdm-ultimate-auction');?></strong></li>
+					<li class="wdm-apb auc_single_list"><strong><?php _e('Bids Placed', 'wdm-ultimate-auction');?></strong></li>
+					<li class="wdm-ape auc_single_list"><strong><?php _e('Ending', 'wdm-ultimate-auction');?></strong></li>
 				</ul>
 			</li>
 			
@@ -100,7 +103,7 @@ $args = array(
 			elseif(!empty($ob))
 				echo $cc ." ".$ob;
 			elseif(empty($ob) && !empty($bnp))
-				echo "Buy at ".$cc ." ".$bnp;
+				printf(__('Buy at %s', 'wdm-ultimate-auction'), $cc ." ".$bnp);
 				?>
 			</span>
 			</li>
@@ -112,7 +115,7 @@ $args = array(
 			if(!empty($bids_placed) || $bids_placed > 0)
 				echo "<span class='wdm-bids-avail wdm-mark-normal'>".$bids_placed."</span>";
 			else
-				echo "<span class='wdm-no-bids-avail wdm-mark-red'>No bids placed</span>";
+				echo "<span class='wdm-no-bids-avail wdm-mark-red'>".__('No bids placed', 'wdm-ultimate-auction')."</span>";
 			?>
 			</li>
 			
@@ -126,7 +129,7 @@ $args = array(
 				
 				if(in_array('expired',$act_trm))
 				{
-					echo "<span class='wdm-mark-red'>Expired</span>";
+					echo "<span class='wdm-mark-red'>".__('Expired', 'wdm-ultimate-auction')."</span>";
 				}
 				elseif($seconds > 0 && !in_array('expired',$act_trm))
 				{
@@ -140,29 +143,29 @@ $args = array(
 					$seconds %= 60;
 					
 					if($days > 1)
-						echo "<span class='wdm-mark-normal'>". $days ." days</span>";
+						echo "<span class='wdm-mark-normal'>". $days ." ".__('days', 'wdm-ultimate-auction')."</span>";
 					elseif($days == 1)
-						echo "<span class='wdm-mark-normal'>". $days ." day</span>";	
+						echo "<span class='wdm-mark-normal'>". $days ." ".__('day', 'wdm-ultimate-auction')."</span>";	
 					elseif($days < 1)
 					{
 						if($hours > 1)
-							echo "<span class='wdm-mark-normal'>". $hours ." hours</span>";
+							echo "<span class='wdm-mark-normal'>". $hours ." ".__('hours', 'wdm-ultimate-auction')."</span>";
 						elseif($hours == 1)
-							echo "<span class='wdm-mark-normal'>". $hours ." hour</span>";
+							echo "<span class='wdm-mark-normal'>". $hours ." ".__('hour', 'wdm-ultimate-auction')."</span>";
 						elseif($hours < 1)
 						{
 							if($minutes > 1)
-								echo "<span class='wdm-mark-normal'>". $minutes ." minutes</span>";
+								echo "<span class='wdm-mark-normal'>". $minutes ." ".__('minutes', 'wdm-ultimate-auction')."</span>";
 							elseif($minutes == 1)
-								echo "<span class='wdm-mark-normal'>". $minutes ." minute</span>";
+								echo "<span class='wdm-mark-normal'>". $minutes ." ".__('minute', 'wdm-ultimate-auction')."</span>";
 							elseif($minutes < 1)
 							{
 								if($seconds > 1)
-									echo "<span class='wdm-mark-normal'>". $seconds ." seconds</span>";
+									echo "<span class='wdm-mark-normal'>". $seconds ." ".__('seconds', 'wdm-ultimate-auction')."</span>";
 								elseif($seconds == 1)
-									echo "<span class='wdm-mark-normal'>". $seconds ." second</span>";
+									echo "<span class='wdm-mark-normal'>". $seconds ." ".__('second', 'wdm-ultimate-auction')."</span>";
 								else
-									echo "<span class='wdm-mark-red'>Expired</span>";
+									echo "<span class='wdm-mark-red'>".__('Expired', 'wdm-ultimate-auction')."</span>";
 							}
 						}
 					}
@@ -170,13 +173,16 @@ $args = array(
 				}
 				else
 				{
-					echo "<span class='wdm-mark-red'>Expired</span>";
+					echo "<span class='wdm-mark-red'>".__('Expired', 'wdm-ultimate-auction')."</span>";
 				}
 
 				?>
 				<br/>
 			</li>
-			<div class="wdm-apd"><?php echo substr($wdm_single_auction->post_content,  0, 100) . " .."; ?> </div>
+			<li class="wdm-apbid auc_single_list auc_list_center">
+			 <input class="wdm_bid_now_btn" type="button" value="<?php _e('Bid Now', 'wdm-ultimate-auction');?>" />
+			</li>
+			<li><div class="wdm-apd"><?php echo substr($wdm_single_auction->post_content,  0, 100) . " .."; ?> </div></li>
 				</ul>
 				</a>
 			</li>
@@ -187,11 +193,15 @@ global $wpdb;
 
 $live_posts = array();
 
-$live_posts = $wpdb->get_col("SELECT object_id
+$comm_query = "SELECT object_id
 FROM ".$wpdb->prefix."term_relationships
 WHERE term_taxonomy_id = (SELECT term_id
 FROM ".$wpdb->prefix."terms
-WHERE slug = 'live')");
+WHERE slug = 'live')";
+
+$comm_query = apply_filters('wdm_ua_filtered_auctions', $comm_query);
+
+$live_posts = $wpdb->get_col($comm_query);
 
 $live_posts = implode("," , $live_posts);
 

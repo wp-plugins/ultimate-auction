@@ -1,9 +1,9 @@
 <div id="wdm-tab-anchor-id"></div>
 <div id="auction-desc-tabs">
   <ul id="auction-tab-titles">
-    <li id="wdm-desc-cmt-link">Comments</li>
-    <li id="wdm-desc-msg-link">Send Private Message</li>
-    <li id="wdm-desc-bids-link">Total bids placed</li>
+    <li id="wdm-desc-cmt-link"><?php _e('Comments', 'wdm-ultimate-auction');?></li>
+    <li id="wdm-desc-msg-link"><?php _e('Send Private Message', 'wdm-ultimate-auction');?></li>
+    <li id="wdm-desc-bids-link"><?php _e('Total bids placed', 'wdm-ultimate-auction');?></li>
   </ul>
   
   <div id="wdm-desc-cmt-tab" class="auction-tab-container">
@@ -16,9 +16,9 @@
     if(isset($comment_details) && $comment_count>0)
     {
         if($comment_count == 1)
-        echo $comment_count." comment for this Auction";
+        echo $comment_count.__(' comment for this Auction', 'wdm-ultimate-auction');
         else
-        echo $comment_count." comments for this Auction";
+        echo $comment_count.__(' comments for this Auction', 'wdm-ultimate-auction');
         $i=0;
         $level=1;
         $top=0;
@@ -43,7 +43,7 @@
                         if (current_user_can( 'edit_comment', $comment_details[$i]->comment_ID ) )
                         {
                         ?>                 
-                        <a href="<?php echo get_bloginfo('url').'/wp-admin/comment.php?action=editcomment&c='.$comment_details[$i]->comment_ID ?>" title="Edit this comment"><span>edit comment</span></a>
+                        <a href="<?php echo get_bloginfo('url').'/wp-admin/comment.php?action=editcomment&c='.$comment_details[$i]->comment_ID ?>" title="<?php _e('Edit this comment', 'wdm-ultimate-auction');?>"><span><?php _e('edit comment', 'wdm-ultimate-auction');?></span></a>
                         <?php } ?>
                     </span>
                 </div>
@@ -73,7 +73,7 @@
                                     if (current_user_can( 'edit_comment', $comment_details[$k]->comment_ID ) )
                                     {
                                     ?>                 
-                                    <a href="<?php echo get_bloginfo('url').'/wp-admin/comment.php?action=editcomment&c='.$comment_details[$k]->comment_ID ?>" title="Edit this comment">edit comment</a>
+                                    <a href="<?php echo get_bloginfo('url').'/wp-admin/comment.php?action=editcomment&c='.$comment_details[$k]->comment_ID ?>" title="<?php _e('Edit this comment', 'wdm-ultimate-auction');?>"><?php _e('edit comment', 'wdm-ultimate-auction');?></a>
                                     <?php } ?>
                                 </span>
                             </div>
@@ -100,7 +100,7 @@
     }
     else
     {
-        echo "No comments for this Auction";
+        _e('No comments for this Auction', 'wdm-ultimate-auction');
     }
 
     comment_form('',$wdm_auction->ID); 
@@ -111,16 +111,16 @@
   <div id="wdm-desc-msg-tab" class="auction-tab-container" style="display: none;">
     <form id="wdm-auction-private-form" action="">
 					
-      <label for="wdm-prv-bidder-name"> Name: </label>
+      <label for="wdm-prv-bidder-name"> <?php _e('Name', 'wdm-ultimate-auction');?>: </label>
       <input type="text" id="wdm-prv-bidder-name" />
       <br />
-      <label for="wdm-prv-bidder-email"> Email: </label>
+      <label for="wdm-prv-bidder-email"> <?php _e('Email', 'wdm-ultimate-auction');?>: </label>
       <input type="text" id="wdm-prv-bidder-email" />
       <br />
-      <label for="wdm-prv-bidder-msg"> Message: </label>
+      <label for="wdm-prv-bidder-msg"> <?php _e('Message', 'wdm-ultimate-auction');?>: </label>
       <textarea id="wdm-prv-bidder-msg"></textarea>
       <br />
-      <input id="ult-auc-prv-msg" name="ult-auc-prv-msg" type="submit" value="Send" />
+      <input id="ult-auc-prv-msg" name="ult-auc-prv-msg" type="submit" value="<?php _e('Send', 'wdm-ultimate-auction');?>" />
 					
     </form>
  </div>
@@ -133,9 +133,9 @@
 				if(!empty($results)){
 				  ?>
 				  <ul class="wdm-recent-bidders">
-				    <li><h4>Bidder Name</h4></li>
-				    <li><h4>Bid Price</h4></li>
-				    <li><h4>When</h4></li>
+				    <li><h4><?php _e('Bidder Name', 'wdm-ultimate-auction');?></h4></li>
+				    <li><h4><?php _e('Bid Price', 'wdm-ultimate-auction');?></h4></li>
+				    <li><h4><?php _e('When', 'wdm-ultimate-auction');?></h4></li>
 				  </ul>
 				  <?php
 					foreach($results as $result){
@@ -156,27 +156,27 @@
 					$ago_time = "";
 					
 					if($dys > 1)
-						$ago_time = $dys ." days";
+						$ago_time = $dys .__('days', 'wdm-ultimate-auction');
 					elseif($dys == 1)
-						$ago_time = $dys ." day";	
+						$ago_time = $dys .__('day', 'wdm-ultimate-auction');	
 					elseif($dys < 1)
 					{
 						if($hrs > 1)
-							$ago_time = $hrs ." hours";
+							$ago_time = $hrs .__('hours', 'wdm-ultimate-auction');
 						elseif($hrs == 1)
-							$ago_time = $hrs ." hour";
+							$ago_time = $hrs .__('hour', 'wdm-ultimate-auction');
 						elseif($hrs < 1)
 						{
 							if($mins > 1)
-								$ago_time = $mins ." minutes";
+								$ago_time = $mins .__('minutes', 'wdm-ultimate-auction');
 							elseif($mins == 1)
-								$ago_time = $mins ." minute";
+								$ago_time = $mins .__('minute', 'wdm-ultimate-auction');
 							elseif($mins < 1)
 							{
 								if($secs > 1)
-									$ago_time = $secs ." seconds";
+									$ago_time = $secs .__('seconds', 'wdm-ultimate-auction');
 								elseif($secs == 1)
-									$ago_time = $secs ." second";
+									$ago_time = $secs .__('second', 'wdm-ultimate-auction');
 							}
 						}
 					}
@@ -191,7 +191,7 @@
 						    <?php echo $currency_code." ".$result->bid; ?>
 						  </li>
 						  <li>
-							<?php echo $ago_time." ago"; ?>
+							<?php printf(__('%s ago', 'wdm-ultimate-auction'), $ago_time); ?>
 						  </li>
 						</ul>
 						<?php

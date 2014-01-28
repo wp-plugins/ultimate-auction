@@ -9,7 +9,7 @@ jQuery(document).ready(
                             
                             if(pm == '' && wm == '' && mm == '')
                             {
-                                alert("You should fill data for atleast one payment method.");
+                                alert(wdm_ua_obj_l10nv.pmt);
                                 return false;
                             }
                                 return true;
@@ -36,7 +36,7 @@ jQuery(document).ready(
                             
                             if(!tl)
                             {
-                                    alert("Please enter Product Title.");
+                                    alert(wdm_ua_obj_l10nv.ttl);
                                     return false; 
                             }
                             
@@ -48,7 +48,7 @@ jQuery(document).ready(
                             
                             if(!edt)
                             {
-                                    alert("Please enter Ending Date/Time.");
+                                    alert(wdm_ua_obj_l10nv.et);
                                     return false; 
                             }
                             
@@ -56,20 +56,20 @@ jQuery(document).ready(
                             {
                                 if(bn)
                                 {
-                                    alert("You should fill PayPal email address in 'Settings' tab to enable 'Buy Now' feature.");
+                                    alert(wdm_ua_obj_l10nv.set);
                                     jQuery("#wdm-add-auction-form #buy_it_now_price").val("");
                                     return false;
                                 }
                                 
                                 if(!ob)
                                 {
-                                    alert("Please enter Opening Bid amount.");
+                                    alert(wdm_ua_obj_l10nv.opb);
                                     return false;
                                 }
                                 
                                 if(!lb)
                                 {
-                                    alert("Please enter Lowest Price (Reserve Price).");
+                                    alert(wdm_ua_obj_l10nv.rp);
                                     return false;
                                 }
                                 
@@ -78,31 +78,31 @@ jQuery(document).ready(
                             {
                                 if(!ob && !bn)
                                 {
-                                    alert("Please enter either Opening Bid amount or Buy Now price.");
+                                    alert(wdm_ua_obj_l10nv.ob);
                                     return false;
                                 }
                                 
                                 if(ob && !lb)
                                 {
-                                    alert("You have entered Opening Bid. Please also enter Lowest Price (Reserve Price).");
+                                    alert(wdm_ua_obj_l10nv.olp);
                                     return false;
                                 }
                                 
                                 if(lb && !ob)
                                 {
-                                    alert("You have entered Lowest Price. Please also enter Opening Bid amount.");
+                                    alert(wdm_ua_obj_l10nv.lpo);
                                     return false;
                                 }
                                 
                                 if(inc && !ob)
                                 {
-                                    alert("You have entered Incremental Value. Please also enter Opening Bid amount.");
+                                    alert(wdm_ua_obj_l10nv.iop);
                                     return false;
                                 }
                             }
                                 if(Number(lb) < Number(ob))
                                 {
-                                    alert("Lowest/Reserve price should be more than or equal to Opening Bid.");
+                                    alert(wdm_ua_obj_l10nv.rpo);
                                     return false;
                                 }
                                 
@@ -110,7 +110,7 @@ jQuery(document).ready(
                                 {
                                    if(Number(bn) < Number(lb))
                                    {
-                                        alert("Buy Now price should be more than or equal to Lowest/Reserve price.");
+                                        alert(wdm_ua_obj_l10nv.bnl);
                                         return false;
                                    }
                                 }

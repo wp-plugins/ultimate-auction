@@ -3,7 +3,7 @@ Contributors: nitesh_singh,WisdmLabs
 Donate link: http://auctionplugin.net/
 Tags: auctions,auction,auction plugin,wp auction,wordpress auction,wp auctions,auction script,ebay,ebay auction,bidding
 Requires at least: 3.4
-Tested up to: 3.8
+Tested up to: 3.8.1
 License: GPLv2 or later
 Stable tag: trunk
 
@@ -23,9 +23,11 @@ Lots of features, very configurable.  Easy to setup.  Great support.
 
  = PRO VERSION Features =
     1. Admin can charge listing fee for users to post auction.
-    2. Auction Post Capability for Registered User.
+    2. Front End User Dashboard for registered user to add/manage auctions. 
 	3. Admin can charge commission on final bid price on user's auction.
-	4. Integrated Paypal Invoicing for handling payments
+	4. Include Shipping Cost for auctions
+	5. Categories feature - Group your auctions in multiple categories and view efficiently.
+	6. Integrated Paypal Invoicing for handling payments
 
 
  = Core Features =
@@ -44,6 +46,8 @@ Lots of features, very configurable.  Easy to setup.  Great support.
     13. Email notification to Admin for all activity
     14. Email Sent for Payment Alerts
 	15. Outbid Email sent to all bidders who has been outbidded.
+	16. Count Down Timer for auctions.
+	17. Lightbox feature to display auction images
     and Much more...
 	
  = Display Features =
@@ -86,6 +90,14 @@ This page is responsible for displaying all live auctions. If you click a specif
 == Frequently Asked Questions ==
 
 == Changelog ==
+= 2.0.0 = 
+* Plugin now supports Category Addon - If you want category feature then you need to buy category addon.
+* Added Countdown timer for auctions.
+* Breadcrumb added for dedicated auction.
+* Bid Now button added on feed page.
+* Lightbox feature to display auction images
+
+
 = 1.0.5 = 
 * HTML editor added for Product description field.
 * Bulk delete feature added for Manage Auction.
