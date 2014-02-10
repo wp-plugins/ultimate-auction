@@ -18,17 +18,19 @@ Lots of features, very configurable.  Easy to setup.  Great support.
 
 
 *   [Upgrade to the Pro Version Now! &raquo;](http://auctionplugin.net/?utm_source=wordpress&utm_medium=wp+plugin+repos&utm_campaign=WP+to+Auction+Plugin+Site+)
-*   [Paypal Invoice Addon for Free Plugin &raquo;](http://auctionplugin.net/addon)
-*   [Shipping Cost/Postage Addon for Free Plugin &raquo;](http://auctionplugin.net/addon)
+*   [Paypal Invoice - Addon for Free Plugin &raquo;](http://auctionplugin.net/addon)
+*   [Shipping Cost/Postage - Addon for Free Plugin &raquo;](http://auctionplugin.net/addon)
+*   [Categories - Addon for Free Plugin &raquo;](http://auctionplugin.net/addon/#tour_page_3)
 
  = PRO VERSION Features =
-    1. Admin can charge listing fee for users to post auction.
-    2. Front End User Dashboard for registered user to add/manage auctions. 
-	3. Admin can charge commission on final bid price on user's auction.
-	4. Include Shipping Cost for auctions
+    1. Registered User of your site can add auction to your site.
+	2. Front End Dashboard to users to add/manage auction.
+	3. Admin can charge listing fee to post auction.
+    4. Admin can charge commission fee on final bidding price.   
+	5. Include Shipping Cost for auctions.
 	5. Categories feature - Group your auctions in multiple categories and view efficiently.
-	6. Integrated Paypal Invoicing for handling payments
-
+	6. Integrated Paypal Invoicing for handling payments.
+	7. Admin can manage auctions, bids of all users.
 
  = Core Features =
     1. Registered User can place bids 
