@@ -28,9 +28,11 @@ Lots of features, very configurable.  Easy to setup.  Great support.
 	3. Admin can charge listing fee to post auction.
     4. Admin can charge commission fee on final bidding price.   
 	5. Include Shipping Cost for auctions.
-	5. Categories feature - Group your auctions in multiple categories and view efficiently.
-	6. Integrated Paypal Invoicing for handling payments.
-	7. Admin can manage auctions, bids of all users.
+	6. Categories feature - Group your auctions in multiple categories and view efficiently.
+	7. Integrated Paypal Invoicing for handling payments.
+	8. Admin can manage auctions, bids of all users.
+	9. Add more than 4 images for your auction. You can even select multiple images for upload.
+	10. Start Date Feature - Schedule your auction for later date.
 
  = Core Features =
     1. Registered User can place bids 
