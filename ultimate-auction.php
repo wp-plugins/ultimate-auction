@@ -1,6 +1,6 @@
 <?php
 /*
-  Plugin Name: Wordpress Auction Plugin
+  Plugin Name: Ultimate Wordpress Auction Plugin
   Plugin URI: http://auctionplugin.net
   Description: Awesome plugin to host auctions on your wordpress site and sell anything you want.
   Author: Nitesh Singh
