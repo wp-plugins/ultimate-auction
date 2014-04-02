@@ -1,4 +1,4 @@
-=== Ultimate Wordpress Auction Plugin ===
+=== Wordpress Auction Plugin ===
 Contributors: nitesh_singh,WisdmLabs
 Donate link: http://auctionplugin.net/
 Tags: auctions,auction,auction plugin,wp auction,wordpress auction,wp auctions,auction script,ebay,ebay auction,bidding
