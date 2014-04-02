@@ -117,6 +117,7 @@ if(!class_exists('wdm_settings'))
     
     //enqueue js and style files to handle datetime picker and image upload 
     public function wdm_enqueue_style(){
+	wp_enqueue_script('wdm_ua_ui_js', plugins_url('js/jquery-ui.min.js', __FILE__), array('jquery'));
         wp_enqueue_style('thickbox');
 	wp_enqueue_script('media-upload');
 	wp_enqueue_script('thickbox');
@@ -271,6 +272,30 @@ if(!class_exists('wdm_settings'))
 	);
 	
 	add_settings_field(
+	    'wdm_auction_url_id', 
+	    __('Auction Page URL', 'wdm-ultimate-auction'), 
+	    array($this, 'wdm_auction_url_field'), 
+	    'test-setting-admin', 
+	    'setting_section_id' 			
+	);
+	
+	add_settings_field(
+	    'wdm_login_url_id', 
+	    __('Login Page URL', 'wdm-ultimate-auction'), 
+	    array($this, 'wdm_login_url_field'), 
+	    'test-setting-admin', 
+	    'setting_section_id' 			
+	);
+	
+	add_settings_field(
+	    'wdm_register_url_id', 
+	    __('Register Page URL', 'wdm-ultimate-auction'), 
+	    array($this, 'wdm_register_url_field'), 
+	    'test-setting-admin', 
+	    'setting_section_id' 			
+	);
+	
+	add_settings_field(
 	    'wdm_powered_by_id', 
 	    __('Powered By Ultimate Auction', 'wdm-ultimate-auction'), 
 	    array($this, 'wdm_powered_by_field'), 
@@ -284,14 +309,15 @@ if(!class_exists('wdm_settings'))
 			   'ttl' => __("Please enter Product Title.", "wdm-ultimate-auction"),
 			   'et' => __("Please enter Ending Date/Time.", "wdm-ultimate-auction"),
 			   'set' => __("You should fill PayPal email address in 'Settings' tab to enable 'Buy Now' feature.", "wdm-ultimate-auction"),
-			   'opb' => __("Please enter Opening Bid amount.", "wdm-ultimate-auction"),
+			   'opb' => __("Please enter Opening Price.", "wdm-ultimate-auction"),
 			   'rp' => __("Please enter Lowest Price (Reserve Price).", "wdm-ultimate-auction"),
-			   'ob' => __("Please enter either Opening Bid amount or Buy Now price.", "wdm-ultimate-auction"),
-			   'olp' => __("You have entered Opening Bid. Please also enter Lowest Price (Reserve Price).", "wdm-ultimate-auction"),
-			   'lpo' => __("You have entered Lowest Price. Please also enter Opening Bid amount.", "wdm-ultimate-auction"),
-			   'iop' => __("You have entered Incremental Value. Please also enter Opening Bid amount.", "wdm-ultimate-auction"),
-			   'rpo' => __("Lowest/Reserve price should be more than or equal to Opening Bid.", "wdm-ultimate-auction"),
-			   'bnl' => __("Buy Now price should be more than or equal to Lowest/Reserve price.", "wdm-ultimate-auction")
+			   'ob' => __("Please enter either Opening Price or Buy Now price.", "wdm-ultimate-auction"),
+			   'olp' => __("You have entered Opening Price. Please also enter Lowest Price (Reserve Price).", "wdm-ultimate-auction"),
+			   'lpo' => __("You have entered Lowest Price. Please also enter Opening Price.", "wdm-ultimate-auction"),
+			   'iop' => __("You have entered Incremental Value. Please also enter Opening Price.", "wdm-ultimate-auction"),
+			   'rpo' => __("Lowest/Reserve price should be more than or equal to Opening Price.", "wdm-ultimate-auction"),
+			   'bnl' => __("Buy Now price should be more than or equal to Lowest/Reserve price.", "wdm-ultimate-auction"),
+			   'oinc' => __("Incremental Value should be greater than 0.", "wdm-ultimate-auction")
 			   );
 	
 		wp_localize_script( 'wdm_logic_valid', 'wdm_ua_obj_l10nv', $trans_a );
@@ -321,6 +347,9 @@ if(!class_exists('wdm_settings'))
 	update_option('wdm_mailing_address',$mid['wdm_mailing_address']);
 	update_option('wdm_powered_by',$mid['wdm_powered_by']);
 	update_option('wdm_account_mode',$mid['wdm_account_mode']);
+	update_option('wdm_auction_page_url',$mid['wdm_auction_page_url']);
+	update_option('wdm_login_page_url',$mid['wdm_login_page_url']);
+	update_option('wdm_register_page_url',$mid['wdm_register_page_url']);
     }
     else{
 	die(__('Sorry, your nonce did not verify.', 'wdm-ultimate-auction'));
@@ -449,6 +478,60 @@ if(!class_exists('wdm_settings'))
     <?php
     }
     
+        //Auction feeder page URL
+    public function wdm_auction_url_field(){
+	?>
+        <input type="text" class="wdm_settings_input url" id="wdm_auction_url_id" name="wdm_auc_settings_data[wdm_auction_page_url]" size="40" value="<?php echo get_option('wdm_auction_page_url');?>" />
+    <div>
+	<span class="ult-auc-settings-tip"><?php _e("Enter your auction feeder page URL.", "wdm-ultimate-auction");?></span>
+    
+	<a href="" class="auction_fields_tooltip"><strong><?php _e("?", "wdm-ultimate-auction");?></strong>
+	    <span style="width: 370px;margin-left: -90px;">
+	    <?php _e("If you want to make each auction title as a link to the front end single auction page in 'Title' columns of the plugin dashboard, you'll need to enter front end URL of the page where you have used auction shortcode i.e. auction feeder page.", "wdm-ultimate-auction");?>
+	    <br /><br />
+	    <?php _e("NOTE: Whenever you change the permalink, do not forget to enter the modified URL over here. Also, if you select auction page as Home page, do not enter Home page URL, instead use actual full URL of the feeder page.", "wdm-ultimate-auction");?>
+	    </span>
+	</a>
+    </div>
+    <?php
+    }
+    
+    //Front end Login page URL
+    public function wdm_login_url_field(){
+	?>
+        <input type="text" class="wdm_settings_input url" id="wdm_login_url_id" name="wdm_auc_settings_data[wdm_login_page_url]" size="40" value="<?php echo get_option('wdm_login_page_url');?>" />
+    <div>
+	<span class="ult-auc-settings-tip"><?php _e("Enter Custom Login page URL (if have any).", "wdm-ultimate-auction");?></span>
+    
+	<a href="" class="auction_fields_tooltip"><strong><?php _e("?", "wdm-ultimate-auction");?></strong>
+	    <span style="width: 370px;margin-left: -90px;">
+	    <?php _e("If your site has a custom Login page and you want the bidders should log in through that page, you should set its URL here, so that while placing the bid, non logged in bidders should visit the custom Login page and not the default WordPress Login page. Please note, with the custom login URL the bidder will not be redirected automatically to the auction page where he/she was going to place the bid. As of now, this functionality works with the default WordPress Login page only. Also, whenever you change the permalink, do not forget to enter the modified URL over here.", "wdm-ultimate-auction");?>
+	    <br /><br />
+	    <?php _e("NOTE: If your site uses default WordPress Login page. You don't need to set it.", "wdm-ultimate-auction");?>
+	    </span>
+	</a>
+    </div>
+    <?php
+    }
+    
+    //Front end Register page URL
+    public function wdm_register_url_field(){
+	?>
+        <input type="text" class="wdm_settings_input url" id="wdm_register_url_id" name="wdm_auc_settings_data[wdm_register_page_url]" size="40" value="<?php echo get_option('wdm_register_page_url');?>" />
+    <div>
+	<span class="ult-auc-settings-tip"><?php _e("Enter Custom Registration page URL (if have any).", "wdm-ultimate-auction");?></span>
+    
+	<a href="" class="auction_fields_tooltip"><strong><?php _e("?", "wdm-ultimate-auction");?></strong>
+	    <span style="width: 370px;margin-left: -90px;">
+	    <?php _e("If your site has a custom Register page and you want the bidders should register through that page, you should set its URL here, so that while placing the bid, non registered bidders should visit the custom Register page and not the default WordPress Register page. Also, whenever you change the permalink, do not forget to enter the modified URL over here.", "wdm-ultimate-auction");?>
+	    <br /><br />
+	    <?php _e("NOTE: If your site uses default WordPress Register page. You don't need to set it.", "wdm-ultimate-auction");?>
+	    </span>
+	</a>
+    </div>
+    <?php
+    }
+    
     //handle post meta keys
     public function wdm_post_meta($meta_key){
         if($this->auction_id!="")
@@ -472,23 +555,27 @@ if(!class_exists('wdm_settings'))
             $auction=get_post($_POST["update_auction"]);
             $single_auction["title"]=$auction->post_title;
             $single_auction["content"]=$auction->post_content;
+	    $single_auction["excerpt"]=$auction->post_excerpt;
             return $single_auction;
         }
         else if(isset($_GET["edit_auction"]) && !empty($_GET["edit_auction"])){
             $auction=get_post($_GET["edit_auction"]);
             $single_auction["title"]=$auction->post_title;
             $single_auction["content"]=$auction->post_content;
+	    $single_auction["excerpt"]=$auction->post_excerpt;
             return $single_auction;
             }
 	else if($this->auction_id!=""){
 	    $auction=get_post($this->auction_id);
             $single_auction["title"]=$auction->post_title;
             $single_auction["content"]=$auction->post_content;
+	    $single_auction["excerpt"]=$auction->post_excerpt;
             return $single_auction;
 	}
         $this->auction_id="";
         $single_auction["title"]="";
         $single_auction["content"]="";
+	$single_auction["excerpt"]="";
         return $single_auction;
     }
     

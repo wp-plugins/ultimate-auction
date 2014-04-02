@@ -5,7 +5,7 @@
   Description: Awesome plugin to host auctions on your wordpress site and sell anything you want.
   Author: Nitesh Singh
   Author URI: http://auctionplugin.net
-  Version: 2.0.0
+  Version: 2.0.1
   License: GPLv2
   Copyright 2014 Nitesh Singh
 */
@@ -311,12 +311,12 @@ function bid_notification_callback()
             $adm_msg .= "<br /><br /> ".__('Bidder Email', 'wdm-ultimate-auction').": ".$_POST['ab_email'];
             $adm_msg .= "<br /><br /> ".__('Bid Value', 'wdm-ultimate-auction').": ".$c_code." ".round($_POST['ab_bid'], 2);
             $adm_msg .= "<br /><br /><strong>".__('Product Details', 'wdm-ultimate-auction')." - </strong>";
-            $adm_msg .= "<br /><br /> ".__('Product URL', 'wdm-ultimate-auction').": ".$ret_url;
+            $adm_msg .= "<br /><br /> ".__('Product URL', 'wdm-ultimate-auction').": <a href='".$ret_url."'>".$ret_url."</a>";
             $adm_msg .= "<br /><br /> ".__('Product Name', 'wdm-ultimate-auction').": ".$_POST['auc_name'];
             $adm_msg .= "<br /><br /> ".__('Description', 'wdm-ultimate-auction').": <br />".$_POST['auc_desc']."<br />";
             
             $hdr = "";
-            //$hdr  = "From: ". get_bloginfo('name') ." <". $adm_email ."> \r\n";
+            $hdr  = "From: ". get_bloginfo('name') ." <". $adm_email ."> \r\n";
             $hdr .= "MIME-Version: 1.0\r\n";
             $hdr .= "Content-type:text/html;charset=UTF-8" . "\r\n";
             
@@ -325,7 +325,7 @@ function bid_notification_callback()
             $bid_sub = "[".get_bloginfo('name')."] ".__('You recently placed a bid on the product', 'wdm-ultimate-auction')." - ".$_POST['auc_name'];
             $bid_msg = "";
             $bid_msg = __('Here are the details', 'wdm-ultimate-auction')." - ";
-            $bid_msg .= "<br /><br /> ".__('Product URL', 'wdm-ultimate-auction').": ". $ret_url;
+            $bid_msg .= "<br /><br /> ".__('Product URL', 'wdm-ultimate-auction').": <a href='".$ret_url."'>". $ret_url."</a>";
             $bid_msg .= "<br /><br /> ".__('Product Name', 'wdm-ultimate-auction').": ".$_POST['auc_name'];
             $bid_msg .= "<br /><br /> ".__('Bid Value', 'wdm-ultimate-auction').": ".$c_code." ".round($_POST['ab_bid'], 2);
             $bid_msg .= "<br /><br /> ".__('Description', 'wdm-ultimate-auction').": <br />".$_POST['auc_desc']."<br />";
@@ -383,10 +383,10 @@ function private_message_callback()
         $msg = __('Name', 'wdm-ultimate-auction').": ".$_POST['p_name']."<br /><br />";
         $msg .= __('Email', 'wdm-ultimate-auction').": ".$_POST['p_email']."<br /><br />";
         $msg .= __('Message', 'wdm-ultimate-auction').": <br />".$_POST['p_msg']."<br /><br />";
-        $msg .= __('Product URL', 'wdm-ultimate-auction').": ".$auc_url."<br />";
+        $msg .= __('Product URL', 'wdm-ultimate-auction').": <a href='".$auc_url."'>".$auc_url."</a><br />";
         
         $hdr = "";
-        //$hdr  = "From: ". get_bloginfo('name') ." <". $adm_email ."> \r\n";
+        $hdr  = "From: ". get_bloginfo('name') ." <". $adm_email ."> \r\n";
         $hdr .= "MIME-Version: 1.0\r\n";
         $hdr .= "Content-type:text/html;charset=UTF-8" . "\r\n";
         
@@ -467,7 +467,7 @@ function wdm_set_auction_timezone()
 					  $buy_now_price = get_post_meta($single_auction->ID, 'wdm_buy_it_now', true);
 					  
 					  $headers = "";
-					  //$headers  = "From: ". $site_name ." <". $auction_email ."> \r\n";
+					  $headers  = "From: ". $site_name ." <". $auction_email ."> \r\n";
 					  $headers .= "MIME-Version: 1.0\r\n";
 					  $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 					  
@@ -549,4 +549,22 @@ function redirect_after_comment($location)
 return $_SERVER["HTTP_REFERER"];
 }
 
+function prepare_single_auction_title($id, $title){
+   
+   $perma_type = get_option('permalink_structure');
+   if(empty($perma_type))
+         $set_char = "&";
+   else
+         $set_char = "?";
+   
+   $auc_url = get_option('wdm_auction_page_url');
+   
+   if(!empty($auc_url)){
+      $link_title = $auc_url.$set_char."ult_auc_id=".$id;
+      $link_title = "<a href='".$link_title."' target='_blank'>".$title."</a>";
+      $title = $link_title;
+   }
+   
+   return $title;
+}
 ?>

@@ -1,5 +1,6 @@
 <?php
 //auction listing page - pagination
+$page_num = 20;
 function auction_pagination($pages = '', $range = 2, $paged)
 {  
      $showitems = ($range * 2)+1;  
@@ -45,14 +46,19 @@ elseif (get_query_var('page')) { $paged = get_query_var('page'); }
 else { $paged = 1; }
 
 $args = array(
-		'posts_per_page'=> 20,
+		'posts_per_page'=> $page_num,
 		'post_type'	=> 'ultimate-auction',
 		'auction-status'  => 'live',
 		'post_status' => 'publish',
-		'paged' => $paged
+		'paged' => $paged,
+		'suppress_filters' => false
 		);
 
+	do_action('wdm_ua_before_get_auctions');
+
 	$wdm_auction_array = get_posts($args);
+	
+	do_action('wdm_ua_after_get_auctions');
         
 		$show_content = '';
 		$show_content = apply_filters('wdm_ua_before_auctions_listing', $show_content);
@@ -99,11 +105,11 @@ $args = array(
 			$bnp = get_post_meta($wdm_single_auction->ID, 'wdm_buy_it_now', true);
 			
 			if((!empty($curr_price) || $curr_price > 0) && !empty($ob))
-				echo $cc ." ". $curr_price;
+				echo $cc ." ". sprintf("%.2f", $curr_price);
 			elseif(!empty($ob))
-				echo $cc ." ".$ob;
+				echo $cc ." ".sprintf("%.2f", $ob);
 			elseif(empty($ob) && !empty($bnp))
-				printf(__('Buy at %s', 'wdm-ultimate-auction'), $cc ." ".$bnp);
+				printf(__('Buy at %s %.2f', 'wdm-ultimate-auction'), $cc, $bnp);
 				?>
 			</span>
 			</li>
@@ -182,7 +188,7 @@ $args = array(
 			<li class="wdm-apbid auc_single_list auc_list_center">
 			 <input class="wdm_bid_now_btn" type="button" value="<?php _e('Bid Now', 'wdm-ultimate-auction');?>" />
 			</li>
-			<li><div class="wdm-apd"><?php echo substr($wdm_single_auction->post_content,  0, 100) . " .."; ?> </div></li>
+			<li><div class="wdm-apd"><?php echo $wdm_single_auction->post_excerpt ; ?> </div></li>
 				</ul>
 				</a>
 			</li>
@@ -205,15 +211,20 @@ $live_posts = $wpdb->get_col($comm_query);
 
 $live_posts = implode("," , $live_posts);
 
-$count_pages = $wpdb->get_var("SELECT count(ID)
+$count_query = "SELECT count(ID)
 FROM ".$wpdb->prefix."posts
 WHERE post_type = 'ultimate-auction'
 AND ID IN($live_posts)
-AND post_status = 'publish'");
+AND post_status = 'publish'";
 
-$c=ceil($count_pages/20);
+$count_query = apply_filters('wdm_ua_filtered_counts', $count_query);
+
+$count_pages = $wpdb->get_var($count_query);
+
+echo '<input type="hidden" id="wdm_ua_auc_avail" value="'.$count_pages.'" />';
+
+$c=ceil($count_pages/$page_num);
 auction_pagination($c, 1, $paged);
 ?>
-
 </ul>
 </div>

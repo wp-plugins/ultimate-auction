@@ -156,27 +156,27 @@
 					$ago_time = "";
 					
 					if($dys > 1)
-						$ago_time = $dys .__('days', 'wdm-ultimate-auction');
+						$ago_time = $dys .' '.__('days', 'wdm-ultimate-auction');
 					elseif($dys == 1)
-						$ago_time = $dys .__('day', 'wdm-ultimate-auction');	
+						$ago_time = $dys .' '.__('day', 'wdm-ultimate-auction');	
 					elseif($dys < 1)
 					{
 						if($hrs > 1)
-							$ago_time = $hrs .__('hours', 'wdm-ultimate-auction');
+							$ago_time = $hrs .' '.__('hours', 'wdm-ultimate-auction');
 						elseif($hrs == 1)
-							$ago_time = $hrs .__('hour', 'wdm-ultimate-auction');
+							$ago_time = $hrs .' '.__('hour', 'wdm-ultimate-auction');
 						elseif($hrs < 1)
 						{
 							if($mins > 1)
-								$ago_time = $mins .__('minutes', 'wdm-ultimate-auction');
+								$ago_time = $mins .' '.__('minutes', 'wdm-ultimate-auction');
 							elseif($mins == 1)
-								$ago_time = $mins .__('minute', 'wdm-ultimate-auction');
+								$ago_time = $mins .' '.__('minute', 'wdm-ultimate-auction');
 							elseif($mins < 1)
 							{
 								if($secs > 1)
-									$ago_time = $secs .__('seconds', 'wdm-ultimate-auction');
+									$ago_time = $secs .' '.__('seconds', 'wdm-ultimate-auction');
 								elseif($secs == 1)
-									$ago_time = $secs .__('second', 'wdm-ultimate-auction');
+									$ago_time = $secs .' '.__('second', 'wdm-ultimate-auction');
 							}
 						}
 					}

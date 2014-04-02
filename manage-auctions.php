@@ -42,7 +42,7 @@ class Auctions_List_Table extends WP_List_Table {
             
             $row = array();
             $row['ID']=$single_auction->ID;
-            $row['title']=$single_auction->post_title;
+            $row['title']=prepare_single_auction_title($single_auction->ID, $single_auction->post_title);
             $end_date = get_post_meta($single_auction->ID,'wdm_listing_ends', true);
             $row['date_created']= "<strong> ".__('Creation Date', 'wdm-ultimate-auction').":</strong> <br />".get_post_meta($single_auction->ID, 'wdm_creation_time', true)." <br /><br /> <strong>  ".__('Ending Date', 'wdm-ultimate-auction').":</strong> <br />".$end_date;
             $row['image_1']="<input class='wdm_chk_auc_act' value=".$single_auction->ID." type='checkbox' style='margin: 0 5px 0 0;' />"."<img src='".get_post_meta($single_auction->ID,'wdm_auction_thumb', true)."' width='90'";

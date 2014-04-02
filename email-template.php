@@ -40,7 +40,7 @@ function ultimate_auction_email_template($auction_name, $auction_id, $auction_de
 	$paypal_link .= "&no_note=0";
 	$paypal_link .= "&bn=PP%2dBuyNowBF%3abtn_buynowCC_LG%2egif%3aNonHostedGuest";
 	
-	$message .= __("Product URL", "wdm-ultimate-auction").": ".$return_url." <br />";
+	$message .= __("Product URL", "wdm-ultimate-auction").": <a href='".$return_url."'>".$return_url."</a> <br />";
 	$message .= "<br />".__("Product Name", "wdm-ultimate-auction").": ".$auction_name." <br />";
 	$message .= "<br />".__("Description", "wdm-ultimate-auction").": <br />".$auction_desc."<br /><br />";
 	
@@ -74,16 +74,39 @@ function ultimate_auction_email_template($auction_name, $auction_id, $auction_de
 	}
 	elseif($check_method === 'method_wire_transfer')
 	{
-	    $message .= sprintf(__('You can pay %s by Wire Transfer.', 'wdm-ultimate-auction'), $pay_amt)."<br /><br />";
+	    $msg = apply_filters('ua_product_shipping_cost_wire_cheque',$shipping_link, $auction_id,$winner_bid,$winner_email);
+	    
+	    if(!empty($msg))
+	    {
+		$message .= sprintf(__('%s by wire transfer','wdm-ultimate-auction'),$msg).'<br /><br />';
+	    }
+	    else
+	    {
+		$message .= sprintf(__('You can pay %s by Wire Transfer.', 'wdm-ultimate-auction'), $pay_amt)."<br /><br />";
+	    }
+	    
+	    $message .= __("Wire Transfer Details", 'wdm-ultimate-auction').": <br />";
 	    $message .= get_option('wdm_wire_transfer');
 	}
 	elseif($check_method === 'method_mailing')
 	{
-	    $message .= sprintf(__('You can pay %s by Cheque.', 'wdm-ultimate-auction'), $pay_amt)."<br /><br />";
-            $message .= get_option('wdm_mailing_address');
+	    $msg = apply_filters('ua_product_shipping_cost_wire_cheque',$shipping_link, $auction_id,$winner_bid,$winner_email);
+	    
+	    if(!empty($msg))
+	    {
+		$message .= sprintf(__('%s by cheque','wdm-ultimate-auction'),$msg).'<br /><br />';
+	    }
+	    else
+	    {
+		$message .= sprintf(__('You can pay %s by Cheque.', 'wdm-ultimate-auction'), $pay_amt)."<br /><br />";
+	    }
+	    
+	    $message .= __("Mailing Address", 'wdm-ultimate-auction').": <br />";
+	    $message .= get_option('wdm_mailing_address');
 	}
+	
 	$headers = "";
-	//$headers  = "From: ". $site_name ." <". $auction_email ."> \r\n";
+	$headers  = "From: ". $site_name ." <". $auction_email ."> \r\n";
 	$headers .= "MIME-Version: 1.0\r\n";
 	$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 	

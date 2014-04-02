@@ -89,7 +89,7 @@ text-decoration: underline;
 .wdm_single_prod_desc
 {
     float: left;
-    width: 285px;
+    width: 300px;
 }
 
 #wdm_place_bid_section form{
@@ -187,6 +187,7 @@ width: 11%;
     padding: 0 10px;
     font-size: 12px;
     color: #21759B !important;
+    clear: both;
 }
 
 #wdm-total-bids-link
@@ -535,3 +536,9 @@ color:#fff;
     padding-right: 3px !important;
     padding-left: 3px !important;
 }
+
+.wdm-image-container .auction-main-img-cont{height: 285px; width: 290px;}
+.wdm-image-container .auction-small-img-cont{width: 290px; margin-top: 10px !important; height: 70px;}
+.wdm-image-container .auction-small-img {max-width:60px; max-height:65px}
+.wdm-image-container .auction-main-img{max-height: 280px; max-width: 285px;margin: 0 auto !important; margin: 0 auto !important;}
+.ua_thin_textarea_field{width: 70%}

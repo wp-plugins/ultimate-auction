@@ -4,6 +4,7 @@ if(!empty($_POST)){
     if(isset($_POST['ua_wdm_add_auc']) && wp_verify_nonce($_POST['ua_wdm_add_auc'],'ua_wp_n_f')){
     $auction_title=(!empty($_POST["auction_title"])) ? ($_POST["auction_title"]):'';
     $auction_content=(!empty($_POST["auction_description"])) ? ($_POST["auction_description"]):'';
+    $auction_excerpt=(!empty($_POST["auction_excerpt"])) ? ($_POST["auction_excerpt"]):'';
     
     $auc_end_tm = isset($_POST["end_date"]) ? strtotime($_POST["end_date"]) : 0;
     $blog_curr_tm = strtotime(date("Y-m-d H:i:s", time()));
@@ -20,7 +21,8 @@ if(!empty($_POST)){
             $args=array(
                         'ID'    => $post_id,
                         'post_title' => $auction_title,
-                        'post_content' => $auction_content
+                        'post_content' => $auction_content,
+			'post_excerpt'  => $auction_excerpt
                         );
             wp_update_post( $args );
             $is_update = true;
@@ -33,7 +35,8 @@ if(!empty($_POST)){
             'post_title'    => wp_strip_all_tags( $auction_title ),//except for title all other fields are sanitized by wordpress
             'post_content'  => $auction_content,
             'post_type'     => 'ultimate-auction',
-            'post_status'   => 'publish'
+            'post_status'   => 'publish',
+	    'post_excerpt'  => $auction_excerpt
             );
             $post_id = wp_insert_post($args);
             $this->wdm_set_auction($post_id);
@@ -46,7 +49,8 @@ if(!empty($_POST)){
                 'post_title'    => wp_strip_all_tags( $auction_title ),//except for title all other fields are sanitized by wordpress
                 'post_content'  => $auction_content,
                 'post_type'     => 'ultimate-auction',
-                'post_status'   => 'publish'
+                'post_status'   => 'publish',
+	        'post_excerpt'  => $auction_excerpt
                 );
             $post_id = wp_insert_post($args);
             $this->wdm_set_auction($post_id);
@@ -163,6 +167,15 @@ $currency_code = substr(get_option('wdm_currency'), -3);
 	    wp_editor($wdm_post["content"], 'auction_description', $args);?>
 	</td>
     </tr>
+    <tr valign="top">
+        <th scope="row">
+            <label for="auction_excerpt"><?php _e("Product Short Description", "wdm-ultimate-auction");?></label>
+        </th>
+        <td>
+            <textarea name="auction_excerpt" id="auction_excerpt" class="regular-text ua_thin_textarea_field"><?php echo $wdm_post["excerpt"];?></textarea>
+        <div class="ult-auc-settings-tip"><?php _e("Enter short description (excerpt) for the product. This description is shown on the auctions listing page.", "wdm-ultimate-auction");?></div>
+	</td>
+    </tr>
     <?php
 	    $after_thumb = '';
 	    $after_thumb = apply_filters('wdm_ua_after_product_desc', $after_thumb);
@@ -202,11 +215,11 @@ $currency_code = substr(get_option('wdm_currency'), -3);
     </tr>   
     <tr valign="top">
         <th scope="row">
-            <label for="opening_bid"><?php _e("Opening Bid", "wdm-ultimate-auction");?></label>
+            <label for="opening_bid"><?php _e("Opening Price", "wdm-ultimate-auction");?></label>
         </th>
         <td>
             <?php echo $currency_code;?>
-            <input name="opening_bid" type="text" id="opening_bid" class="small-text number" min="0" value="<?php echo $this->wdm_post_meta('wdm_opening_bid');?>"/>
+            <input name="opening_bid" type="text" id="opening_bid" class="small-text number" value="<?php echo $this->wdm_post_meta('wdm_opening_bid');?>"/>
         </td>
     </tr>
     <tr valign="top">
@@ -215,7 +228,7 @@ $currency_code = substr(get_option('wdm_currency'), -3);
         </th>
         <td>
             <?php echo $currency_code;?>
-            <input name="lowest_bid" type="text" id="lowest_bid" class="small-text number" min="0" value="<?php echo $this->wdm_post_meta('wdm_lowest_bid');?>"/>
+            <input name="lowest_bid" type="text" id="lowest_bid" class="small-text number" value="<?php echo $this->wdm_post_meta('wdm_lowest_bid');?>"/>
 	    <div>
 		<span class="ult-auc-settings-tip"><?php _e("Set Reserve price for your auction.", "wdm-ultimate-auction");?></span>
 	    <a href="" class="auction_fields_tooltip"><strong>?</strong>
@@ -233,7 +246,7 @@ $currency_code = substr(get_option('wdm_currency'), -3);
         </th>
         <td>
             <?php echo $currency_code;?>
-            <input name="incremental_value" type="text" id="incremental_value" class="small-text number" min="0" value="<?php echo $this->wdm_post_meta('wdm_incremental_val');?>"/>
+            <input name="incremental_value" type="text" id="incremental_value" class="small-text number" value="<?php echo $this->wdm_post_meta('wdm_incremental_val');?>"/>
 	    <div class="ult-auc-settings-tip"><?php _e("Set an amount from which next bid should start.", "wdm-ultimate-auction");?></div>
 	</td>
     </tr>
@@ -307,7 +320,7 @@ $currency_code = substr(get_option('wdm_currency'), -3);
       </div>
       </div>
             <?php echo $currency_code;?>
-            <input name="buy_it_now_price" type="text" id="buy_it_now_price" class="small-text number" min="1" value="<?php echo $this->wdm_post_meta('wdm_buy_it_now');?>"/>
+            <input name="buy_it_now_price" type="text" id="buy_it_now_price" class="small-text number" value="<?php echo $this->wdm_post_meta('wdm_buy_it_now');?>"/>
             <div class="ult-auc-settings-tip" ><?php _e("Visitors can buy your auction by making payments via PayPal.", "wdm-ultimate-auction");?></div>
 	    
 	</td>
@@ -362,7 +375,8 @@ $currency_code = substr(get_option('wdm_currency'), -3);
            
         jQuery('#end_date').datetimepicker({
             timeFormat: "HH:mm:ss",
-            dateFormat : 'yy-mm-dd'
+            dateFormat : 'yy-mm-dd',
+	    minDateTime: 0
             });
 	
 	jQuery("#how-set-pp-auto-return").click(

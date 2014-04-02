@@ -94,6 +94,14 @@ This page is responsible for displaying all live auctions. If you click a specif
 == Frequently Asked Questions ==
 
 == Changelog ==
+= 2.0.1 = 
+
+* Support for new Search feature - Plugin will integrate with Categories Addon to display categories and search box.
+* Auction short description field - New field added inside "Add Auction" form. This field is responsible in displaying auction excerpts (1 or 2 lines about auction) on feed page. Prior to this, 
+* All prices on front end would display decimal values upto 2 places.
+* Bug - Fix provided for HTML Editor for auction description to accept new line characters.
+* Bug - Email Sent via plugin would have sender name as website name.
+
 = 2.0.0 = 
 * Plugin now supports Category Addon - If you want category feature then you need to buy category addon.
 * Added Countdown timer for auctions.

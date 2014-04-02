@@ -54,59 +54,65 @@ jQuery(document).ready(
                             
                             if(pd == 'disabled')
                             {
-                                if(bn)
+                                if(bn && Number(bn) > 0)
                                 {
                                     alert(wdm_ua_obj_l10nv.set);
                                     jQuery("#wdm-add-auction-form #buy_it_now_price").val("");
                                     return false;
                                 }
                                 
-                                if(!ob)
+                                if(!ob || 0 >= Number(ob))
                                 {
                                     alert(wdm_ua_obj_l10nv.opb);
                                     return false;
                                 }
                                 
-                                if(!lb)
+                                if(!lb || Number(lb) < Number(ob))
                                 {
                                     alert(wdm_ua_obj_l10nv.rp);
                                     return false;
                                 }
                                 
                             }
-                            else
-                            {
-                                if(!ob && !bn)
+                            //else
+                            //{
+                                if((!ob || 0 >= Number(ob)) && (!bn || 0 >= Number(bn)))
                                 {
                                     alert(wdm_ua_obj_l10nv.ob);
                                     return false;
                                 }
                                 
-                                if(ob && !lb)
+                                if((ob && Number(ob) > 0) && (!lb || 0 >= Number(lb)))
                                 {
                                     alert(wdm_ua_obj_l10nv.olp);
                                     return false;
                                 }
                                 
-                                if(lb && !ob)
+                                if((ob && Number(ob) > 0) && (!inc || 0 >= Number(inc)))
+                                {
+                                   alert(wdm_ua_obj_l10nv.oinc);
+                                   return false;
+                                }
+                                
+                                if((lb && Number(lb) > 0) && (!ob || 0 >= Number(ob)))
                                 {
                                     alert(wdm_ua_obj_l10nv.lpo);
                                     return false;
                                 }
                                 
-                                if(inc && !ob)
+                                if((inc && Number(inc) > 0) && (!ob || 0 >= Number(ob)))
                                 {
                                     alert(wdm_ua_obj_l10nv.iop);
                                     return false;
                                 }
-                            }
+                            //}
                                 if(Number(lb) < Number(ob))
                                 {
                                     alert(wdm_ua_obj_l10nv.rpo);
                                     return false;
                                 }
                                 
-                                if(bn)
+                                if(bn && Number(bn) > 0)
                                 {
                                    if(Number(bn) < Number(lb))
                                    {
