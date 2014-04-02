@@ -37,7 +37,7 @@ Lots of features, very configurable.  Easy to setup.  Great support.
 	9. Add more than 4 images for your auction. You can even select multiple images for upload.
 	10. Start Date Feature - Schedule your auction for later date.
 
- = Core Features =
+ = FREE VERSION (Core) Features =
     1. Registered User can place bids 
 	2. Ajax Admin panel for better management.
     3. Add standard auctions for bidding
