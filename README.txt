@@ -11,7 +11,7 @@ Ultimate Wordpress Auction plugin allows you to host auctions on your wordpress 
 
 == Description ==
 
-[Main Site](http://auctionplugin.net/) | [Pro Features](http://auctionplugin.net/features)| [Pro Demo](http://demo.auctionplugin.net/) | [Support](http://auctionplugin.net/support/)
+[Main Site](http://auctionplugin.net/) | [Pro Features](http://auctionplugin.net/features)| [Pro Demo](http://demo.auctionplugin.net/) 
 
 Ultimate Wordpress Auction plugin is the most popular and best-supported WordPress Auction plugin available. Start selling your stuff in a quick and easy way by setting up a professional auction website in ebay style.
 
