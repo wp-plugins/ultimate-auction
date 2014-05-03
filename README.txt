@@ -1,4 +1,4 @@
-=== Wordpress Auction Plugin ===
+=== Ultimate Wordpress Auction Plugin ===
 Contributors: nitesh_singh,WisdmLabs
 Donate link: http://auctionplugin.net/
 Tags: auctions,auction,auction plugin,wp auction,wordpress auction,wp auctions,auction script,ebay,ebay auction,bidding
@@ -7,7 +7,7 @@ Tested up to: 3.8.1
 License: GPLv2 or later
 Stable tag: trunk
 
-Ultimate Wordpress Auction plugin allows you to host auctions on your wordpress site and sell anything you want.
+Awesome plugin to host auctions on your wordpress site and sell anything you want.
 
 == Description ==
 
@@ -15,8 +15,9 @@ Ultimate Wordpress Auction plugin allows you to host auctions on your wordpress 
 
 Ultimate Wordpress Auction plugin is the most popular and best-supported WordPress Auction plugin available. Start selling your stuff in a quick and easy way by setting up a professional auction website in ebay style.
 
-Simple and flexible, Ultimate Wordpress Auction plugin works with any WordPress theme. 
+The **Ultimate Wordpress Auction plugin** allows easy and quick way to set up a professional auction website in ebay style.
 
+Simple and flexible, Ultimate Wordpress Auction plugin works with any WordPress theme. 
 Lots of features, very configurable.  Easy to setup.  Great support.
 
 
@@ -26,18 +27,19 @@ Lots of features, very configurable.  Easy to setup.  Great support.
 *   [Categories - Addon for Free Plugin &raquo;](http://auctionplugin.net/addon/#tour_page_3)
 
  = PRO VERSION Features =
-    1. Registered User of your site can add auction to your site.
-	2. Front End Dashboard to users to add/manage auction.
-	3. Admin can charge listing fee to post auction.
-    4. Admin can charge commission fee on final bidding price.   
-	5. Include Shipping Cost for auctions.
-	6. Categories feature - Group your auctions in multiple categories and view efficiently.
-	7. Integrated Paypal Invoicing for handling payments.
-	8. Admin can manage auctions, bids of all users.
-	9. Add more than 4 images for your auction. You can even select multiple images for upload.
-	10. Start Date Feature - Schedule your auction for later date.
 
- = FREE VERSION (Core) Features =
+	1. Registered Users can add auction to your site.
+	2. Front End Dashboard for users to add/manage auction.
+	3. Admin can charge LISTING FEE to users to post auction.
+    4. Admin can charge COMMISSIONS FEE on final bidding price.   
+	5. Add SHIPPING/POSTAGE fee to auctions.
+	6. CATEGORIZE Auction in different categories.
+	7. Smart SEARCH feature for finding auctions.
+	8. PAYPAL invoicing for handling payment.
+	9. Schedule auction Feature - Make it live for later date
+	10. Add more than 4 IMAGES to auction
+
+ = Free VERSION (Core) Features =
     1. Registered User can place bids 
 	2. Ajax Admin panel for better management.
     3. Add standard auctions for bidding
@@ -97,6 +99,12 @@ This page is responsible for displaying all live auctions. If you click a specif
 == Frequently Asked Questions ==
 
 == Changelog ==
+= 2.0.2 = 
+
+* Fix - Email Notification is not working for some wordpress site.
+* Fix - Paypal link not proper for email clients like outlook.
+
+
 = 2.0.1 = 
 
 * Support for new Search feature - Plugin will integrate with Categories Addon to display categories and search box.

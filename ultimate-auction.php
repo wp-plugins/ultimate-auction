@@ -5,7 +5,7 @@
   Description: Awesome plugin to host auctions on your wordpress site and sell anything you want.
   Author: Nitesh Singh
   Author URI: http://auctionplugin.net
-  Version: 2.0.1
+  Version: 2.0.2
   License: GPLv2
   Copyright 2014 Nitesh Singh
 */
@@ -316,7 +316,7 @@ function bid_notification_callback()
             $adm_msg .= "<br /><br /> ".__('Description', 'wdm-ultimate-auction').": <br />".$_POST['auc_desc']."<br />";
             
             $hdr = "";
-            $hdr  = "From: ". get_bloginfo('name') ." <". $adm_email ."> \r\n";
+            //$hdr  = "From: ". get_bloginfo('name') ." <". $adm_email ."> \r\n";
             $hdr .= "MIME-Version: 1.0\r\n";
             $hdr .= "Content-type:text/html;charset=UTF-8" . "\r\n";
             
@@ -386,7 +386,7 @@ function private_message_callback()
         $msg .= __('Product URL', 'wdm-ultimate-auction').": <a href='".$auc_url."'>".$auc_url."</a><br />";
         
         $hdr = "";
-        $hdr  = "From: ". get_bloginfo('name') ." <". $adm_email ."> \r\n";
+        //$hdr  = "From: ". get_bloginfo('name') ." <". $adm_email ."> \r\n";
         $hdr .= "MIME-Version: 1.0\r\n";
         $hdr .= "Content-type:text/html;charset=UTF-8" . "\r\n";
         

@@ -26,19 +26,19 @@ function ultimate_auction_email_template($auction_name, $auction_id, $auction_de
 	else
 		$paypal_link  = "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick";
 		
-	$paypal_link .= "&business=".urlencode($rec_email);
+	$paypal_link .= "&amp;business=".urlencode($rec_email);
 	//$paypal_link .= "&lc=US";
-	$paypal_link .= "&item_name=".urlencode($auction_name);
-	$paypal_link .= "&amount=".urlencode($winner_bid);
+	$paypal_link .= "&amp;item_name=".urlencode($auction_name);
+	$paypal_link .= "&amp;amount=".urlencode($winner_bid);
 	//shipping field hooks
 	$shipping_link = '';
-	$paypal_link .= apply_filters('ua_product_shipping_cost_link', $shipping_link, $auction_id, $winner_email); //SHP-ADD hook shipping cost link
+	//$paypal_link .= apply_filters('ua_product_shipping_cost_link', $shipping_link, $auction_id, $winner_email); //SHP-ADD hook shipping cost link
 	//end shipping
-	$paypal_link .= "&currency_code=".urlencode($cur_code);
-	$paypal_link .= "&return=".urlencode($return_url);
-	$paypal_link .= "&button_subtype=services";
-	$paypal_link .= "&no_note=0";
-	$paypal_link .= "&bn=PP%2dBuyNowBF%3abtn_buynowCC_LG%2egif%3aNonHostedGuest";
+	$paypal_link .= "&amp;currency_code=".urlencode($cur_code);
+	$paypal_link .= "&amp;return=".urlencode($return_url);
+	$paypal_link .= "&amp;button_subtype=services";
+	$paypal_link .= "&amp;no_note=0";
+	$paypal_link .= "&amp;bn=PP%2dBuyNowBF%3abtn_buynowCC_LG%2egif%3aNonHostedGuest";
 	
 	$message .= __("Product URL", "wdm-ultimate-auction").": <a href='".$return_url."'>".$return_url."</a> <br />";
 	$message .= "<br />".__("Product Name", "wdm-ultimate-auction").": ".$auction_name." <br />";
@@ -67,7 +67,7 @@ function ultimate_auction_email_template($auction_name, $auction_id, $auction_de
 	    
 	    $paypal_link = apply_filters( 'ua_paypal_email_content', $paypal_link, $auction_data );
 	    
-            $message .= $paypal_link;
+            $message .= "<a href=".$paypal_link.">".$paypal_link."</a>";
 	    
 	    $message .= "<br/><br /> ".__('Kindly, click on above URL to make payment', 'wdm-ultimate-auction')."<br />";
 	    
@@ -106,7 +106,7 @@ function ultimate_auction_email_template($auction_name, $auction_id, $auction_de
 	}
 	
 	$headers = "";
-	$headers  = "From: ". $site_name ." <". $auction_email ."> \r\n";
+	//$headers  = "From: ". $site_name ." <". $auction_email ."> \r\n";
 	$headers .= "MIME-Version: 1.0\r\n";
 	$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 	
