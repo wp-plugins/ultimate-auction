@@ -128,7 +128,7 @@
   
   <div id="wdm-desc-bids-tab" class="auction-tab-container" style="display: none;">
 				<?php
-				$query = "SELECT * FROM ".$wpdb->prefix."wdm_bidders WHERE auction_id =".$wdm_auction->ID." ORDER BY date DESC";
+				$query = "SELECT * FROM ".$wpdb->prefix."wdm_bidders WHERE auction_id =".$wdm_auction->ID." ORDER BY id DESC";
 				$results = $wpdb->get_results($query);
 				if(!empty($results)){
 				  ?>

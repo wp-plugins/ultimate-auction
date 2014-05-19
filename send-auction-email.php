@@ -58,14 +58,14 @@ foreach($completed_auctions as $ca){
 	  $reserve_price_met = get_post_meta($ca->ID, 'wdm_lowest_bid',true);
 	  
 	  $winner_bid = "";
-          $bid_qry = "SELECT MAX(bid) FROM ".$wpdb->prefix."wdm_bidders WHERE auction_id =".$ca->ID;
+          $bid_qry = "SELECT MAX(bid) FROM ".$wpdb->prefix."wdm_bidders WHERE auction_id =".$ca->ID." ORDER BY id DESC";
           $winner_bid = $wpdb->get_var($bid_qry);
 	  
 	  if($winner_bid >= $reserve_price_met){
           update_post_meta($ca->ID, 'wdm_to_be_sent', 'in_progress');
           
 	  $winner_email  = "";
-	  $email_qry = "SELECT email FROM ".$wpdb->prefix."wdm_bidders WHERE bid =".$winner_bid." AND auction_id =".$ca->ID;
+	  $email_qry = "SELECT email FROM ".$wpdb->prefix."wdm_bidders WHERE bid =".$winner_bid." AND auction_id =".$ca->ID." ORDER BY id DESC";
 	  $winner_email = $wpdb->get_var($email_qry);
 		
           $return_url = get_post_meta($ca->ID, 'current_auction_permalink',true);

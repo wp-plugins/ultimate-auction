@@ -8,6 +8,7 @@ function wdm_auction_listing(){
 	wp_enqueue_script('wdm-custom-js', plugins_url('js/wdm-custom-js.js', __FILE__), array('jquery'));
 	wp_enqueue_style('wdm_lightbox_css',plugins_url('lightbox/jquery.fs.boxer.css', __FILE__));
 	wp_enqueue_script('wdm-lightbox-js', plugins_url('lightbox/jquery.fs.boxer.js', __FILE__), array('jquery'));
+	wp_enqueue_script('wdm-block-ui-js', plugins_url('js/wdm-jquery.blockUI.js', __FILE__), array('jquery'));
 	
 	//check the permalink from database and append variable to the auction single pages accordingly
 	$perma_type = get_option('permalink_structure');
@@ -76,6 +77,8 @@ function wdm_auction_listing(){
 			    $img_arr = array('png', 'jpg', 'jpeg', 'gif', 'bmp', 'ico');
 			    $vid_arr = array('mpg', 'mpeg', 'avi', 'mov', 'wmv', 'wma', 'mp4', '3gp', 'ogm', 'mkv', 'flv');
 			    
+			    $flg = 0;
+			    
 			    $images .= '<div class="auction-main-img-cont">';
 			    
 			    for($c=1; $c<=4; $c++){
@@ -88,6 +91,12 @@ function wdm_auction_listing(){
 				   $imgMime = wdm_get_mime_type($imgURL);
 			           $img_ext = end(explode(".",$imgURL));
 				   
+				    if(empty($imgURL)){
+						$images .= '';
+					}
+			    else{
+					$flg = 1;
+					
 				   $images .= '<a href="'.get_post_meta($wdm_auction->ID,'wdm-image-'.$c,true).'" class="auction-main-img-a auction-main-img'.$c.'" rel="gallery" style="'.$img_show.'">';
 				   
 				   if(strstr($imgMime, "image/") || in_array($img_ext, $img_arr))
@@ -99,15 +108,19 @@ function wdm_auction_listing(){
 					  Your browser does not support the video tag.
 				   </video>';
 				   elseif(strstr($imgURL, "youtube.com") || strstr($imgURL, "vimeo.com"))
-					  $images .= '<img class="auction-main-img"  src="'.wp_mime_type_icon( 'video/flv' ).'" />';
+					  $images .= '<img class="auction-main-img"  src="'.plugins_url('img/film.png', __FILE__).'" />';
 				   else
 					  $images .= '<img class="auction-main-img"  src="'.wp_mime_type_icon( $imgMime ).'" />';
 			    
-			    $images .= '</a>';
+					  $images .= '</a>';
+				}
 			    } 
 			    
 			    $images .= '</div>';
 			
+			if($flg == 0)
+				echo '<style> .wdm-image-container{display: none;} </style>';
+				
 			    $images .= '<div class="auction-small-img-cont">';
 			
 			    for($c=1; $c<=4; $c++){
@@ -116,14 +129,18 @@ function wdm_auction_listing(){
 			    $imgMime = wdm_get_mime_type($imgURL);
 			    $img_ext = end(explode(".",$imgURL));
 			    
-			    if(strstr($imgMime, "image/") || in_array($img_ext, $img_arr))
-				   $images .= '<img class="auction-small-img auction-small-img'.$c.'" src="'.$imgURL.'" />';
-			    elseif(strstr($imgMime, "video/") || in_array($img_ext, $vid_arr)  || strstr($imgURL, "youtube.com") || strstr($imgURL, "vimeo.com"))
-				   $images .= '<img class="auction-small-img auction-small-img'.$c.'"  src="'.wp_mime_type_icon( 'video/flv' ).'" />';
-			    else
-				   $images .= '<img class="auction-small-img auction-small-img'.$c.'" src="'.wp_mime_type_icon( $imgMime ).'" />';   
+			    if(empty($imgURL)){
+				$images .= '';
 			    }
-			    
+			    else{
+					if(strstr($imgMime, "image/") || in_array($img_ext, $img_arr))
+						$images .= '<img class="auction-small-img auction-small-img'.$c.'" src="'.$imgURL.'" />';
+					elseif(strstr($imgMime, "video/") || in_array($img_ext, $vid_arr)  || strstr($imgURL, "youtube.com") || strstr($imgURL, "vimeo.com"))
+						$images .= '<img class="auction-small-img auction-small-img'.$c.'"  src="'.plugins_url('img/film.png', __FILE__).'" />';
+					else
+						$images .= '<img class="auction-small-img auction-small-img'.$c.'" src="'.wp_mime_type_icon( $imgMime ).'" />';   
+				}
+			    }
 			    $images .= '</div>';
 			    
 			    echo $images;
@@ -133,10 +150,16 @@ function wdm_auction_listing(){
 			<div class="wdm_single_prod_desc">
 			    
 			    <div class="wdm-single-auction-title">
-				<?php echo $wdm_auction->post_title; ?>
+				<?php echo $wdm_auction->post_title;?>
 			    </div> <!--wdm-single-auction-title ends here-->
 			    
-			<?php //get auction-status taxonomy value for the current post - live/expired
+			<?php
+			
+			$ext_html = '';
+			$ext_html = apply_filters('wdm_ua_text_before_bid_section', $ext_html, $wdm_auction->ID);
+			echo $ext_html;
+			
+			//get auction-status taxonomy value for the current post - live/expired
 			$active_terms = wp_get_post_terms($wdm_auction->ID, 'auction-status',array("fields" => "names"));
 			
 			//incremented price value
@@ -199,7 +222,7 @@ function wdm_auction_listing(){
 				   
 					  if($win_bid >= $res_price_met){
 						 $winner_name  = "";
-						 $name_qry = "SELECT name FROM ".$wpdb->prefix."wdm_bidders WHERE bid =".$win_bid." AND auction_id =".$wdm_auction->ID;
+						 $name_qry = "SELECT name FROM ".$wpdb->prefix."wdm_bidders WHERE bid =".$win_bid." AND auction_id =".$wdm_auction->ID." ORDER BY id DESC";
 						 $winner_name = $wpdb->get_var($name_qry);
 						 printf('<div class="wdm-mark-red">'.__('This auction has been sold to %1$s at %2$s.', 'wdm-ultimate-auction').'</div>', $winner_name, $currency_code." ".$win_bid);
 					  }
@@ -257,18 +280,27 @@ function wdm_auction_listing(){
 					</div>
 					<?php
 				}
+				
 				if(is_user_logged_in()) {
 				   $curr_user = wp_get_current_user();
 				   $auction_bidder_name = $curr_user->user_login;
 				   $auction_bidder_email = $curr_user->user_email;
+				   
 				?>
 				<br />
 				<form action="<?php echo dirname(__FILE__); ?>" style="margin-top:20px;">
-					<div class="wdm_bid_val" style="float:left;">
+					<div class="wdm_bid_val" style="">
 						<label for="wdm-bidder-bidval"><?php _e('Bid Value', 'wdm-ultimate-auction');?>: </label>
 						<input type="text" id="wdm-bidder-bidval" style="width:85px;" placeholder="<?php printf(__('in %s', 'wdm-ultimate-auction'), $currency_code);?>" />
-						<br /><span class="wdm_enter_val_text" style="float:right;">
-						<small>(<?php printf(__('Enter %.2f or more', 'wdm-ultimate-auction'), $inc_price);?>)</small>
+						<br /><span class="wdm_enter_val_text" style="float:left;">
+						<small>(<?php printf(__('Enter %.2f or more', 'wdm-ultimate-auction'), $inc_price);?>)
+						<?php
+						
+						$ehtml = '';
+						$ehtml = apply_filters('wdm_ua_text_after_bid_form', $ehtml, $wdm_auction->ID);
+						echo $ehtml;
+						?>
+						</small>
 						</span>
 					</div>
 					<div class="wdm_place_bid" style="float:right;">
@@ -295,7 +327,8 @@ function wdm_auction_listing(){
 				   </div>
 				<?php }?>
 				</div> <!--wdm_place_bid_section ends here-->
-				<?php }?>
+				<?php
+				}?>
 				<br />
 				<?php if(!empty($to_buy) || $to_buy > 0){
 				   $a_key = get_post_meta($wdm_auction->ID, 'wdm-auth-key', true);
@@ -306,7 +339,7 @@ function wdm_auction_listing(){
 					  $pp_link  = "https://sandbox.paypal.com/cgi-bin/webscr";
 				   else
 					  $pp_link  = "https://www.paypal.com/cgi-bin/webscr";
-				   if(is_user_logged_in()){?>
+				   if(is_user_logged_in()){ ?>
 				<!--buy now button-->
 				<div id="wdm_buy_now_section">
 					<div id="wdm-buy-line-above" >

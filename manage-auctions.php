@@ -60,7 +60,7 @@ class Auctions_List_Table extends WP_List_Table {
             $row_bidders = "";
             global $wpdb;
             $currency_code = substr(get_option('wdm_currency'), -3);
-            $query = "SELECT * FROM ".$wpdb->prefix."wdm_bidders WHERE auction_id =".$single_auction->ID." ORDER BY date DESC LIMIT 5";
+            $query = "SELECT * FROM ".$wpdb->prefix."wdm_bidders WHERE auction_id =".$single_auction->ID." ORDER BY id DESC LIMIT 5";
             $results = $wpdb->get_results($query);
             
             if(!empty($results)){
@@ -77,7 +77,7 @@ class Auctions_List_Table extends WP_List_Table {
                 }
                 $row["bidders"] = "<div class='wdm-bidder-list-".$single_auction->ID."'><ul>".$row_bidders."</ul></div>";
                 $row["bidders"] .="<div id='wdm-cancel-bidder-".$bidder_id."' style='font-weight:bold;color:#21759B;cursor:pointer;'>".__('Cancel Last Bid', 'wdm-ultimate-auction')."</div>";
-                $qry = "SELECT * FROM ".$wpdb->prefix."wdm_bidders WHERE auction_id =".$single_auction->ID." ORDER BY date DESC";
+                $qry = "SELECT * FROM ".$wpdb->prefix."wdm_bidders WHERE auction_id =".$single_auction->ID." ORDER BY id DESC";
                 $all_bids = $wpdb->get_results($qry);
                 if(count($all_bids) > 5)
                 $row["bidders"] .="<br />
@@ -100,7 +100,7 @@ class Auctions_List_Table extends WP_List_Table {
 	    }
 	    elseif(!empty($start_price))
 	    {
-		$query="SELECT MAX(bid) FROM ".$wpdb->prefix."wdm_bidders WHERE auction_id =".$single_auction->ID;
+		$query="SELECT MAX(bid) FROM ".$wpdb->prefix."wdm_bidders WHERE auction_id =".$single_auction->ID." ORDER BY id DESC";
 		$curr_price = $wpdb->get_var($query);
 		
 		if(empty($curr_price))
@@ -128,12 +128,12 @@ class Auctions_List_Table extends WP_List_Table {
                     {
 			$reserve_price_met = get_post_meta($single_auction->ID, 'wdm_lowest_bid',true);
 		    
-			$bid_qry = "SELECT MAX(bid) FROM ".$wpdb->prefix."wdm_bidders WHERE auction_id =".$single_auction->ID;
+			$bid_qry = "SELECT MAX(bid) FROM ".$wpdb->prefix."wdm_bidders WHERE auction_id =".$single_auction->ID." ORDER BY id DESC";
 			$winner_bid = $wpdb->get_var($bid_qry);
 			
 			if($winner_bid >= $reserve_price_met)
 			{
-			    $email_qry = "SELECT email FROM ".$wpdb->prefix."wdm_bidders WHERE bid =".$winner_bid." AND auction_id =".$single_auction->ID;
+			    $email_qry = "SELECT email FROM ".$wpdb->prefix."wdm_bidders WHERE bid =".$winner_bid." AND auction_id =".$single_auction->ID." ORDER BY id DESC";
 			    $winner_email = $wpdb->get_var($email_qry);
 			    
 			    $email_sent = get_post_meta($single_auction->ID,'auction_email_sent',true);

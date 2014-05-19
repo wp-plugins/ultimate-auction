@@ -39,7 +39,7 @@
 	#boxer .boxer-arrow.previous { left: 20px; }
 	#boxer .boxer-arrow.next { background-position: -40px 0; right: 20px; }
 	
-	#boxer .boxer-position { color: #999; font-size: 11px; margin: 0; padding: 15px 10px 5px; }
+	#boxer .boxer-position { color: #999; font-size: 11px; margin: 0; padding: 15px 10px 5px; display: none;}
 	#boxer .boxer-caption p { margin: 0; padding: 15px 10px 10px 10px; }
 	#boxer .boxer-caption.gallery p { padding-top: 0; }
 	

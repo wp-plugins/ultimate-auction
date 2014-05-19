@@ -30,14 +30,16 @@ Lots of features, very configurable.  Easy to setup.  Great support.
 
 	1. Registered Users can add auction to your site.
 	2. Front End Dashboard for users to add/manage auction.
-	3. Admin can charge LISTING FEE to users to post auction.
-    4. Admin can charge COMMISSIONS FEE on final bidding price.   
-	5. Add SHIPPING/POSTAGE fee to auctions.
-	6. CATEGORIZE Auction in different categories.
-	7. Smart SEARCH feature for finding auctions.
-	8. PAYPAL invoicing for handling payment.
-	9. Schedule auction Feature - Make it live for later date
-	10. Add more than 4 IMAGES to auction
+	3. PROXY BIDDING feature
+	4. Automatic Time Extension to AVOID SNIPPING.
+	5. Admin can charge LISTING FEE to users to post auction.
+    6. Admin can charge COMMISSIONS FEE on final bidding price.   
+	7. Add SHIPPING/POSTAGE fee to auctions.
+	8. CATEGORIZE Auction in different categories.
+	9. Smart SEARCH feature for finding auctions.
+	10. PAYPAL invoicing for handling payment.
+	11. Schedule auction Feature - Make it live for later date
+	12. Add more than 4 IMAGES to auction
 
  = Free VERSION (Core) Features =
     1. Registered User can place bids 
@@ -99,6 +101,15 @@ This page is responsible for displaying all live auctions. If you click a specif
 == Frequently Asked Questions ==
 
 == Changelog ==
+= 3.0.0 = 
+
+* Code Update to support Proxy Bidding Addon. One needs to buy Proxy Bidding Addon for free plugin or PRO version for it.
+* Code Update to support Automatic Time Extension to avoid snipping. One needs to buy Proxy Bidding Addon for free plugin or PRO version for it.
+* Fix - Feed Page Image is now displayed by scaling it ratio wise which does not squeeze or blur the image.
+* Fix - Default Image when no images are loaded.
+* Fix - Lightbox Image container is fixed for no images. Earlier empty container was shown.
+
+
 = 2.0.2 = 
 
 * Fix - Email Notification is not working for some wordpress site.

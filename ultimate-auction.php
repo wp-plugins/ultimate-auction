@@ -1,11 +1,11 @@
 <?php
 /*
-  Plugin Name: Ultimate Wordpress Auction Plugin
+  Plugin Name: Wordpress Auction Plugin
   Plugin URI: http://auctionplugin.net
   Description: Awesome plugin to host auctions on your wordpress site and sell anything you want.
   Author: Nitesh Singh
   Author URI: http://auctionplugin.net
-  Version: 2.0.2
+  Version: 3.0.0
   License: GPLv2
   Copyright 2014 Nitesh Singh
 */
@@ -47,7 +47,7 @@ function wdm_create_bidders_table()
 //send email Ajax callback - An automatic activity once an auction has expired
 function send_auction_email_callback()
 {
-    require_once('email-template.php');
+    //require_once('email-template.php');
     
     $sent_email = ultimate_auction_email_template($_POST['auc_title'], $_POST['auc_id'], $_POST['auc_cont'], $_POST['auc_bid'], $_POST['auc_email'], $_POST['auc_url']);
     
@@ -63,7 +63,7 @@ add_action('wp_ajax_nopriv_send_auction_email', 'send_auction_email_callback');
 //resend email Ajax callback - 'Resend' link on 'Manage Auctions' page
 function resend_auction_email_callback()
 {
-    require_once('email-template.php');
+    //require_once('email-template.php');
     
     $res_email = ultimate_auction_email_template($_POST['a_title'], $_POST['a_id'], $_POST['a_cont'], $_POST['a_bid'], $_POST['a_em'], $_POST['a_url']);
     
@@ -188,6 +188,7 @@ add_action('wp_ajax_nopriv_cancel_last_bid', 'cancel_last_bid_callback');
 //place bid Ajax callback - 'Place Bid' button on Single Auction page
 function place_bid_now_callback()
 {
+   $ab_bid=round((double)$_POST['ab_bid'],2);
    if(is_user_logged_in()){
     global $wpdb;
     $wpdb->hide_errors();
@@ -199,36 +200,71 @@ function place_bid_now_callback()
       update_post_meta($_POST['auction_id'], 'wdm_previous_bid_value', $next_bid); //store bid value of the most recent bidder
     }
     
-    if(empty($next_bid))
-         $next_bid = get_post_meta($_POST['auction_id'], 'wdm_opening_bid', true);
+   
+   if(empty($next_bid))
+      $next_bid = get_post_meta($_POST['auction_id'], 'wdm_opening_bid', true);
+      
+    $high_bid = $next_bid;   
          
     $next_bid = $next_bid + get_post_meta($_POST['auction_id'],'wdm_incremental_val',true);
     
     $terms = wp_get_post_terms($_POST['auction_id'], 'auction-status',array("fields" => "names"));
-    
-    if($_POST['ab_bid'] < $next_bid)
+   
+   $next_bid=round($next_bid,2);
+   
+    if($ab_bid < $next_bid)
     {
-       echo "inv_bid".$next_bid;
+       json_encode(array('stat' => 'inv_bid', 'bid' => $next_bid));
     }
     elseif(in_array('expired',$terms))
     {
-      echo "Expired"; 
+      echo json_encode(array("stat" => "Expired"));  
     }
     else
     {
+         $ab_name = $_POST['ab_name'];
+         $ab_email = $_POST['ab_email'];
+         
+         $ab_bid = apply_filters('wdm_ua_modified_bid_amt', $ab_bid, $high_bid, $_POST['auction_id']);
+         
+         $a_bid = array();
+         
+         if(is_array($ab_bid)){
+            $a_bid = $ab_bid;
+            if(!empty($a_bid['abid'])){
+               $ab_bid = $a_bid['abid'];
+            }
+            
+            if(!empty($a_bid['cbid'])){
+               $cu_bid = $a_bid['cbid'];
+            }
+            
+            if(!empty($a_bid['name'])){
+               $ab_name = $a_bid['name'];
+            }
+            
+            if(!empty($a_bid['email'])){
+               $ab_email = $a_bid['email'];
+            }
+         }
+         
          $buy_price = get_post_meta($_POST['auction_id'], 'wdm_buy_it_now', true);
          
-         if(!empty($buy_price) && $_POST['ab_bid'] >= $buy_price){
-            add_post_meta($_POST['auction_id'], 'wdm_this_auction_winner', $_POST['ab_email'], true);
+         if(!empty($buy_price) && $ab_bid >= $buy_price){
+            add_post_meta($_POST['auction_id'], 'wdm_this_auction_winner', $ab_email, true);
             
-            if(get_post_meta($_POST['auction_id'], 'wdm_this_auction_winner', true) === $_POST['ab_email']){
+            if(get_post_meta($_POST['auction_id'], 'wdm_this_auction_winner', true) === $ab_email){
+               if(!empty($a_bid)){
+            do_action('wdm_ua_modified_bid_place', array( 'email_type' => 'winner', 'mod_name' => $ab_name, 'mod_email' => $ab_email, 'mod_bid' => $ab_bid, 'orig_bid' => $cu_bid, 'orig_name' => $_POST['ab_name'], 'orig_email' => $_POST['ab_email'], 'auc_name' => $_POST['auc_name'], 'auc_desc' => $_POST['auc_desc'], 'auc_url' => $_POST['auc_url'], 'site_char' => $_POST['ab_char'], 'auc_id' => $_POST['auction_id']));
+            }
+            else{
                $place_bid = $wpdb->insert( 
 	$wpdb->prefix.'wdm_bidders', 
 	array( 
-		'name' => $_POST['ab_name'], 
-		'email' => $_POST['ab_email'],
+		'name' => $ab_name, 
+		'email' => $ab_email,
                 'auction_id' => $_POST['auction_id'],
-                'bid' => $_POST['ab_bid'],
+                'bid' => $ab_bid,
                 'date' => date("Y-m-d H:i:s", time())
 	), 
 	array( 
@@ -246,40 +282,51 @@ function place_bid_now_callback()
 		     wp_set_post_terms($_POST['auction_id'], $check_term["term_id"], 'auction-status');
                      update_post_meta($_POST['auction_id'], 'email_sent_imd', 'sent_imd');
                         
-                     echo "Won";
+                     echo json_encode(array('type' => 'simple', 'stat' => 'Won', 'bid' => $ab_bid));
                }
+            }   
             }
             else{
-                  echo "Sold";
+                  echo json_encode(array("stat" => "Sold"));
             }
          }
          else{
-            $place_bid = $wpdb->insert( 
-	$wpdb->prefix.'wdm_bidders', 
-	array( 
-		'name' => $_POST['ab_name'], 
-		'email' => $_POST['ab_email'],
+            
+            //$args = array();
+            if(!empty($a_bid)){
+            do_action('wdm_ua_modified_bid_place', array( 'mod_name' => $ab_name, 'mod_email' => $ab_email, 'mod_bid' => $ab_bid, 'orig_bid' => $cu_bid, 'orig_name' => $_POST['ab_name'], 'orig_email' => $_POST['ab_email'], 'auc_name' => $_POST['auc_name'], 'auc_desc' => $_POST['auc_desc'], 'auc_url' => $_POST['auc_url'], 'site_char' => $_POST['ab_char'], 'auc_id' => $_POST['auction_id']));
+            } 
+        else{
+         
+               do_action('wdm_extend_auction_time', $_POST['auction_id']);
+               
+               $place_bid = $wpdb->insert( 
+               $wpdb->prefix.'wdm_bidders', 
+               array( 
+		'name' => $ab_name, 
+		'email' => $ab_email,
                 'auction_id' => $_POST['auction_id'],
-                'bid' => $_POST['ab_bid'],
+                'bid' => $ab_bid,
                 'date' => date("Y-m-d H:i:s", time())
-	), 
-	array( 
+            ), 
+               array( 
 		'%s', 
 		'%s',
                 '%d',
                 '%f',
                 '%s'
-	) 
-        );
-               
+            ) 
+            );
+                     
             if($place_bid){
-               echo "Placed";
+               echo json_encode(array('type' => 'simple', 'stat' => 'Placed', 'bid' => $ab_bid));
             }
+        }
          }
     }
 }
 else{
-   echo "Please log in to place bid";
+   echo json_encode(array("stat" => "Please log in to place bid"));
 }
 	die();
 }
@@ -291,69 +338,42 @@ add_action('wp_ajax_nopriv_place_bid_now', 'place_bid_now_callback');
 function bid_notification_callback()
 {
     
-            $c_code = substr(get_option('wdm_currency'), -3);
-            
-            //$perma_type = get_option('permalink_structure');
-            //if(empty($perma_type))
-            //    $char = "&";
-            //else
-            //    $char = "?";
             $char = $_POST['ab_char'];
                 
             $ret_url = $_POST['auc_url'].$char."ult_auc_id=".$_POST['auction_id'];
             
             $adm_email = get_option("wdm_auction_email");
-            
-            $adm_sub = "[".get_bloginfo('name')."]  ".__("A bidder has placed a bid on the product", "wdm-ultimate-auction")." - ".$_POST['auc_name'];
-            $adm_msg = "";
-            $adm_msg  = "<strong> ".__('Bidder Details', 'wdm-ultimate-auction')." - </strong>";
-            $adm_msg .= "<br /><br /> ".__('Bidder Name', 'wdm-ultimate-auction').": ".$_POST['ab_name'];
-            $adm_msg .= "<br /><br /> ".__('Bidder Email', 'wdm-ultimate-auction').": ".$_POST['ab_email'];
-            $adm_msg .= "<br /><br /> ".__('Bid Value', 'wdm-ultimate-auction').": ".$c_code." ".round($_POST['ab_bid'], 2);
-            $adm_msg .= "<br /><br /><strong>".__('Product Details', 'wdm-ultimate-auction')." - </strong>";
-            $adm_msg .= "<br /><br /> ".__('Product URL', 'wdm-ultimate-auction').": <a href='".$ret_url."'>".$ret_url."</a>";
-            $adm_msg .= "<br /><br /> ".__('Product Name', 'wdm-ultimate-auction').": ".$_POST['auc_name'];
-            $adm_msg .= "<br /><br /> ".__('Description', 'wdm-ultimate-auction').": <br />".$_POST['auc_desc']."<br />";
-            
+  
             $hdr = "";
             //$hdr  = "From: ". get_bloginfo('name') ." <". $adm_email ."> \r\n";
             $hdr .= "MIME-Version: 1.0\r\n";
             $hdr .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+            wdm_ua_seller_notification_mail($adm_email, $_POST['md_bid'], $ret_url, $_POST['auc_name'], $_POST['auc_desc'], $_POST['ab_email'], $_POST['ab_name'], $hdr, '');
             
-	    wp_mail($adm_email, $adm_sub, $adm_msg, $hdr, '');
+            wdm_ua_bidder_notification_mail($_POST['ab_email'], $_POST['ab_bid'], $ret_url, $_POST['auc_name'], $_POST['auc_desc'], $hdr, '');
             
-            $bid_sub = "[".get_bloginfo('name')."] ".__('You recently placed a bid on the product', 'wdm-ultimate-auction')." - ".$_POST['auc_name'];
-            $bid_msg = "";
-            $bid_msg = __('Here are the details', 'wdm-ultimate-auction')." - ";
-            $bid_msg .= "<br /><br /> ".__('Product URL', 'wdm-ultimate-auction').": <a href='".$ret_url."'>". $ret_url."</a>";
-            $bid_msg .= "<br /><br /> ".__('Product Name', 'wdm-ultimate-auction').": ".$_POST['auc_name'];
-            $bid_msg .= "<br /><br /> ".__('Bid Value', 'wdm-ultimate-auction').": ".$c_code." ".round($_POST['ab_bid'], 2);
-            $bid_msg .= "<br /><br /> ".__('Description', 'wdm-ultimate-auction').": <br />".$_POST['auc_desc']."<br />";
-            
-            wp_mail($_POST['ab_email'], $bid_sub, $bid_msg, $hdr, '');
-	    
 	    //outbid email
 	    global $wpdb;
 	    $wpdb->hide_errors();
 	    
 	    $prev_bid = get_post_meta($_POST['auction_id'], 'wdm_previous_bid_value', true);
 	    
-	    if(!empty($prev_bid)){
+	    if(!empty($prev_bid) && ($_POST['ab_bid'] > $prev_bid)){
 	       $bidder_email  = "";
 	       $email_qry = "SELECT email FROM ".$wpdb->prefix."wdm_bidders WHERE bid =".$prev_bid." AND auction_id =".$_POST['auction_id'];
 	       $bidder_email = $wpdb->get_var($email_qry);
 	       
 	       if($bidder_email != $_POST['ab_email']){
-		  $outbid_sub = "[".get_bloginfo('name')."] ".__('You have been outbid on the product', 'wdm-ultimate-auction')." - ".$_POST['auc_name'];
-		  wp_mail($bidder_email, $outbid_sub, $bid_msg, $hdr, '');
+                  wdm_ua_outbid_notification_mail($bidder_email, $_POST['md_bid'], $ret_url, $_POST['auc_name'], $_POST['auc_desc'], $hdr, '');
 	       }
 	    }
             
 	    //auction won immediately
             if(isset($_POST['email_type']) && $_POST['email_type'] === 'winner_email')
             {
-                require_once('email-template.php');    
-                ultimate_auction_email_template($_POST['auc_name'], $_POST['auction_id'], $_POST['auc_desc'], round($_POST['ab_bid'], 2), $_POST['ab_email'], $ret_url);
+                //require_once('email-template.php');    
+                ultimate_auction_email_template($_POST['auc_name'], $_POST['auction_id'], $_POST['auc_desc'], round($_POST['md_bid'], 2), $_POST['ab_email'], $ret_url);
             }
                 
 	die();
@@ -467,7 +487,7 @@ function wdm_set_auction_timezone()
 					  $buy_now_price = get_post_meta($single_auction->ID, 'wdm_buy_it_now', true);
 					  
 					  $headers = "";
-					  $headers  = "From: ". $site_name ." <". $auction_email ."> \r\n";
+					  //$headers  = "From: ". $site_name ." <". $auction_email ."> \r\n";
 					  $headers .= "MIME-Version: 1.0\r\n";
 					  $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 					  
@@ -567,4 +587,6 @@ function prepare_single_auction_title($id, $title){
    
    return $title;
 }
+
+require_once('email-template.php'); 
 ?>

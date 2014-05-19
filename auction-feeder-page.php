@@ -89,7 +89,17 @@ $args = array(
 				<ul>
 			<li class="wdm-apn auc_single_list">
 				<div  class="wdm_single_auction_thumb">
-				<img src="<?php echo get_post_meta($wdm_single_auction->ID, 'wdm_auction_thumb', true); ?>" width="100" height="80" alt="<?php echo $wdm_single_auction->post_title; ?>" />
+				   <?php $vid_arr = array('mpg', 'mpeg', 'avi', 'mov', 'wmv', 'wma', 'mp4', '3gp', 'ogm', 'mkv', 'flv');
+					$auc_thumb = get_post_meta($wdm_single_auction->ID, 'wdm_auction_thumb', true);
+					$imgMime = wdm_get_mime_type($auc_thumb); 
+					$img_ext = end(explode(".",$auc_thumb));
+					
+					if(strstr($imgMime, "video/") || in_array($img_ext, $vid_arr) || strstr($auc_thumb, "youtube.com") || strstr($auc_thumb, "vimeo.com")){
+					$auc_thumb = plugins_url('img/film.png', __FILE__);	
+				}
+				if(empty($auc_thumb)){$auc_thumb = plugins_url('img/no-pic.jpg', __FILE__);}
+				?>
+				<img src="<?php echo $auc_thumb; ?>" width="100" height="80" alt="<?php echo $wdm_single_auction->post_title; ?>" />
 				</div>
 			</li>
 			

@@ -1,4 +1,5 @@
 <?php
+wp_enqueue_media();
 $post_id;
 if(!empty($_POST)){
     if(isset($_POST['ua_wdm_add_auc']) && wp_verify_nonce($_POST['ua_wdm_add_auc'],'ua_wp_n_f')){
@@ -99,6 +100,8 @@ if(!empty($_POST)){
             update_post_meta($post_id, 'wdm_buy_it_now', round($_POST["buy_it_now_price"], 2));
             update_post_meta($post_id, 'wdm_incremental_val', round($_POST["incremental_value"], 2));
             update_post_meta($post_id, 'wdm_payment_method', $_POST["payment_method"]);
+	    //if another bidding engine is active
+	    update_post_meta($post_id, 'wdm_bidding_engine', $_POST["bidding_engine"]);
 			for($im=1; $im<=4; $im++)
 			{
 				if(get_post_meta($post_id,'wdm-main-image',true) == 'main_image_'.$im)
@@ -144,6 +147,42 @@ $currency_code = substr(get_option('wdm_currency'), -3);
     echo "<h3>".__("Add New Auction", "wdm-ultimate-auction")."</h3>";
     ?>
     <table class="form-table">
+	
+    <?php
+	$after_thumb = "";
+	$bidding_engine = array();
+	
+	$bidding_engine = apply_filters('ua_add_bidding_engine', $bidding_engine);
+		
+	if(!empty($bidding_engine)){
+	$after_thumb = '<tr valign="top">
+        <th scope="row">
+            <label for="bidding_engine">'.__("Bidding Engine", "wdm-ultimate-auction").'</label>
+        </th>
+        <td>
+            <select id="bidding_engine" name="bidding_engine">
+            <option value="">'.__("Simple Bidding", "wdm-ultimate-auction").'</option>';
+            
+	    foreach($bidding_engine as $be){
+		
+		$opt = get_option("wdm_bidding_engines");
+		
+		$opt_new = $this->wdm_post_meta("wdm_bidding_engine");
+		
+		if((isset($_GET['edit_auction']) && !empty($_GET['edit_auction'])) || isset($post_id))
+		    $opt = $opt_new;
+	    
+		$select = $opt == $be["val"] ? "selected" : "";
+		$after_thumb .= '<option value="'.$be["val"].'" '.$select.'>'.$be["text"].'</option>';
+	    }
+                
+        $after_thumb .= '</select>
+        </td>
+    </tr>';
+    }
+	echo $after_thumb;
+    ?>
+	
     <tr valign="top">
         <th scope="row">
             <label for="auction_title"><?php _e("Product Title", "wdm-ultimate-auction");?></label>
@@ -177,9 +216,9 @@ $currency_code = substr(get_option('wdm_currency'), -3);
 	</td>
     </tr>
     <?php
-	    $after_thumb = '';
-	    $after_thumb = apply_filters('wdm_ua_after_product_desc', $after_thumb);
-	    echo $after_thumb;
+	    $after_desc = '';
+	    $after_desc = apply_filters('wdm_ua_after_product_desc', $after_desc);
+	    echo $after_desc;
 	    
 	for($p=1; $p<=4; $p++)
 	{
@@ -212,7 +251,8 @@ $currency_code = substr(get_option('wdm_currency'), -3);
 				?>
             </select>
         </td>
-    </tr>   
+    </tr>
+
     <tr valign="top">
         <th scope="row">
             <label for="opening_bid"><?php _e("Opening Price", "wdm-ultimate-auction");?></label>
@@ -360,19 +400,52 @@ $currency_code = substr(get_option('wdm_currency'), -3);
 <!--script to handle image upload and date picker functionality-->
 <script type="text/javascript">
     jQuery(document).ready(function($){
-        var x;
-        jQuery(".wdm_auction_image_upload").click(function(){
-            tb_show('', 'media-upload.php?type=image&TB_iframe=true');
-            x=jQuery(this).attr("id");
-            return false;
-            });
+        //var x;
+        //jQuery(".wdm_auction_image_upload").click(function(){
+        //    tb_show('', 'media-upload.php?type=image&TB_iframe=true');
+        //    x=jQuery(this).attr("id");
+        //    return false;
+        //    });
+        //
+        //window.send_to_editor = function(html) {
+        //    imgurl = jQuery('img',html).attr('src');
+        //    jQuery('.'+x).val(imgurl);
+        //    tb_remove();
+        //    }
         
-        window.send_to_editor = function(html) {
-            imgurl = jQuery('img',html).attr('src');
-            jQuery('.'+x).val(imgurl);
-            tb_remove();
-            }
-           
+	var custom_uploader;
+
+    jQuery('.wdm_auction_image_upload').click(function(e) {
+
+     var target_input = jQuery(this).attr('id');
+
+    e.preventDefault();
+
+        //If the uploader object has already been created, reopen the dialog
+        //if (custom_uploader) {
+        //    custom_uploader.open();
+        //    return;
+        //}
+
+        //Extend the wp.media object
+        custom_uploader = wp.media.frames.file_frame = wp.media({
+            title: 'Choose Image',
+            button: {
+                text: 'Choose Image'
+            },
+            multiple: false
+        });
+
+        //When a file is selected, grab the URL and set it as the text field's value
+    custom_uploader.on('select', function() {
+    attachment = custom_uploader.state().get('selection').first().toJSON();
+    jQuery('.' + target_input).val(attachment.url);
+});
+
+        //Open the uploader dialog
+        custom_uploader.open();
+    });
+   
         jQuery('#end_date').datetimepicker({
             timeFormat: "HH:mm:ss",
             dateFormat : 'yy-mm-dd',

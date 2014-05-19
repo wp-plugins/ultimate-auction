@@ -271,6 +271,23 @@ if(!class_exists('wdm_settings'))
 	    'setting_section_id' 			
 	);
 	
+	$bidding_engine = array();
+	
+	$bidding_engine = apply_filters('ua_add_bidding_engine_option', $bidding_engine);
+	
+	if(!empty($bidding_engine)){
+	    add_settings_field(
+	    'wdm_bidding_engines', 
+	    __('Default Bidding Engine', 'wdm-ultimate-auction'),
+	    array($this, 'wdm_bid_engine_field'), 
+	    'test-setting-admin', 
+	    'setting_section_id',
+	    $bidding_engine
+	    );
+	}
+	
+	do_action('wdm_auto_extend_auction_endtime', 'test-setting-admin', 'setting_section_id');
+	
 	add_settings_field(
 	    'wdm_auction_url_id', 
 	    __('Auction Page URL', 'wdm-ultimate-auction'), 
@@ -350,6 +367,8 @@ if(!class_exists('wdm_settings'))
 	update_option('wdm_auction_page_url',$mid['wdm_auction_page_url']);
 	update_option('wdm_login_page_url',$mid['wdm_login_page_url']);
 	update_option('wdm_register_page_url',$mid['wdm_register_page_url']);
+	update_option('wdm_bidding_engines',$mid['wdm_bidding_engines']);
+	
     }
     else{
 	die(__('Sorry, your nonce did not verify.', 'wdm-ultimate-auction'));
@@ -385,6 +404,24 @@ if(!class_exists('wdm_settings'))
 	}
 	echo "</select>";
 	echo '<div class="ult-auc-settings-tip">'.__("Please select your local Timezone.", "wdm-ultimate-auction").'</div>';
+    }
+    
+    //extra bidding engine field
+    public function wdm_bid_engine_field($bidding_engine)
+    {
+    
+	add_option('wdm_bidding_engines','Standard');
+	
+	echo '<select id="bidding_engines" name="wdm_auc_settings_data[wdm_bidding_engines]">
+	    <option value="">'.__("Simple Bidding", "wdm-ultimate-auction").'</option>';
+            
+	foreach($bidding_engine as $be){
+	    $select = get_option("wdm_bidding_engines") == $be["val"] ? "selected" : "";
+	    echo '<option value="'.$be["val"].'" '.$select.'>'.$be["text"].'</option>';
+	}
+                
+        echo '</select>';
+	echo '<div class="ult-auc-settings-tip">'.__("Please select a default bidding engine.", "wdm-ultimate-auction").'</div>';
     }
     
     //plugin credit link field - (shown in footer of the site)
