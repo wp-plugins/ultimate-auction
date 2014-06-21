@@ -1,12 +1,32 @@
 <div id="wdm-tab-anchor-id"></div>
 <div id="auction-desc-tabs">
   <ul id="auction-tab-titles">
+    <li id="wdm-desc-aucdesc-link"><?php _e('Description','wdm-ultimate-auction');?></li>
+    <?php do_action('wdm_ua_add_ship_tab', $wdm_auction->ID); ?>
     <li id="wdm-desc-cmt-link"><?php _e('Comments', 'wdm-ultimate-auction');?></li>
     <li id="wdm-desc-msg-link"><?php _e('Send Private Message', 'wdm-ultimate-auction');?></li>
     <li id="wdm-desc-bids-link"><?php _e('Total bids placed', 'wdm-ultimate-auction');?></li>
   </ul>
   
-  <div id="wdm-desc-cmt-tab" class="auction-tab-container">
+  <div id="wdm-desc-aucdesc-tab" class="auction-tab-container">
+    <div class="wdm-single-auction-description">
+      <?php
+	  $ext_desc = "";
+	  $ext_desc = apply_filters('wdm_single_auction_extra_desc', $ext_desc);
+	  echo $ext_desc;
+	  echo apply_filters('the_content', $wdm_auction->post_content);
+      ?>
+    </div>
+  </div>
+  <?php if(get_post_meta($wdm_auction->ID, 'wdm_enable_shipping', true) == "1"){ ?>
+  <div id="wdm-desc-ship-tab" class="auction-tab-container" style="display: none;">
+      <div class="wdm-ship-info clear">
+	<?php do_action('ua_add_shipping_cost_view_field', $wdm_auction->ID); //SHP-ADD hook to add new product data ?>
+      </div>  
+  </div>
+  <?php } ?>
+  
+  <div id="wdm-desc-cmt-tab" class="auction-tab-container" style="display: none;">
     <?php //comments_template();
     $comm_args = array(
     'post_id' => $wdm_auction->ID
@@ -205,57 +225,141 @@
 		<script type="text/javascript">
 		jQuery(document).ready(function(){
             
-			jQuery("#wdm-desc-cmt-link").css("border-bottom-color","#ffffff");
-			jQuery("#wdm-desc-cmt-link").css("background-color","#ffffff");
+			jQuery("#wdm-desc-aucdesc-link").css("background-color","#ffffff");
+			jQuery("#wdm-desc-aucdesc-link").css("border-bottom-color","#ffffff");
+			jQuery("#wdm-desc-cmt-link").css("background-color","#dddddd");
 			jQuery("#wdm-desc-msg-link").css("background-color","#dddddd");
 			jQuery("#wdm-desc-bids-link").css("background-color","#dddddd");
+			jQuery("#wdm-desc-ship-link").css("background-color","#dddddd");
 			
 			jQuery("#wdm-desc-cmt-link").click(function(){
 			jQuery("#wdm-desc-cmt-tab").css("display","block");
 			jQuery("#wdm-desc-msg-tab").css("display","none");
 			jQuery("#wdm-desc-bids-tab").css("display","none");
+			jQuery("#wdm-desc-aucdesc-tab").css("display","none");
+			jQuery("#wdm-desc-ship-tab").css("display","none");
 			jQuery(this).css("border-bottom-color","#ffffff");
 			jQuery("#wdm-desc-msg-link").css("border-bottom-color","#cccccc");
 			jQuery("#wdm-desc-bids-link").css("border-bottom-color","#cccccc");
+			jQuery("#wdm-desc-aucdesc-link").css("border-bottom-color","#cccccc");
+			jQuery("#wdm-desc-ship-link").css("border-bottom-color","#cccccc");
 			jQuery(this).css("background-color","#ffffff");
 			jQuery("#wdm-desc-msg-link").css("background-color","#dddddd");
+			jQuery("#wdm-desc-aucdesc-link").css("background-color","#dddddd");
+			jQuery("#wdm-desc-ship-link").css("background-color","#dddddd");
 			jQuery("#wdm-desc-bids-link").css("background-color","#dddddd");});
 			
 			jQuery("#wdm-desc-msg-link").click(function(){
 			jQuery("#wdm-desc-msg-tab").css("display","block");
 			jQuery("#wdm-desc-cmt-tab").css("display","none");
 			jQuery("#wdm-desc-bids-tab").css("display","none");
+			jQuery("#wdm-desc-ship-tab").css("display","none");
+			jQuery("#wdm-desc-aucdesc-tab").css("display","none");
 			jQuery(this).css("border-bottom-color","#ffffff");
 			jQuery("#wdm-desc-cmt-link").css("border-bottom-color","#cccccc");
 			jQuery("#wdm-desc-bids-link").css("border-bottom-color","#cccccc");
+			jQuery("#wdm-desc-aucdesc-link").css("border-bottom-color","#cccccc");
+			jQuery("#wdm-desc-ship-link").css("border-bottom-color","#cccccc");
 			jQuery(this).css("background-color","#ffffff");
 			jQuery("#wdm-desc-cmt-link").css("background-color","#dddddd");
+			jQuery("#wdm-desc-aucdesc-link").css("background-color","#dddddd");
+			jQuery("#wdm-desc-ship-link").css("background-color","#dddddd");
 			jQuery("#wdm-desc-bids-link").css("background-color","#dddddd");});
 			
 			jQuery("#wdm-desc-bids-link").click(function(){
 			jQuery("#wdm-desc-bids-tab").css("display","block");
 			jQuery("#wdm-desc-cmt-tab").css("display","none");
 			jQuery("#wdm-desc-msg-tab").css("display","none");
+			jQuery("#wdm-desc-aucdesc-tab").css("display","none");
+			jQuery("#wdm-desc-ship-tab").css("display","none");
 			jQuery(this).css("border-bottom-color","#ffffff");
 			jQuery("#wdm-desc-cmt-link").css("border-bottom-color","#cccccc");
 			jQuery("#wdm-desc-msg-link").css("border-bottom-color","#cccccc");
+			jQuery("#wdm-desc-aucdesc-link").css("border-bottom-color","#cccccc");
+			jQuery("#wdm-desc-ship-link").css("border-bottom-color","#cccccc");
 			jQuery(this).css("background-color","#ffffff");
 			jQuery("#wdm-desc-msg-link").css("background-color","#dddddd");
+			jQuery("#wdm-desc-aucdesc-link").css("background-color","#dddddd");
+			jQuery("#wdm-desc-ship-link").css("background-color","#dddddd");
 			jQuery("#wdm-desc-cmt-link").css("background-color","#dddddd");});
+			
+			jQuery("#wdm-desc-aucdesc-link").click(function(){
+			jQuery("#wdm-desc-aucdesc-tab").css("display","block");
+			jQuery("#wdm-desc-cmt-tab").css("display","none");
+			jQuery("#wdm-desc-msg-tab").css("display","none");
+			jQuery("#wdm-desc-bids-tab").css("display","none");
+			jQuery("#wdm-desc-ship-tab").css("display","none");
+			jQuery(this).css("border-bottom-color","#ffffff");
+			jQuery("#wdm-desc-cmt-link").css("border-bottom-color","#cccccc");
+			jQuery("#wdm-desc-msg-link").css("border-bottom-color","#cccccc");
+			jQuery("#wdm-desc-bids-link").css("border-bottom-color","#cccccc");
+			jQuery("#wdm-desc-ship-link").css("border-bottom-color","#cccccc");
+			jQuery(this).css("background-color","#ffffff");
+			jQuery("#wdm-desc-msg-link").css("background-color","#dddddd");
+			jQuery("#wdm-desc-cmt-link").css("background-color","#dddddd");
+			jQuery("#wdm-desc-bids-link").css("background-color","#dddddd");
+			jQuery("#wdm-desc-ship-link").css("background-color","#dddddd");
+			});
+			
+			jQuery("#wdm-desc-ship-link").click(function(){
+			jQuery("#wdm-desc-ship-tab").css("display","block");
+			jQuery("#wdm-desc-cmt-tab").css("display","none");
+			jQuery("#wdm-desc-msg-tab").css("display","none");
+			jQuery("#wdm-desc-bids-tab").css("display","none");
+			jQuery("#wdm-desc-aucdesc-tab").css("display","none");
+			jQuery(this).css("border-bottom-color","#ffffff");
+			jQuery("#wdm-desc-cmt-link").css("border-bottom-color","#cccccc");
+			jQuery("#wdm-desc-msg-link").css("border-bottom-color","#cccccc");
+			jQuery("#wdm-desc-bids-link").css("border-bottom-color","#cccccc");
+			jQuery("#wdm-desc-aucdesc-link").css("border-bottom-color","#cccccc");
+			jQuery(this).css("background-color","#ffffff");
+			jQuery("#wdm-desc-msg-link").css("background-color","#dddddd");
+			jQuery("#wdm-desc-cmt-link").css("background-color","#dddddd");
+			jQuery("#wdm-desc-bids-link").css("background-color","#dddddd");
+			jQuery("#wdm-desc-aucdesc-link").css("background-color","#dddddd");
+			});
 			
 			jQuery("#wdm-total-bids-link").click(
 			  function()
 			  {
 				jQuery("#wdm-desc-bids-tab").css("display","block");
+				jQuery("#wdm-desc-ship-tab").css("display","none");
+				jQuery("#wdm-desc-aucdesc-tab").css("display","none");
 				jQuery("#wdm-desc-cmt-tab").css("display","none");
 				jQuery("#wdm-desc-msg-tab").css("display","none");
 				jQuery("#wdm-desc-bids-link").css("border-bottom-color","#ffffff");
 				jQuery("#wdm-desc-cmt-link").css("border-bottom-color","#cccccc");
 				jQuery("#wdm-desc-msg-link").css("border-bottom-color","#cccccc");
+				jQuery("#wdm-desc-ship-link").css("border-bottom-color","#cccccc");
+				jQuery("#wdm-desc-aucdesc-link").css("border-bottom-color","#cccccc");
 				jQuery("#wdm-desc-bids-link").css("background-color","#ffffff");
 				jQuery("#wdm-desc-msg-link").css("background-color","#dddddd");
 				jQuery("#wdm-desc-cmt-link").css("background-color","#dddddd");
+				jQuery("#wdm-desc-ship-link").css("background-color","#dddddd");
+				jQuery("#wdm-desc-aucdesc-link").css("background-color","#dddddd");
 			  }
 			  );
+			
+			jQuery("#wdm-shipping-info-link").click(
+			  function()
+			  {
+				jQuery("#wdm-desc-ship-tab").css("display","block");
+				jQuery("#wdm-desc-bids-tab").css("display","none");
+				jQuery("#wdm-desc-cmt-tab").css("display","none");
+				jQuery("#wdm-desc-msg-tab").css("display","none");
+				jQuery("#wdm-desc-aucdesc-tab").css("display","none");
+				jQuery("#wdm-desc-ship-link").css("border-bottom-color","#ffffff");
+				jQuery("#wdm-desc-cmt-link").css("border-bottom-color","#cccccc");
+				jQuery("#wdm-desc-msg-link").css("border-bottom-color","#cccccc");
+				jQuery("#wdm-desc-bids-link").css("border-bottom-color","#cccccc");
+				jQuery("#wdm-desc-aucdesc-link").css("border-bottom-color","#cccccc");
+				jQuery("#wdm-desc-ship-link").css("background-color","#ffffff");
+				jQuery("#wdm-desc-msg-link").css("background-color","#dddddd");
+				jQuery("#wdm-desc-cmt-link").css("background-color","#dddddd");
+				jQuery("#wdm-desc-aucdesc-link").css("background-color","#dddddd");
+				jQuery("#wdm-desc-bids-link").css("background-color","#dddddd");
+			  }
+			  );
+			
 			});
 		</script>

@@ -219,22 +219,26 @@ $comm_query = apply_filters('wdm_ua_filtered_auctions', $comm_query);
 
 $live_posts = $wpdb->get_col($comm_query);
 
-$live_posts = implode("," , $live_posts);
+if(!empty($live_posts)){
+     $live_posts = implode("," , $live_posts);
 
-$count_query = "SELECT count(ID)
-FROM ".$wpdb->prefix."posts
-WHERE post_type = 'ultimate-auction'
-AND ID IN($live_posts)
-AND post_status = 'publish'";
+     $count_query = "SELECT count(ID)
+     FROM ".$wpdb->prefix."posts
+     WHERE post_type = 'ultimate-auction'
+     AND ID IN($live_posts)
+     AND post_status = 'publish'";
 
-$count_query = apply_filters('wdm_ua_filtered_counts', $count_query);
+     $count_query = apply_filters('wdm_ua_filtered_counts', $count_query);
 
-$count_pages = $wpdb->get_var($count_query);
+     $count_pages = $wpdb->get_var($count_query);
+     
+     if(!empty($count_pages)){
+	  echo '<input type="hidden" id="wdm_ua_auc_avail" value="'.$count_pages.'" />';
 
-echo '<input type="hidden" id="wdm_ua_auc_avail" value="'.$count_pages.'" />';
-
-$c=ceil($count_pages/$page_num);
-auction_pagination($c, 1, $paged);
+	  $c=ceil($count_pages/$page_num);
+	  auction_pagination($c, 1, $paged);
+     }
+}
 ?>
 </ul>
 </div>

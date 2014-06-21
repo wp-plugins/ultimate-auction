@@ -125,7 +125,7 @@ jQuery(document).ready(function($){
 		    
 		    if (response.type == 'simple') {
 		    
-		    if (Number($("#wdm-bidder-bidval").val()) >= Number('<?php echo $to_buy;?>')) {
+		    if (Number('<?php echo $to_buy;?>') > 0 && Number($("#wdm-bidder-bidval").val()) >= Number('<?php echo $to_buy;?>')) {
 			wdmmsg = "<?php _e("You can be winner if your bid reaches 'Buy it now' price by automatic bidding.", "wdm-ultimate-auction");?>";
 		    }
 		    

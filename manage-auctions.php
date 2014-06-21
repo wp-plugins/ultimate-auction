@@ -14,7 +14,10 @@ class Auctions_List_Table extends WP_List_Table {
             $args = array(
                 'posts_per_page'  => -1,
                 'post_type'       => 'ultimate-auction',
-                'auction-status'  => 'expired' 
+                'auction-status'  => 'expired',
+		'orderby' => 'meta_value',
+		'meta_key' => 'wdm_listing_ends',
+		'order' => 'DESC'
                 );
         }
         else
@@ -45,7 +48,12 @@ class Auctions_List_Table extends WP_List_Table {
             $row['title']=prepare_single_auction_title($single_auction->ID, $single_auction->post_title);
             $end_date = get_post_meta($single_auction->ID,'wdm_listing_ends', true);
             $row['date_created']= "<strong> ".__('Creation Date', 'wdm-ultimate-auction').":</strong> <br />".get_post_meta($single_auction->ID, 'wdm_creation_time', true)." <br /><br /> <strong>  ".__('Ending Date', 'wdm-ultimate-auction').":</strong> <br />".$end_date;
-            $row['image_1']="<input class='wdm_chk_auc_act' value=".$single_auction->ID." type='checkbox' style='margin: 0 5px 0 0;' />"."<img src='".get_post_meta($single_auction->ID,'wdm_auction_thumb', true)."' width='90'";
+	    $thumb_img = get_post_meta($single_auction->ID,'wdm_auction_thumb', true);
+	    if(empty($thumb_img) || $thumb_img == null)
+	    {
+		$thumb_img = plugins_url('img/no-pic.jpg', __FILE__);
+	    }
+            $row['image_1']="<input class='wdm_chk_auc_act' value=".$single_auction->ID." type='checkbox' style='margin: 0 5px 0 0;' />"."<img src='".$thumb_img."' width='90'";
             
             if($this->auction_type=="live")
             {
@@ -225,7 +233,10 @@ class Auctions_List_Table extends WP_List_Table {
 	    $order = 'desc';
 	
         foreach ($args as $array) {
+	    if($orderby === 'title')
+	    {
             $sort_key[] = $array[$orderby];
+	    }
         }
         if($order=='asc')
             array_multisort($sort_key,SORT_ASC,$args);

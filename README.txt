@@ -40,6 +40,7 @@ Lots of features, very configurable.  Easy to setup.  Great support.
 	10. PAYPAL invoicing for handling payment.
 	11. Schedule auction Feature - Make it live for later date
 	12. Add more than 4 IMAGES to auction
+	13. Add To Watch list feature
 
  = Free VERSION (Core) Features =
     1. Registered User can place bids 
@@ -101,6 +102,13 @@ This page is responsible for displaying all live auctions. If you click a specif
 == Frequently Asked Questions ==
 
 == Changelog ==
+= 3.1.0 =
+* Fix - Auction owner cannot place bid on his own auction
+* Fix - Feed page overlap issue for few WP themes.
+* Fix - Timer is now localized to be converted to local language.
+* Fix - Popup message saying "ʺyou can be winner if you amount is close to buy nowʺ is now rectified to show at correct time.
+
+ 
 = 3.0.0 = 
 
 * Code Update to support Proxy Bidding Addon. One needs to buy Proxy Bidding Addon for free plugin or PRO version for it.

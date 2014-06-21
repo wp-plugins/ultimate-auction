@@ -251,6 +251,8 @@ function wdm_auction_listing(){
 				
 				$auc_time = "live";
 				
+				if(is_user_logged_in())
+				   $curr_user = wp_get_current_user();
 				
 			?>
 			<!--form to place bids-->
@@ -282,9 +284,11 @@ function wdm_auction_listing(){
 				}
 				
 				if(is_user_logged_in()) {
-				   $curr_user = wp_get_current_user();
+				   //$curr_user = wp_get_current_user();
 				   $auction_bidder_name = $curr_user->user_login;
 				   $auction_bidder_email = $curr_user->user_email;
+				   
+				   if($curr_user->ID != $wdm_auction->post_author){
 				   
 				?>
 				<br />
@@ -310,6 +314,7 @@ function wdm_auction_listing(){
 				</form>
 				<?php
 				   require_once('ajax-actions/place-bid.php'); //file to handle ajax requests related to bid placing form
+				   }
 				}
 				else{
 				  ?>
@@ -339,9 +344,12 @@ function wdm_auction_listing(){
 					  $pp_link  = "https://sandbox.paypal.com/cgi-bin/webscr";
 				   else
 					  $pp_link  = "https://www.paypal.com/cgi-bin/webscr";
-				   if(is_user_logged_in()){ ?>
+				   if(is_user_logged_in()){
+					
+				   ?>
 				<!--buy now button-->
 				<div id="wdm_buy_now_section">
+					<?php if($curr_user->ID != $wdm_auction->post_author){ ?>
 					<div id="wdm-buy-line-above" >
 				<form action="<?php echo $pp_link; ?>" method="post" target="_top">
 				<input type="hidden" name="cmd" value="_xclick">
@@ -361,6 +369,8 @@ function wdm_auction_listing(){
 				<input type="submit" value="<?php printf(__('Buy it now for %s %.2f', 'wdm-ultimate-auction'), $currency_code, $buy_now_price);?>" id="wdm-buy-now-button">
 				</form>
 					</div>
+					<?php }
+					do_action('wdm_ua_ship_short_link', $wdm_auction->ID); ?>
 			        </div> <!--wdm_buy_now_section ends here-->
 				
 				<script type="text/javascript">
@@ -372,7 +382,8 @@ function wdm_auction_listing(){
 		
 			    });
 			       </script>
-				<?php }
+				<?php 
+				}
 				else{?>
 				   <div id="wdm_buy_now_section">
 					  <div id="wdm-buy-line-above" >
@@ -380,25 +391,31 @@ function wdm_auction_listing(){
 						 <?php printf(__('Buy it now for %s %.2f', 'wdm-ultimate-auction'), $currency_code, $buy_now_price);?>
 					  </a>
 					  </div>
+					  <?php do_action('wdm_ua_ship_short_link', $wdm_auction->ID); ?>
 				   </div>
 				   <?php
 				   }
 				}
-				   do_action('ua_add_shipping_cost_view_field', $wdm_auction->ID); //SHP-ADD hook to add new product data
+				
+				if(is_user_logged_in() && $curr_user->ID == $wdm_auction->post_author){
+					echo "<span style='float: left;'>".__('Sorry, you can not bid on your own item.', 'wdm-ultimate-auction')."</span>";
+				}
+				   
+				   //do_action('ua_add_shipping_cost_view_field', $wdm_auction->ID); //SHP-ADD hook to add new product data
 				}
 				?>
 			    </div> <!--wdm_single_prod_desc ends here-->
 			
 		</div> <!--wdm-ultimate-auction-container ends here-->
 		
-		<div id="wdm_auction_desc_section">
+		<!--<div id="wdm_auction_desc_section">
 			<div class="wdm-single-auction-description">
-				<strong><?php _e('Description', 'wdm-ultimate-auction');?></strong>
+				<strong><?php //_e('Description', 'wdm-ultimate-auction');?></strong>
 				<br />
-				<?php echo apply_filters('the_content', $wdm_auction->post_content); ?>
+				<?php //echo apply_filters('the_content', $wdm_auction->post_content); ?>
 			</div>
 			
-		</div> <!--wdm_auction_desc_section ends here-->
+		</div>--> <!--wdm_auction_desc_section ends here-->
 			
 		<?php 	
 			require_once('auction-description-tabs.php'); //file to display current auction description tabs section
@@ -490,11 +507,11 @@ function wdm_auction_listing(){
 	}
 	else if(vDays == 1 || vDays == -1){
 		eDays.show();
-		jQuery('#wdm_days_text').html(' day ');
+		jQuery('#wdm_days_text').html(' <?php _e("day", "wdm-ultimate-auction");?> ');
 	}
 	else{
 		eDays.show();
-		jQuery('#wdm_days_text').html(' days ');
+		jQuery('#wdm_days_text').html(' <?php _e("days", "wdm-ultimate-auction");?> ');
 	}
 	    
 	if(vHours == 0){
@@ -503,11 +520,11 @@ function wdm_auction_listing(){
 	}
 	else if(vHours == 1 || vHours == -1){
 		eHours.show();
-		jQuery('#wdm_hrs_text').html(' hour ');
+		jQuery('#wdm_hrs_text').html(' <?php _e("hour", "wdm-ultimate-auction");?> ');
 	}
 	else{
 		eHours.show();
-		jQuery('#wdm_hrs_text').html(' hours ');
+		jQuery('#wdm_hrs_text').html(' <?php _e("hours", "wdm-ultimate-auction");?> ');
 	}
 	       
 	if(vMinutes == 0){
@@ -516,11 +533,11 @@ function wdm_auction_listing(){
 	}
 	else if(vMinutes == 1 || vMinutes == -1){
 		eMinutes.show();
-		jQuery('#wdm_mins_text').html(' minute ');
+		jQuery('#wdm_mins_text').html(' <?php _e("minute", "wdm-ultimate-auction");?> ');
 	}
 	else{
 		eMinutes.show();
-		jQuery('#wdm_mins_text').html(' minutes ');
+		jQuery('#wdm_mins_text').html(' <?php _e("minutes", "wdm-ultimate-auction");?> ');
 	}
 	       
 	if(vSeconds == 0){
@@ -529,11 +546,11 @@ function wdm_auction_listing(){
 	}
 	else if(vSeconds == 1 || vSeconds == -1){
 		eSeconds.show();
-		jQuery('#wdm_secs_text').html(' second');
+		jQuery('#wdm_secs_text').html(' <?php _e("second", "wdm-ultimate-auction");?>');
 	}
 	else{
 		eSeconds.show();
-		jQuery('#wdm_secs_text').html(' seconds');
+		jQuery('#wdm_secs_text').html(' <?php _e("seconds", "wdm-ultimate-auction");?>');
 	}
 	
         }, 1000);
