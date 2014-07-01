@@ -19,7 +19,7 @@
     </div>
   </div>
   <?php if(get_post_meta($wdm_auction->ID, 'wdm_enable_shipping', true) == "1"){ ?>
-  <div id="wdm-desc-ship-tab" class="auction-tab-container" style="display: none;">
+  <div id="wdm-desc-ship-tab" class="auction-tab-container" style="display: none;overflow: hidden;">
       <div class="wdm-ship-info clear">
 	<?php do_action('ua_add_shipping_cost_view_field', $wdm_auction->ID); //SHP-ADD hook to add new product data ?>
       </div>  

@@ -5,7 +5,7 @@
   Description: Awesome plugin to host auctions on your wordpress site and sell anything you want.
   Author: Nitesh Singh
   Author URI: http://auctionplugin.net
-  Version: 3.1.0
+  Version: 3.2.0
   License: GPLv2
   Copyright 2014 Nitesh Singh
 */

@@ -556,3 +556,4 @@ color:#fff;
 .wdm-image-container .auction-main-img{max-height: 280px; max-width: 285px;margin: 0 auto !important; margin: 0 auto !important;}
 .ua_thin_textarea_field{width: 70%}
 /*.entry-content, .entry-header{max-width: none !important; padding: 0 10px !important;}*/
+.wdm-clear{clear: both !important; display: table; content: "";}

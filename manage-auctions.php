@@ -215,9 +215,16 @@ class Auctions_List_Table extends WP_List_Table {
     $hidden = array();
     $sortable = $this->get_sortable_columns();
     $this->_column_headers = array($columns, $hidden, $sortable);
-    $this->items = $this->wdm_sort_array($this->wdm_get_data());
+    $orderby = ( ! empty( $_GET['orderby'] ) ) ? $_GET['orderby'] : 'ID';
+    if($orderby === 'title')
+    {
+	$this->items = $this->wdm_sort_array($this->wdm_get_data());
     }
-    
+    else
+    {
+	$this->items = $this->wdm_get_data();
+    }
+    }
     function get_result_e(){
         return $this->allData;    
     }
@@ -233,10 +240,7 @@ class Auctions_List_Table extends WP_List_Table {
 	    $order = 'desc';
 	
         foreach ($args as $array) {
-	    if($orderby === 'title')
-	    {
             $sort_key[] = $array[$orderby];
-	    }
         }
         if($order=='asc')
             array_multisort($sort_key,SORT_ASC,$args);

@@ -3,7 +3,7 @@ Contributors: nitesh_singh,WisdmLabs
 Donate link: http://auctionplugin.net/
 Tags: auctions,auction,auction plugin,wp auction,wordpress auction,wp auctions,auction script,ebay,ebay auction,bidding
 Requires at least: 3.4
-Tested up to: 3.8.1
+Tested up to: 3.9.1
 License: GPLv2 or later
 Stable tag: trunk
 
@@ -40,7 +40,8 @@ Lots of features, very configurable.  Easy to setup.  Great support.
 	10. PAYPAL invoicing for handling payment.
 	11. Schedule auction Feature - Make it live for later date
 	12. Add more than 4 IMAGES to auction
-	13. Add To Watch list feature
+	13. Add To Watchlist feature
+	
 
  = Free VERSION (Core) Features =
     1. Registered User can place bids 
@@ -57,9 +58,10 @@ Lots of features, very configurable.  Easy to setup.  Great support.
 	12. Email notifications to bidders for placing bids
     13. Email notification to Admin for all activity
     14. Email Sent for Payment Alerts
-	15. Outbid Email sent to all bidders who has been outbidded.
+	15. Outbid Email sent to all bidders who has been outbid.
 	16. Count Down Timer for auctions.
 	17. Lightbox feature to display auction images
+	18. Ability to Cancel last bid 
     and Much more...
 	
  = Display Features =
@@ -102,6 +104,10 @@ This page is responsible for displaying all live auctions. If you click a specif
 == Frequently Asked Questions ==
 
 == Changelog ==
+= 3.2.0 =
+* Fix - Warning message appearing under manage auction.
+
+
 = 3.1.0 =
 * Fix - Auction owner cannot place bid on his own auction
 * Fix - Feed page overlap issue for few WP themes.

@@ -370,7 +370,7 @@ function wdm_auction_listing(){
 				</form>
 					</div>
 					<?php }
-					do_action('wdm_ua_ship_short_link', $wdm_auction->ID); ?>
+					?>
 			        </div> <!--wdm_buy_now_section ends here-->
 				
 				<script type="text/javascript">
@@ -391,7 +391,7 @@ function wdm_auction_listing(){
 						 <?php printf(__('Buy it now for %s %.2f', 'wdm-ultimate-auction'), $currency_code, $buy_now_price);?>
 					  </a>
 					  </div>
-					  <?php do_action('wdm_ua_ship_short_link', $wdm_auction->ID); ?>
+					  
 				   </div>
 				   <?php
 				   }
@@ -400,8 +400,10 @@ function wdm_auction_listing(){
 				if(is_user_logged_in() && $curr_user->ID == $wdm_auction->post_author){
 					echo "<span style='float: left;'>".__('Sorry, you can not bid on your own item.', 'wdm-ultimate-auction')."</span>";
 				}
-				   
-				   //do_action('ua_add_shipping_cost_view_field', $wdm_auction->ID); //SHP-ADD hook to add new product data
+				
+				do_action('wdm_ua_ship_short_link', $wdm_auction->ID);
+				
+				//do_action('ua_add_shipping_cost_view_field', $wdm_auction->ID); //SHP-ADD hook to add new product data
 				}
 				?>
 			    </div> <!--wdm_single_prod_desc ends here-->
