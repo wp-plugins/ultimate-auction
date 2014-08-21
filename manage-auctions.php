@@ -178,7 +178,7 @@ class Auctions_List_Table extends WP_List_Table {
     function get_columns(){
     if($this->auction_type=="live")
     $columns =   array(
-    //'ID'        => 'Auction ID',
+    'ID'        => __('ID', 'wdm-ultimate-auction'),
     'image_1'   => '<input class="wdm_select_all_chk" type="checkbox" style="margin: 0 5px 0 0;" />'.__('Image', 'wdm-ultimate-auction'),
     'title' => __('Title', 'wdm-ultimate-auction'),
     'date_created' => __('Creation / Ending Date', 'wdm-ultimate-auction'),
@@ -188,7 +188,7 @@ class Auctions_List_Table extends WP_List_Table {
     );
     else
     $columns =   array(
-    //'ID'        => 'Auction ID',
+    'ID'        => __('ID', 'wdm-ultimate-auction'),
     'image_1'   => '<input class="wdm_select_all_chk" type="checkbox" style="margin: 0 5px 0 0;" />'.__('Image', 'wdm-ultimate-auction'),
     'title' => __('Title', 'wdm-ultimate-auction'),
     'date_created' => __('Creation / Ending Date', 'wdm-ultimate-auction'),

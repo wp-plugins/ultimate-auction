@@ -2,7 +2,7 @@
 Contributors: nitesh_singh,WisdmLabs
 Donate link: http://auctionplugin.net/
 Tags: auctions,auction,auction plugin,wp auction,wordpress auction,wp auctions,auction script,ebay,ebay auction,bidding
-Requires at least: 3.4
+Requires at least: 3.5
 Tested up to: 3.9.1
 License: GPLv2 or later
 Stable tag: trunk
@@ -93,7 +93,7 @@ Manual Installation
 
 6. Enter this text "[wdm_auction_listing]" as a shortcode inside this new page and publish it. 
 
-7. If you have a Default Wordpress theme installed then the page you published (on step 6) will be accessible through top menu bar. NOTE: For Cusotm themes you would be required to add the page on top menu bar.
+7. If you have a Default Wordpress theme installed then the page you published (on step 6) will be accessible through top menu bar. NOTE: For Custom themes you would be required to add the page on top menu bar.
 
 This page is responsible for displaying all live auctions. If you click a specific auction on this page, it'll open specific auction page where your visitors can place bids and perform all actions related to tht auction.
 
@@ -104,6 +104,12 @@ This page is responsible for displaying all live auctions. If you click a specif
 == Frequently Asked Questions ==
 
 == Changelog ==
+= 3.3.0 =
+* Fix - Plugin comments conflicts with theme/site comments.
+* Fix - Javascript code has been moved out in separate directory as it was previously posing problem with few wordpress themes.
+
+
+
 = 3.2.0 =
 * Fix - Warning message appearing under manage auction.
 

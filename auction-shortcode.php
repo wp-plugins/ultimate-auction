@@ -1,15 +1,17 @@
 <?php
-wp_enqueue_style('wdm_auction_front_end_styling',plugins_url('css/ua-front-end.css', __FILE__));
-
-function wdm_auction_listing(){
-	ob_start();
-	//enqueue css file for front end style
-
-	wp_enqueue_script('wdm-custom-js', plugins_url('js/wdm-custom-js.js', __FILE__), array('jquery'));
+if(isset($_GET["ult_auc_id"]) && $_GET["ult_auc_id"]){
 	wp_enqueue_style('wdm_lightbox_css',plugins_url('lightbox/jquery.fs.boxer.css', __FILE__));
 	wp_enqueue_script('wdm-lightbox-js', plugins_url('lightbox/jquery.fs.boxer.js', __FILE__), array('jquery'));
 	wp_enqueue_script('wdm-block-ui-js', plugins_url('js/wdm-jquery.blockUI.js', __FILE__), array('jquery'));
+	wp_enqueue_script('wdm-custom-js', plugins_url('js/wdm-custom-js.js', __FILE__), array('jquery'));
+}
+
+function wdm_auction_listing(){
 	
+	//enqueue css file for front end style
+	wp_enqueue_style('wdm_auction_front_end_styling',plugins_url('css/ua-front-end.css', __FILE__));
+
+	ob_start();
 	//check the permalink from database and append variable to the auction single pages accordingly
 	$perma_type = get_option('permalink_structure');
 	

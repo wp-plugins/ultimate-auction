@@ -160,3 +160,6 @@ outline: none !important;
 #auction_description_tbl td{padding-top: 4px !important;}
 
 #wdm_auction_setID table th{padding: 10px !important;}
+
+
+td.ID.column-ID,th.manage-column.column-ID {width:50px;}
