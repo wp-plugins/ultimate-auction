@@ -124,10 +124,14 @@ class Auctions_List_Table extends WP_List_Table {
             if($this->auction_type === "expired")
             {
                 $row['email_payment'] = "";
+		$payment_qry = get_post_meta($single_auction->ID,'wdm_payment_method',true);
+		$payment_method = str_replace("method_"," ",$payment_qry);
+		$payment_method = str_replace("_"," ",$payment_method);
+		$row['email_payment'] = "<span>".sprintf(__('Method : %s', 'wdm-ultimate-auction'), $payment_method)."</span><br /><br />";
                 
                 if(get_post_meta($single_auction->ID,'auction_bought_status',true) === 'bought')
                 {
-                    $row['email_payment'] = "<span class='wdm-auction-bought'>".__('Auction has been bought by paying Buy Now price', 'wdm-ultimate-auction')." <br/> [".$currency_code." ".$buy_it_now_price."] </span>";
+                    $row['email_payment'] .= "<span class='wdm-auction-bought'>".__('Auction has been bought by paying Buy Now price', 'wdm-ultimate-auction')." <br/> [".$currency_code." ".$buy_it_now_price."] </span>";
                 }
                 
                 else
@@ -146,7 +150,7 @@ class Auctions_List_Table extends WP_List_Table {
 			    
 			    $email_sent = get_post_meta($single_auction->ID,'auction_email_sent',true);
 			    
-			    $row['email_payment']  = "<strong>Status: </strong>";
+			    $row['email_payment']  .= "<strong>Status: </strong>";
 			    if($email_sent === 'sent')
 				$row['email_payment'] .= "<span style='color:green'>".__('Yes', 'wdm-ultimate-auction')."</span>";
 			    else
@@ -158,7 +162,7 @@ class Auctions_List_Table extends WP_List_Table {
 			}
 			else
 			{
-			    $row['email_payment'] = "<span style='color:#D64B00'>".__('Auction has expired without reaching its reserve price', 'wdm-ultimate-auction')."</span>";
+			    $row['email_payment'] .= "<span style='color:#D64B00'>".__('Auction has expired without reaching its reserve price', 'wdm-ultimate-auction')."</span>";
 			}
                     }
                 }

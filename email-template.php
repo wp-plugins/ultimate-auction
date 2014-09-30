@@ -157,7 +157,7 @@ function wdm_ua_seller_notification_mail($email, $bid, $ret_url, $auc_name, $auc
             $adm_msg .= "<br /><br /><strong>".__('Product Details', 'wdm-ultimate-auction')." - </strong>";
             $adm_msg .= "<br /><br /> ".__('Product URL', 'wdm-ultimate-auction').": <a href='".$ret_url."'>".$ret_url."</a>";
             $adm_msg .= "<br /><br /> ".__('Product Name', 'wdm-ultimate-auction').": ".$auc_name;
-            $adm_msg .= "<br /><br /> ".__('Description', 'wdm-ultimate-auction').": <br />".$auc_desc."<br />";
+            $adm_msg .= "<br /><br /> ".__('Description', 'wdm-ultimate-auction').": <br />".html_entity_decode(strip_tags($auc_desc))."<br />";
             
 	    wp_mail($email, $adm_sub, $adm_msg, $hdr, $atch);
 }
@@ -172,7 +172,7 @@ function wdm_ua_bidder_notification_mail($email, $bid, $ret_url, $auc_name, $auc
             $bid_msg .= "<br /><br /> ".__('Product URL', 'wdm-ultimate-auction').": <a href='".$ret_url."'>". $ret_url."</a>";
             $bid_msg .= "<br /><br /> ".__('Product Name', 'wdm-ultimate-auction').": ".$auc_name;
             $bid_msg .= "<br /><br /> ".__('Bid Value', 'wdm-ultimate-auction').": ".$c_code." ".sprintf("%.2f", $bid);
-            $bid_msg .= "<br /><br /> ".__('Description', 'wdm-ultimate-auction').": <br />".$auc_desc."<br />";
+            $bid_msg .= "<br /><br /> ".__('Description', 'wdm-ultimate-auction').": <br />".html_entity_decode(strip_tags($auc_desc))."<br />";
             
             wp_mail($email, $bid_sub, $bid_msg, $hdr, $atch);
 }
@@ -189,7 +189,7 @@ function wdm_ua_outbid_notification_mail($email, $bid, $ret_url, $auc_name, $auc
             $bid_msg .= "<br /><br /> ".__('Product URL', 'wdm-ultimate-auction').": <a href='".$ret_url."'>". $ret_url."</a>";
             $bid_msg .= "<br /><br /> ".__('Product Name', 'wdm-ultimate-auction').": ".$auc_name;
             $bid_msg .= "<br /><br /> ".__('Bid Value', 'wdm-ultimate-auction').": ".$c_code." ".sprintf("%.2f", $bid);
-            $bid_msg .= "<br /><br /> ".__('Description', 'wdm-ultimate-auction').": <br />".$auc_desc."<br />";
+            $bid_msg .= "<br /><br /> ".__('Description', 'wdm-ultimate-auction').": <br />".html_entity_decode(strip_tags($auc_desc))."<br />";
             
 	    wp_mail($email, $outbid_sub, $bid_msg, $hdr, '');
 }

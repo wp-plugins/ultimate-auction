@@ -54,9 +54,21 @@ $args = array(
 		'suppress_filters' => false
 		);
 
+		
+		$arg_data_c = array(
+		'posts_per_page'=> -1,
+		'post_type'	=> 'ultimate-auction',
+		'auction-status'  => 'live',
+		'post_status' => 'publish',
+		'paged' => $paged,
+		'suppress_filters' => false
+		);
+		
 	do_action('wdm_ua_before_get_auctions');
 
 	$wdm_auction_array = get_posts($args);
+	
+	$count_pages = count(get_posts($arg_data_c));
 	
 	do_action('wdm_ua_after_get_auctions');
         
@@ -205,32 +217,32 @@ $args = array(
 			<?php
 		}
         
-global $wpdb;
-
-$live_posts = array();
-
-$comm_query = "SELECT object_id
-FROM ".$wpdb->prefix."term_relationships
-WHERE term_taxonomy_id = (SELECT term_id
-FROM ".$wpdb->prefix."terms
-WHERE slug = 'live')";
-
-$comm_query = apply_filters('wdm_ua_filtered_auctions', $comm_query);
-
-$live_posts = $wpdb->get_col($comm_query);
-
-if(!empty($live_posts)){
-     $live_posts = implode("," , $live_posts);
-
-     $count_query = "SELECT count(ID)
-     FROM ".$wpdb->prefix."posts
-     WHERE post_type = 'ultimate-auction'
-     AND ID IN($live_posts)
-     AND post_status = 'publish'";
-
-     $count_query = apply_filters('wdm_ua_filtered_counts', $count_query);
-
-     $count_pages = $wpdb->get_var($count_query);
+//global $wpdb;
+//
+//$live_posts = array();
+//
+//$comm_query = "SELECT object_id
+//FROM ".$wpdb->prefix."term_relationships
+//WHERE term_taxonomy_id = (SELECT term_id
+//FROM ".$wpdb->prefix."terms
+//WHERE slug = 'live')";
+//
+//$comm_query = apply_filters('wdm_ua_filtered_auctions', $comm_query);
+//
+//$live_posts = $wpdb->get_col($comm_query);
+//
+//if(!empty($live_posts)){
+//     $live_posts = implode("," , $live_posts);
+//
+//     $count_query = "SELECT count(ID)
+//     FROM ".$wpdb->prefix."posts
+//     WHERE post_type = 'ultimate-auction'
+//     AND ID IN($live_posts)
+//     AND post_status = 'publish'";
+//
+//     $count_query = apply_filters('wdm_ua_filtered_counts', $count_query);
+//
+//     $count_pages = $wpdb->get_var($count_query);
      
      if(!empty($count_pages)){
 	  echo '<input type="hidden" id="wdm_ua_auc_avail" value="'.$count_pages.'" />';
@@ -238,7 +250,7 @@ if(!empty($live_posts)){
 	  $c=ceil($count_pages/$page_num);
 	  auction_pagination($c, 1, $paged);
      }
-}
+//}
 ?>
 </ul>
 </div>

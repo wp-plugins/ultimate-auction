@@ -35,7 +35,7 @@ jQuery(document).ready(function($){
             return false;
         }
         else
-            var cnf = confirm('<?php _e("Are you sure to delete selected auctions? All data related to the auctions (including bids) will be deleted.", "wdm-ultimate-auction");?>');
+            var cnf = confirm('<?php _e("Are you sure to delete selected auctions? All data related to the auctions (including bids and attachments) will be deleted.", "wdm-ultimate-auction");?>');
         
         if(cnf == true){
         $('.wdmua_del_stats').html("<?php _e('Deleting', 'wdm-ultimate-auction'); echo ' ';?> <img src='<?php echo plugins_url('/img/ajax-loader.gif', dirname(__FILE__) );?>' />");       

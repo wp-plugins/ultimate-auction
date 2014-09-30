@@ -371,14 +371,16 @@ $currency_code = substr(get_option('wdm_currency'), -3);
             <label for="payment_method"><?php _e("Payment Method", "wdm-ultimate-auction");?></label>
         </th>
         <td>
-            <?php   $paypal_enabled = get_option('wdm_paypal_address');
+            <?php   /*$paypal_enabled = get_option('wdm_paypal_address');
                     $wire_enabled = get_option('wdm_wire_transfer');
-                    $mailing_enabled = get_option('wdm_mailing_address');
+                    $mailing_enabled = get_option('wdm_mailing_address');*/
+	    
+		    $pay_methods = get_option('payment_options_enabled');
             ?>
             <select id="payment_method" name="payment_method">
-                <option id="wdm_method_paypal" value="method_paypal" <?php if($this->wdm_post_meta('wdm_payment_method') == "method_paypal") echo "selected"; if(empty($paypal_enabled)) echo "disabled='disabled'";?>>PayPal</option>
-                <option id="wdm_method_wire_transfer" value="method_wire_transfer" <?php if($this->wdm_post_meta('wdm_payment_method') == "method_wire_transfer") echo "selected"; if(empty($wire_enabled)) echo "disabled='disabled'";?>>Wire Transfer</option>
-                <option id="wdm_method_mailing" value="method_mailing" <?php if($this->wdm_post_meta('wdm_payment_method') == "method_mailing") echo "selected"; if(empty($mailing_enabled)) echo "disabled='disabled'";?>>By Cheque</option>
+                <option id="wdm_method_paypal" value="method_paypal" <?php if($this->wdm_post_meta('wdm_payment_method') == "method_paypal") echo "selected"; if(!array_key_exists("method_paypal", $pay_methods)) echo "disabled='disabled'";?>>PayPal</option>
+                <option id="wdm_method_wire_transfer" value="method_wire_transfer" <?php if($this->wdm_post_meta('wdm_payment_method') == "method_wire_transfer") echo "selected"; if(!array_key_exists("method_wire_transfer", $pay_methods)) echo "disabled='disabled'";?>>Wire Transfer</option>
+                <option id="wdm_method_mailing" value="method_mailing" <?php if($this->wdm_post_meta('wdm_payment_method') == "method_mailing") echo "selected"; if(!array_key_exists("method_mailing", $pay_methods)) echo "disabled='disabled'";?>>By Cheque</option>
             </select>
 	    <div class="ult-auc-settings-tip"><?php _e("Only those methods will be active for which you've entered details inside plugin's settings page.", "wdm-ultimate-auction");?></div>
         </td>

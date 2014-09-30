@@ -3,7 +3,7 @@ Contributors: nitesh_singh,WisdmLabs
 Donate link: http://auctionplugin.net/
 Tags: auctions,auction,auction plugin,wp auction,wordpress auction,wp auctions,auction script,ebay,ebay auction,bidding
 Requires at least: 3.5
-Tested up to: 3.9.1
+Tested up to: 4.0
 License: GPLv2 or later
 Stable tag: trunk
 
@@ -25,6 +25,7 @@ Lots of features, very configurable.  Easy to setup.  Great support.
 *   [Paypal Invoice - Addon for Free Plugin &raquo;](http://auctionplugin.net/addon)
 *   [Shipping Cost/Postage - Addon for Free Plugin &raquo;](http://auctionplugin.net/addon)
 *   [Categories - Addon for Free Plugin &raquo;](http://auctionplugin.net/addon/#tour_page_3)
+*	[Proxy Bidding - Addon for Free Plugin &raquo;](http://auctionplugin.net/addon/#tour_page_4)
 
  = PRO VERSION Features =
 
@@ -38,9 +39,12 @@ Lots of features, very configurable.  Easy to setup.  Great support.
 	8. CATEGORIZE Auction in different categories.
 	9. Smart SEARCH feature for finding auctions.
 	10. PAYPAL invoicing for handling payment.
-	11. Schedule auction Feature - Make it live for later date
+	11. Schedule auction for later date
 	12. Add more than 4 IMAGES to auction
-	13. Add To Watchlist feature
+	13. Add To WATCHLIST feature
+	14. BULK IMPORT feature
+	15. WIDGET to show auction list.
+	
 	
 
  = Free VERSION (Core) Features =
@@ -104,10 +108,16 @@ This page is responsible for displaying all live auctions. If you click a specif
 == Frequently Asked Questions ==
 
 == Changelog ==
+= 3.4.0 = 
+* New Feature - Deleting auction would delete its images too.
+* New Feature - Manage Auction -> Expired auction -> Payment column would now highlight payment method for better readability.
+* Fix - Description text would appear without HTML code.
+* Fix - New layout for Settings tab and separate Payments tab to mention payment related details.
+
+
 = 3.3.0 =
 * Fix - Plugin comments conflicts with theme/site comments.
 * Fix - Javascript code has been moved out in separate directory as it was previously posing problem with few wordpress themes.
-
 
 
 = 3.2.0 =

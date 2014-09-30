@@ -3,7 +3,7 @@ jQuery(document).ready(function($){
        var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
        $('#wdm-delete-auction-<?php echo $single_auction->ID;?>').click(function(){
         
-        var cnf = confirm("<?php _e("Are you sure to delete this auction? All data related to this auction (including bids) will be deleted.", "wdm-ultimate-auction");?>");
+        var cnf = confirm("<?php _e("Are you sure to delete this auction? All data related to this auction (including bids and attachments) will be deleted.", "wdm-ultimate-auction");?>");
         
         if(cnf == true){
         $(this).html("<?php _e('Deleting', 'wdm-ultimate-auction'); echo ' ';?> <img src='<?php echo plugins_url('/img/ajax-loader.gif', dirname(__FILE__) );?>' />");       

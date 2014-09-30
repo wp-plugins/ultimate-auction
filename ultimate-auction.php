@@ -5,7 +5,7 @@
   Description: Awesome plugin to host auctions on your wordpress site and sell anything you want.
   Author: Nitesh Singh
   Author URI: http://auctionplugin.net
-  Version: 3.3.0
+  Version: 3.4.0
   License: GPLv2
   Copyright 2014 Nitesh Singh
 */
@@ -81,19 +81,41 @@ add_action('wp_ajax_nopriv_resend_auction_email', 'resend_auction_email_callback
 //delete auction Ajax callback - 'Delete' link on 'Manage Auctions' page
 function delete_auction_callback()
 {
-    if($_POST["force_del"] === 'yes')
+       global $wpdb;
+   
+	$delete_post_id = $_POST["del_id"];
+	$delete_auction_array = $wpdb->get_col($wpdb->prepare("SELECT meta_value from $wpdb->postmeta WHERE meta_key LIKE %s AND post_id = %d", '%wdm-image-%', $delete_post_id));
+	
+   if($_POST["force_del"] === 'yes')
         $force = true;
-    else
+   else
         $force = false;
-    //echo $force;
-    if(current_user_can('delete_posts'))
-    {
+   
+   if(current_user_can('delete_posts'))
+   {
         $del_auc = wp_delete_post($_POST["del_id"], false);
-    }
+        
+        $wpdb->query( 
+	$wpdb->prepare( 
+		"
+                DELETE FROM ".$wpdb->prefix."wdm_bidders
+		 WHERE auction_id = %d
+		",
+	        $_POST["del_id"]
+        )
+    );
+   }
     
     if($del_auc)
     {
-        printf(__("Auction %s deleted successfully.", "wdm-ultimate-auction"), $_POST['auc_title']);
+	
+	foreach($delete_auction_array as $delete_image_url){
+		if(!empty($delete_image_url) && $delete_image_url !== null) {
+				$auction_url_post_id = $wpdb->get_var("SELECT ID from $wpdb->posts WHERE guid = '$delete_image_url' AND post_type = 'attachment'");
+				wp_delete_post($auction_url_post_id, true); //also delete images attached
+			}
+		}
+        printf(__("Auction %s and its attachments are deleted successfully.", "wdm-ultimate-auction"), $_POST['auc_title']);
     }
     else
         _e("Sorry, this auction cannot be deleted.", "wdm-ultimate-auction");
@@ -106,7 +128,7 @@ add_action('wp_ajax_nopriv_delete_auction', 'delete_auction_callback');
 //multiple delete auction Ajax callback
 function multi_delete_auction_callback()
 {
-   global $wpdb;
+global $wpdb;
    
    if($_POST["force_del"] === 'yes')
         $force = true;
@@ -117,7 +139,18 @@ function multi_delete_auction_callback()
    
    foreach($all_aucs as $aa){
      
+	$delete_auction_array = $wpdb->get_col($wpdb->prepare("SELECT meta_value from $wpdb->postmeta WHERE meta_key LIKE %s AND post_id = %d", '%wdm-image-%', $aa));
+	
         $del_auc = wp_delete_post($aa, false);
+	if($del_auc)
+	{
+		foreach($delete_auction_array as $delete_image_url){
+			if(!empty($delete_image_url)  && $delete_image_url !== null) {
+				$auction_url_post_id = $wpdb->get_var("SELECT ID from $wpdb->posts WHERE guid = '$delete_image_url' AND post_type = 'attachment'");
+				wp_delete_post($auction_url_post_id, true); //also delete images attached
+			}
+		}
+	}
         
         $wpdb->query( 
 	$wpdb->prepare( 
@@ -131,7 +164,7 @@ function multi_delete_auction_callback()
    }
     if($del_auc)
     {
-        printf(__("Auctions deleted successfully.", "wdm-ultimate-auction"));
+        printf(__("Auctions and their attachments are deleted successfully.", "wdm-ultimate-auction"));
     }
     else
         _e("Sorry, the auctions cannot be deleted.", "wdm-ultimate-auction");
@@ -588,5 +621,5 @@ function prepare_single_auction_title($id, $title){
    return $title;
 }
 
-require_once('email-template.php'); 
+require_once('email-template.php');
 ?>

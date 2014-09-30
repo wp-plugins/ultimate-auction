@@ -108,6 +108,7 @@ if(!class_exists('wdm_settings'))
 	
         add_menu_page( __('Ultimate Auction', 'wdm-ultimate-auction'), __('Ultimate Auction', 'wdm-ultimate-auction'), 'administrator', 'ultimate-auction', array($this, 'create_admin_page'), $ua_icon_url);
 	add_submenu_page( 'ultimate-auction', __('Settings', 'wdm-ultimate-auction'), __('Settings', 'wdm-ultimate-auction'), 'administrator', 'ultimate-auction', array($this, 'create_admin_page') );
+	add_submenu_page( 'ultimate-auction', __('Payment', 'wdm-ultimate-auction'), __('Payment', 'wdm-ultimate-auction'), 'administrator', 'payment', array($this, 'create_admin_page') );
 	do_action('ua_add_submenu_after_setting', 'ultimate-auction', array($this, 'create_admin_page'));
 	add_submenu_page( 'ultimate-auction', __('Add Auction', 'wdm-ultimate-auction'), __('Add Auction', 'wdm-ultimate-auction'), 'administrator', 'add-new-auction', array($this, 'create_admin_page') );
         add_submenu_page( 'ultimate-auction', __('Manage Auctions', 'wdm-ultimate-auction'), __('Manage Auctions', 'wdm-ultimate-auction'), 'administrator', 'manage_auctions', array($this, 'create_admin_page') );
@@ -149,6 +150,7 @@ if(!class_exists('wdm_settings'))
             ?>
             <h2 class="nav-tab-wrapper">  
                 <a href="?page=ultimate-auction" class="nav-tab <?php echo $active_tab == 'ultimate-auction' ? 'nav-tab-active' : ''; ?>"><?php _e('Settings', 'wdm-ultimate-auction');?></a>
+		<a href="?page=payment" class="nav-tab <?php echo $active_tab == 'payment' ? 'nav-tab-active' : ''; ?>"><?php _e('Payment', 'wdm-ultimate-auction');?></a>
 		<?php do_action('ua_add_tab_after_setting', 'page', 'nav-tab', 'nav-tab-active', $active_tab);?>
 		<a href="?page=add-new-auction" class="nav-tab <?php echo $active_tab == 'add-new-auction' ? 'nav-tab-active' : ''; ?>"><?php _e('Add Auction', 'wdm-ultimate-auction');?></a>
                 <a href="?page=manage_auctions" class="nav-tab <?php echo $active_tab == 'manage_auctions' ? 'nav-tab-active' : ''; ?>"><?php _e('Manage Auctions', 'wdm-ultimate-auction');?></a>
@@ -159,7 +161,18 @@ if(!class_exists('wdm_settings'))
             
             <?php
             if($active_tab=='ultimate-auction'){
+		if( isset( $_GET[ 'setting_section' ] ) ) {  
+		$manage_setting_tab = $_GET[ 'setting_section' ];  
+		} 
+		else
+		$manage_setting_tab = 'payment';  
             ?>
+	    <ul class="subsubsub">
+		<li><a href="?page=ultimate-auction&setting_section=payment" class="<?php echo $manage_setting_tab == 'payment' ? 'current' : ''; ?>"><?php _e('Payment', 'wdm-ultimate-auction');?></a>|</li>
+		<li><a href="?page=ultimate-auction&setting_section=auction" class="<?php echo $manage_setting_tab == 'auction' ? 'current' : ''; ?>"><?php _e('Auction', 'wdm-ultimate-auction');?></a>|</li>
+		<li><a href="?page=ultimate-auction&setting_section=email" class="<?php echo $manage_setting_tab == 'email' ? 'current' : ''; ?>"><?php _e('Email', 'wdm-ultimate-auction');?></a></li>
+	    </ul><br class="clear">
+            
 	    <form id="auction-settings-form" class="auction_settings_section_style" method="post" action="options.php">
 	        <?php
 		    settings_fields('test_option_group');//adds all the nonce/hidden fields and verifications	
@@ -178,6 +191,9 @@ if(!class_exists('wdm_settings'))
 	    }
 	    elseif($active_tab=='help-support'){
 		require_once('help-and-support.php');
+	    }
+	    elseif($active_tab=='payment'){
+		require_once('payment.php');
 	    }
 	    do_action('ua_call_setting_file', $active_tab);
             ?>
@@ -201,67 +217,14 @@ if(!class_exists('wdm_settings'))
                          array($this, 'wdm_validate_save_data')//callback function for sanitizing data
                          );
 	
-	 add_settings_section(
-	    'payment_section_id',
-	    __('Payment Settings', 'wdm-ultimate-auction'), 
-	    array($this, 'print_payment_info'), 
-	    'test-setting-admin' 
-	);
-	 
-	 add_settings_field(
-	    'wdm_currency_id', 
-	    __('Currency', 'wdm-ultimate-auction'),
-	    array($this, 'wdm_currency_field'), 
-	    'test-setting-admin', 
-	    'payment_section_id' 			
-	);
 	
-	add_settings_field(
-	    'wdm_paypal_id', 
-	    __('PayPal Email Address', 'wdm-ultimate-auction'), 
-	    array($this, 'wdm_paypal_field'), 
-	    'test-setting-admin', 
-	    'payment_section_id' 			
-	);
-	
-	add_settings_field(
-	    'wdm_account_mode_id', 
-	    __('PayPal Account Type', 'wdm-ultimate-auction'),  
-	    array($this, 'wdm_account_field'), 
-	    'test-setting-admin', 
-	    'payment_section_id' 			
-	);
-	
-	 add_settings_field(
-	    'wdm_wire_transfer_id', 
-	    __('Wire Transfer Details', 'wdm-ultimate-auction'),  
-	    array($this, 'wdm_wire_transfer_field'), 
-	    'test-setting-admin', 
-	    'payment_section_id' 			
-	);
-	
-	add_settings_field(
-	    'wdm_mailing_id', 
-	    __('Mailing Address', 'wdm-ultimate-auction'),  
-	    array($this, 'wdm_mailing_field'), 
-	    'test-setting-admin', 
-	    'payment_section_id' 			
-	);
-	
+	if(isset($_GET["page"]) && ($_GET["page"] == "ultimate-auction") && isset($_GET["setting_section"]) && ($_GET["setting_section"] == "auction")){
         add_settings_section(
 	    'setting_section_id',//this is the unique id for the section
 	    __('General Settings', 'wdm-ultimate-auction'),  //title or name of the section that appears on the page
 	    array($this, 'print_section_info'), //callback function
 	    'test-setting-admin' //the parameter in do_settings_sections
 	);	
-	
-	add_settings_field(
-	    'wdm_email_id', 
-	    __('Email for receiving bid notification', 'wdm-ultimate-auction'),
-	    array($this, 'wdm_email_field'), 
-	    'test-setting-admin', 
-	    'setting_section_id' 			
-	);
 	
 	add_settings_field(
 	    'wdm_timezone_id', 
@@ -313,13 +276,72 @@ if(!class_exists('wdm_settings'))
 	);
 	
 	add_settings_field(
+		'wdm_comment_set_id', 
+		__('Show Comment Section', 'wdm-ultimate-auction'), 
+		array($this, 'wdm_comment_set_field'), 
+		'test-setting-admin', 
+		'setting_section_id' 			
+	    );
+	    
+	add_settings_field(
+	    'wdm_show_prvt_msg_id', 
+	    __('Show Send Private Message', 'wdm-ultimate-auction'), 
+	    array($this, 'wdm_show_prvt_msg_field'), 
+	    'test-setting-admin', 
+	    'setting_section_id' 			
+	    );
+	
+	add_settings_field(
 	    'wdm_powered_by_id', 
 	    __('Powered By Ultimate Auction', 'wdm-ultimate-auction'), 
 	    array($this, 'wdm_powered_by_field'), 
 	    'test-setting-admin', 
 	    'setting_section_id' 			
 	);
+    }
+    elseif(isset($_GET["page"]) && ($_GET["page"] == "ultimate-auction") && isset($_GET["setting_section"]) && ($_GET["setting_section"] == "email")
+){
+	    
+	add_settings_section(
+	    'email_section_id',//this is the unique id for the section
+	    __('Email Settings', 'wdm-ultimate-auction'), //title or name of the section that appears on the page
+	    array($this, 'print_email_info'), //callback function
+	    'test-setting-admin' //the parameter in do_settings_sections
+	);
+	    
+	add_settings_field(
+	    'wdm_email_id', 
+	    __('Email for receiving bid notification', 'wdm-ultimate-auction'),
+	    array($this, 'wdm_email_field'), 
+	    'test-setting-admin', 
+	    'email_section_id' 			
+	);
+    }
+    else{
 	
+	add_settings_section(
+	    'payment_section_id',
+	    __('Payment Settings', 'wdm-ultimate-auction'), 
+	    array($this, 'print_payment_info'), 
+	    'test-setting-admin' 
+	);
+	 
+	 add_settings_field(
+	    'wdm_currency_id', 
+	    __('Currency', 'wdm-ultimate-auction'),
+	    array($this, 'wdm_currency_field'), 
+	    'test-setting-admin', 
+	    'payment_section_id' 			
+	);
+	 
+	add_settings_field(
+	    'wdm_payment_opt', 
+	    __('Enable Payment Options', 'wdm-ultimate-auction'),
+	    array($this, 'wdm_set_payment_options'), 
+	    'test-setting-admin', 
+	    'payment_section_id' 			
+	);
+    }
 	//enqueue script to handle validations related to bidding logic
 	wp_enqueue_script('wdm_logic_valid', plugins_url('/js/logic-validation.js', __FILE__ ), array('jquery'));
 	$trans_a = array('pmt' => __("You should fill data for atleast one payment method.", "wdm-ultimate-auction"),
@@ -345,29 +367,51 @@ if(!class_exists('wdm_settings'))
         $mid = $input;
 	
 	if(isset($_POST['ua_wdm_setting_auc']) && wp_verify_nonce($_POST['ua_wdm_setting_auc'],'ua_setting_wp_n_f')){
-        if(is_email($mid['wdm_auction_email']))
-        update_option('wdm_auction_email',$mid['wdm_auction_email']);
-        else{
-        add_settings_error(
-        'test_option_group', // whatever you registered in register_setting
-        'wdm-error', // this will be appended to the div ID
-        __('Please enter a valid Email address', 'wdm-ultimate-auction'),
-        'error' // error or notice works to make things pretty
-        );
-        $mid['wdm_auction_email']="";
-        }
 	
-	update_option('wdm_time_zone',$mid['wdm_time_zone']);
-	update_option('wdm_currency',$mid['wdm_currency']);
-	update_option('wdm_paypal_address',$mid['wdm_paypal_address']);
-	update_option('wdm_wire_transfer',$mid['wdm_wire_transfer']);
-	update_option('wdm_mailing_address',$mid['wdm_mailing_address']);
-	update_option('wdm_powered_by',$mid['wdm_powered_by']);
-	update_option('wdm_account_mode',$mid['wdm_account_mode']);
-	update_option('wdm_auction_page_url',$mid['wdm_auction_page_url']);
-	update_option('wdm_login_page_url',$mid['wdm_login_page_url']);
-	update_option('wdm_register_page_url',$mid['wdm_register_page_url']);
-	update_option('wdm_bidding_engines',$mid['wdm_bidding_engines']);
+	if(isset($mid['wdm_auction_email'])){
+	    if(is_email($mid['wdm_auction_email']))
+	    update_option('wdm_auction_email',$mid['wdm_auction_email']);
+	    else{
+	    add_settings_error(
+	    'test_option_group', // whatever you registered in register_setting
+	    'wdm-error', // this will be appended to the div ID
+	    __('Please enter a valid Email address', 'wdm-ultimate-auction'),
+	    'error' // error or notice works to make things pretty
+	    );
+	    $mid['wdm_auction_email']="";
+	    }
+	}
+	
+	if(isset($mid['wdm_time_zone']))
+	    update_option('wdm_time_zone',$mid['wdm_time_zone']);
+	
+	if(isset($mid['wdm_currency']))
+	    update_option('wdm_currency',$mid['wdm_currency']);
+
+	if(isset($mid['wdm_powered_by']))
+	    update_option('wdm_powered_by',$mid['wdm_powered_by']);
+	//update_option('wdm_account_mode',$mid['wdm_account_mode']);
+	
+	if(isset($mid['wdm_auction_page_url']))
+	    update_option('wdm_auction_page_url',$mid['wdm_auction_page_url']);
+	
+	if(isset($mid['wdm_login_page_url']))
+	    update_option('wdm_login_page_url',$mid['wdm_login_page_url']);
+	
+	if(isset($mid['wdm_register_page_url']))
+	    update_option('wdm_register_page_url',$mid['wdm_register_page_url']);
+	
+	if(isset($mid['wdm_bidding_engines']))
+	    update_option('wdm_bidding_engines',$mid['wdm_bidding_engines']);
+	
+	if(isset($mid['wdm_comment_set']))
+	    update_option('wdm_comment_set',$mid['wdm_comment_set']);
+	
+	if(isset($mid['wdm_show_prvt_msg']))
+	    update_option('wdm_show_prvt_msg',$mid['wdm_show_prvt_msg']);
+	    
+	if(isset($mid['payment_options_enabled']))
+	    update_option('payment_options_enabled',$mid['payment_options_enabled']);
 	
     }
     else{
@@ -376,14 +420,20 @@ if(!class_exists('wdm_settings'))
 	return $mid;
     }
 
+    //'Email Settings' section
+    public function print_email_info()
+    {
+	
+    }
+    
     //'General Settings' section 	
     public function print_section_info(){
-	
+
     }
     
     //'Payment Settings' section 
     public function print_payment_info(){
-	
+
     }
     
     //admin email field
@@ -479,43 +529,27 @@ if(!class_exists('wdm_settings'))
 	
     }
     
-    //PayPal email address of business/merchant account
-    public function wdm_paypal_field(){?>
-        <input class="wdm_settings_input email" type="text" id="wdm_paypal_id" name="wdm_auc_settings_data[wdm_paypal_address]" value="<?php echo get_option('wdm_paypal_address');?>" />
-    <?php
-    }
-    
-    //PayPal account type
-     public function wdm_account_field(){
-	$options = array("Live", "Sandbox");
-	
-	add_option('wdm_account_mode','Live');
-	
-	foreach($options as $option) {
-		$checked = (get_option('wdm_account_mode')== $option) ? ' checked="checked" ' : '';
-		echo "<input ".$checked." value='$option' name='wdm_auc_settings_data[wdm_account_mode]' type='radio' /> $option <br />";
-	}
-	printf("<div class='ult-auc-settings-tip'>".__("Select 'Sandbox' option when testing with your %s email address.", "wdm-ultimate-auction")."</div>", "sandbox PayPal");
-    }
-    
-    //Wire Transfer details field
-    public function wdm_wire_transfer_field(){?>
-        <textarea class="wdm_settings_input" id="wdm_wire_transfer_id" name="wdm_auc_settings_data[wdm_wire_transfer]"><?php echo get_option('wdm_wire_transfer');?></textarea>
-    <br />
-    <div class="ult-auc-settings-tip"><?php _e("Enter your wire transfer details. This will be sent to the highest bidder.", "wdm-ultimate-auction");?></div>
-    <?php
-    }
-    
-    //Mailing address field
-    public function wdm_mailing_field()
+    public function wdm_set_payment_options()
     {
-	?>
-        <textarea class="wdm_settings_input" id="wdm_mailing_id" name="wdm_auc_settings_data[wdm_mailing_address]"><?php echo get_option('wdm_mailing_address');?></textarea>
-    <div class="ult-auc-settings-tip"><?php _e("Enter your mailing address where you want to receive checks by mail. This will be sent to the highest bidder.", "wdm-ultimate-auction");?></div>
-    <?php
+	$default = array("method_paypal" => __("PayPal", "wdm-ultimate-auction"), "method_wire_transfer" => __("Wire Transfer", "wdm-ultimate-auction"), "method_mailing" => __("Mailing Address", "wdm-ultimate-auction"));
+	
+	$options = apply_filters('ua_add_new_payment_option', $default);
+	
+	add_option('payment_options_enabled', array("method_paypal" => __("PayPal", "wdm-ultimate-auction")));
+	
+	foreach($options as $key => $option) {
+		$values = get_option('payment_options_enabled');
+		$checked = (array_key_exists($key, $values)) ? ' checked="checked" ' : '';
+		
+		echo "<input $checked value='$option' name='wdm_auc_settings_data[payment_options_enabled][$key]' type='checkbox' /> $option <br />";
+	}
+	
+	echo '<br/><br/>';
+	
+	 _e("NOTE: If you choose to activate any payment method, please go to Payment tab and enter its details. For example: if you enable Wire Transfer, go to Payment -> Wire Transfer and enter its details. Same would apply to Paypal and Mailing Address.", "wdm-ultimate-auction");
     }
     
-        //Auction feeder page URL
+    //Auction feeder page URL
     public function wdm_auction_url_field(){
 	?>
         <input type="text" class="wdm_settings_input url" id="wdm_auction_url_id" name="wdm_auc_settings_data[wdm_auction_page_url]" size="40" value="<?php echo get_option('wdm_auction_page_url');?>" />
@@ -567,6 +601,32 @@ if(!class_exists('wdm_settings'))
 	</a>
     </div>
     <?php
+    }
+    
+     //Comment set section
+    public function wdm_comment_set_field(){
+	$options = array("Yes", "No");
+	
+	add_option('wdm_comment_set','Yes');
+	
+	foreach($options as $option) {
+		$checked = (get_option('wdm_comment_set')== $option) ? ' checked="checked" ' : '';
+		echo "<input ".$checked." value='$option' name='wdm_auc_settings_data[wdm_comment_set]' type='radio' /> $option <br />";
+	}
+	printf("<div class='ult-auc-settings-tip'>".__("Choose Yes if you want to display comments tab under auction.", "wdm-ultimate-auction")."</div>");
+    }
+    
+    public function wdm_show_prvt_msg_field()
+    {
+	$options = array("Yes", "No");
+	
+	add_option('wdm_show_prvt_msg','Yes');
+	
+	foreach($options as $option) {
+		$checked = (get_option('wdm_show_prvt_msg')== $option) ? ' checked="checked" ' : '';
+		echo "<input ".$checked." value='$option' name='wdm_auc_settings_data[wdm_show_prvt_msg]' type='radio' /> $option <br />";
+	}
+	printf("<div class='ult-auc-settings-tip'>".__("Choose Yes if you want to display private message section.", "wdm-ultimate-auction")."</div>");
     }
     
     //handle post meta keys

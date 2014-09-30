@@ -3,8 +3,12 @@
   <ul id="auction-tab-titles">
     <li id="wdm-desc-aucdesc-link"><?php _e('Description','wdm-ultimate-auction');?></li>
     <?php do_action('wdm_ua_add_ship_tab', $wdm_auction->ID); ?>
+     <?php if(get_option('wdm_comment_set')=="Yes"){?>
     <li id="wdm-desc-cmt-link"><?php _e('Comments', 'wdm-ultimate-auction');?></li>
+       <?php } ?>
+    <?php if(get_option('wdm_show_prvt_msg')=="Yes"){?>
     <li id="wdm-desc-msg-link"><?php _e('Send Private Message', 'wdm-ultimate-auction');?></li>
+     <?php } ?>
     <li id="wdm-desc-bids-link"><?php _e('Total bids placed', 'wdm-ultimate-auction');?></li>
   </ul>
   
