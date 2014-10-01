@@ -108,6 +108,9 @@ This page is responsible for displaying all live auctions. If you click a specif
 == Frequently Asked Questions ==
 
 == Changelog ==
+= 3.5.0 = 
+* Fix - Payment tab not appearing as one file was missing from the zip.
+
 = 3.4.0 = 
 * New Feature - Deleting auction would delete its images too.
 * New Feature - Manage Auction -> Expired auction -> Payment column would now highlight payment method for better readability.
