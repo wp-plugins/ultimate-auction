@@ -3,7 +3,7 @@ Contributors: nitesh_singh,WisdmLabs
 Donate link: http://auctionplugin.net/
 Tags: auctions,auction,auction plugin,wp auction,wordpress auction,wp auctions,auction script,ebay,ebay auction,bidding
 Requires at least: 3.5
-Tested up to: 4.0
+Tested up to: 4.1
 License: GPLv2 or later
 Stable tag: trunk
 
@@ -43,7 +43,7 @@ Lots of features, very configurable.  Easy to setup.  Great support.
 	12. Add more than 4 IMAGES to auction
 	13. Add To WATCHLIST feature
 	14. BULK IMPORT feature
-	15. WIDGET to show auction list.
+	15. WIDGET to show auction.
 	
 	
 
@@ -108,8 +108,17 @@ This page is responsible for displaying all live auctions. If you click a specif
 == Frequently Asked Questions ==
 
 == Changelog ==
+= 3.6.0 = 
+* New Feature - Allows localhost url on add auction page.
+* New Feature - Added "Reply to" header for users mentioned inside expired auctions so that it is convenient for admin to click and email them.
+* New Feature - You can now mention how many auctions can appear on feed page. 
+* Fix - Large size of thumbnails and fonts on feed page.
+
+
+
 = 3.5.0 = 
 * Fix - Payment tab not appearing as one file was missing from the zip.
+
 
 = 3.4.0 = 
 * New Feature - Deleting auction would delete its images too.

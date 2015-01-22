@@ -5,9 +5,9 @@
   Description: Awesome plugin to host auctions on your wordpress site and sell anything you want.
   Author: Nitesh Singh
   Author URI: http://auctionplugin.net
-  Version: 3.5.0
+  Version: 3.6.0
   License: GPLv2
-  Copyright 2014 Nitesh Singh
+  Copyright 2015 Nitesh Singh
 */
 
 load_plugin_textdomain('wdm-ultimate-auction', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
@@ -440,6 +440,7 @@ function private_message_callback()
         
         $hdr = "";
         //$hdr  = "From: ". get_bloginfo('name') ." <". $adm_email ."> \r\n";
+	$hdr .= "Reply-To: <". $_POST['p_email'] ."> \r\n";
         $hdr .= "MIME-Version: 1.0\r\n";
         $hdr .= "Content-type:text/html;charset=UTF-8" . "\r\n";
         
@@ -521,6 +522,7 @@ function wdm_set_auction_timezone()
 					  
 					  $headers = "";
 					  //$headers  = "From: ". $site_name ." <". $auction_email ."> \r\n";
+					  $headers .= "Reply-To: <". $buyer_email ."> \r\n";
 					  $headers .= "MIME-Version: 1.0\r\n";
 					  $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 					  
@@ -544,7 +546,12 @@ function wdm_set_auction_timezone()
 								 'header' => $headers
 					  );
 					  
-					  do_action('ua_shipping_data_email', $auction_data);
+                                          $check_method = get_post_meta($single_auction->ID, 'wdm_payment_method', true);
+						
+					  if($check_method === 'method_paypal'){
+                                             do_action('ua_shipping_data_email', $auction_data);
+                                          }
+                                          
                                         }
                                     }
                               
@@ -619,6 +626,60 @@ function prepare_single_auction_title($id, $title){
    }
    
    return $title;
+}
+
+function paypal_auto_return_url_notes(){
+
+   $pp_ms = '<div class="paypal-config-note-text" style="float: right;width: 530px;">';
+		
+   $pp_ms .= '<span class="pp-please-note">'.__("Mandatory Settings:", "wdm-ultimate-auction").'</span> <br />';
+		
+   $pp_ms .= '<span class="pp-url-notification">'.sprintf(__('It is mandatory to set %1$s (if not already set) and enable %2$s (if not already enabled) in your PayPal account for proper functioning of payment related features.', 'wdm-ultimate-auction'),"<strong>Auto Return URL</strong>","<strong>Payment Data Transfer</strong>").'</span>';
+
+   $pp_ms .= '<a href="" class="auction_fields_tooltip"><strong>'.__("?", "wdm-ultimate-auction").'</strong><span style="width: 370px;margin-left: -90px;">';
+   
+   $pp_ms .= sprintf(__("Whenever a visitor clicks on 'Buy it Now' button of a product/auction, he is redirected to PayPal where he can make payment for that product/auction.", "wdm-ultimate-auction")).'<br />';
+   
+   $pp_ms .= sprintf(__("After making payment he is again redirected automatically (if the %s has been set) to this site and then the auction expires.", "wdm-ultimate-auction"),"Auto Return URL").'<br />';
+   
+   $pp_ms .= '</span></a>';
+   
+   $pp_ms .= '<br /><a href="#" id="how-set-pp-auto-return">'.__("How to do these settings?", "wdm-ultimate-auction").'</a><br />';
+   
+   $pp_ms .= '<div id="wdm-steps-to-be-followed" style="display:none;"><br />';
+   
+   $pp_ms .= sprintf(__("1. Log in to your PayPal account", "wdm-ultimate-auction")).'- <a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_account" target="_blank">Live</a>/ <a href="https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_account" target="_blank">Sandbox</a><br />';
+   
+   $pp_ms .= sprintf(__('2. Under %2$s -> click %1$s.', 'wdm-ultimate-auction'),"<strong>Profile</strong>","<strong>My Account</strong>").'<br />';
+   
+   $pp_ms .= sprintf(__("3. Click %s (on LHS)", "wdm-ultimate-auction"),"<strong>My Selling Tools</strong>").'<br />';
+
+   $pp_ms .= sprintf(__('4. Go to %1$s (on RHS) -> %2$s -> Click %3$s link (next to %4$s)', 'wdm-ultimate-auction'), "<strong>Selling Online</strong>", "<strong>Website Preferences</strong>", "<strong>Update</strong>", "<strong>Website Preferences</strong>").'<br />';
+
+   $pp_ms .= sprintf(__('5. %s page will open.', 'wdm-ultimate-auction'),"<strong>Website Preferences</strong>").'<br />';
+
+         
+   $pp_ms .= sprintf(__('6. Enable %s.', 'wdm-ultimate-auction'),"<strong>Auto Return</strong>").'<br />';
+	 
+   $pp_ms .= sprintf(__('7. Set a URL in %s box. Enter feed page URL.', 'wdm-ultimate-auction'),"<strong>Return URL</strong>").'<br />';
+	 
+   $pp_ms .= sprintf(__('8. Enable %1$s option (if the %2$s is not set, %3$s can not be enabled).', 'wdm-ultimate-auction'),"<strong>PDT (Payment Data Transfer)</strong>", "<strong>Return URL</strong>", "<strong>PDT</strong>")." <br />";
+
+   $pp_ms .= sprintf(__("9. Scroll down and click the %s button.", "wdm-ultimate-auction"),"<strong>Save</strong>");
+   $pp_ms .= '</div></div>';
+	
+   $pp_ms .=  '<script type="text/javascript">
+	jQuery(document).ready(function(){
+	jQuery("#how-set-pp-auto-return").click(
+		function(){
+		jQuery("#wdm-steps-to-be-followed").slideToggle("slow");
+		jQuery("html, body").animate({scrollTop: jQuery(".paypal-config-note-text").offset().top - 50});
+		return false;
+		});
+	});
+      </script>';
+      
+   return $pp_ms;
 }
 
 require_once('email-template.php');

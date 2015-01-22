@@ -1,6 +1,8 @@
 <?php
 //auction listing page - pagination
-$page_num = 20;
+$page_num = get_option('wdm_auc_num_per_page');
+$page_num = (!empty($page_num) && $page_num > 0) ? $page_num : 20;
+
 function auction_pagination($pages = '', $range = 2, $paged)
 {  
      $showitems = ($range * 2)+1;  
@@ -104,14 +106,18 @@ $args = array(
 				   <?php $vid_arr = array('mpg', 'mpeg', 'avi', 'mov', 'wmv', 'wma', 'mp4', '3gp', 'ogm', 'mkv', 'flv');
 					$auc_thumb = get_post_meta($wdm_single_auction->ID, 'wdm_auction_thumb', true);
 					$imgMime = wdm_get_mime_type($auc_thumb); 
-					$img_ext = end(explode(".",$auc_thumb));
+					$img_ext = explode(".",$auc_thumb);
+					$img_ext = end($img_ext);
+					
+					if(strpos($img_ext, '?') !== false)
+						$img_ext = strtolower(strstr($img_ext, '?', true));
 					
 					if(strstr($imgMime, "video/") || in_array($img_ext, $vid_arr) || strstr($auc_thumb, "youtube.com") || strstr($auc_thumb, "vimeo.com")){
 					$auc_thumb = plugins_url('img/film.png', __FILE__);	
 				}
 				if(empty($auc_thumb)){$auc_thumb = plugins_url('img/no-pic.jpg', __FILE__);}
 				?>
-				<img src="<?php echo $auc_thumb; ?>" width="100" height="80" alt="<?php echo $wdm_single_auction->post_title; ?>" />
+				<img src="<?php echo $auc_thumb; ?>" alt="<?php echo $wdm_single_auction->post_title; ?>" />
 				</div>
 			</li>
 			
@@ -149,7 +155,7 @@ $args = array(
 			
 			<li class="wdm-ape auc_single_list auc_list_center">
 				<?php
-				$now = mktime(); 
+				$now = time(); 
 				$ending_date = strtotime(get_post_meta($wdm_single_auction->ID, 'wdm_listing_ends', true));
 				$act_trm = wp_get_post_terms($wdm_single_auction->ID, 'auction-status',array("fields" => "names"));
 				

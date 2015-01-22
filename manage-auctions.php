@@ -35,7 +35,7 @@ class Auctions_List_Table extends WP_List_Table {
         foreach($auction_item_array as $single_auction){
             
             $act_term = wp_get_post_terms($single_auction->ID, 'auction-status',array("fields" => "names"));
-            if(mktime() >= strtotime(get_post_meta($single_auction->ID,'wdm_listing_ends',true))){
+            if(time() >= strtotime(get_post_meta($single_auction->ID,'wdm_listing_ends',true))){
 				if(!in_array('expired',$act_term))
 				{
 					$check_tm = term_exists('expired', 'auction-status');
@@ -127,6 +127,10 @@ class Auctions_List_Table extends WP_List_Table {
 		$payment_qry = get_post_meta($single_auction->ID,'wdm_payment_method',true);
 		$payment_method = str_replace("method_"," ",$payment_qry);
 		$payment_method = str_replace("_"," ",$payment_method);
+		
+		if($payment_method == 'mailing')
+		    $payment_method = 'cheque';
+		    
 		$row['email_payment'] = "<span>".sprintf(__('Method : %s', 'wdm-ultimate-auction'), $payment_method)."</span><br /><br />";
                 
                 if(get_post_meta($single_auction->ID,'auction_bought_status',true) === 'bought')

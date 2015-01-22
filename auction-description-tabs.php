@@ -163,7 +163,7 @@
 				  </ul>
 				  <?php
 					foreach($results as $result){
-				$curr_time = mktime(); 
+				$curr_time = time(); 
 				$bid_time = strtotime($result->date);
 				
 				$secs = $curr_time - $bid_time;

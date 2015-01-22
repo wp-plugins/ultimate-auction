@@ -32,7 +32,7 @@ jQuery(document).ready(
                             inc = jQuery("#wdm-add-auction-form #incremental_value").val();
                             edt = jQuery("#wdm-add-auction-form #end_date").val();
                             
-                            var pd = jQuery("#payment_method #wdm_method_paypal").attr("disabled");
+                            //var pd = jQuery("#payment_method #wdm_method_paypal").attr("disabled");
                             
                             if(!tl)
                             {
@@ -52,28 +52,28 @@ jQuery(document).ready(
                                     return false; 
                             }
                             
-                            if(pd == 'disabled')
-                            {
-                                if(bn && Number(bn) > 0)
-                                {
-                                    alert(wdm_ua_obj_l10nv.set);
-                                    jQuery("#wdm-add-auction-form #buy_it_now_price").val("");
-                                    return false;
-                                }
-                                
-                                if(!ob || 0 >= Number(ob))
-                                {
-                                    alert(wdm_ua_obj_l10nv.opb);
-                                    return false;
-                                }
-                                
-                                if(!lb || Number(lb) < Number(ob))
-                                {
-                                    alert(wdm_ua_obj_l10nv.rp);
-                                    return false;
-                                }
-                                
-                            }
+                            //if(pd == 'disabled')
+                            //{
+                            //    if(bn && Number(bn) > 0)
+                            //    {
+                            //        alert(wdm_ua_obj_l10nv.set);
+                            //        jQuery("#wdm-add-auction-form #buy_it_now_price").val("");
+                            //        return false;
+                            //    }
+                            //    
+                            //    if(!ob || 0 >= Number(ob))
+                            //    {
+                            //        alert(wdm_ua_obj_l10nv.opb);
+                            //        return false;
+                            //    }
+                            //    
+                            //    if(!lb || Number(lb) < Number(ob))
+                            //    {
+                            //        alert(wdm_ua_obj_l10nv.rp);
+                            //        return false;
+                            //    }
+                            //    
+                            //}
                             //else
                             //{
                                 if((!ob || 0 >= Number(ob)) && (!bn || 0 >= Number(bn)))

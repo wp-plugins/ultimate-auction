@@ -3,8 +3,11 @@
 function ultimate_auction_email_template($auction_name, $auction_id, $auction_desc, $winner_bid, $winner_email, $return_url)
 {
 	global $wpdb;
-	$name_qry = "SELECT name FROM ".$wpdb->prefix."wdm_bidders WHERE bid =".$winner_bid." AND auction_id =".$auction_id." ORDER BY id DESC";
-	$winner_name = $wpdb->get_var($name_qry);
+
+	//$name_qry = "SELECT name FROM ".$wpdb->prefix."wdm_bidders WHERE bid =".$winner_bid." AND auction_id =".$auction_id." ORDER BY id DESC";
+	//$winner_name = $wpdb->get_var($name_qry);
+	$winner_user = get_user_by('email', $winner_email);
+	$winner_name = $winner_user->user_login;
 	
         $rec_email    	= get_option('wdm_paypal_address');
         $cur_code     	= substr(get_option('wdm_currency'), -3);
@@ -103,24 +106,34 @@ function ultimate_auction_email_template($auction_name, $auction_id, $auction_de
 		$message .= sprintf(__('You can pay %s by Cheque.', 'wdm-ultimate-auction'), $pay_amt)."<br /><br />";
 	    }
 	    
-	    $message .= __("Mailing Address", 'wdm-ultimate-auction').": <br />";
+	    $message .= __("Mailing Address & Cheque Details", 'wdm-ultimate-auction').": <br />";
 	    $message .= get_option('wdm_mailing_address');
 	}
 	
-	$headers = "";
+	$hdr = "";
 	//$headers  = "From: ". $site_name ." <". $auction_email ."> \r\n";
-	$headers .= "MIME-Version: 1.0\r\n";
-	$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+	$hdr .= "MIME-Version: 1.0\r\n";
+	$hdr .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 	
 	$email_sent = false;
-	
-	if(!empty($paypal_link))
-		$email_sent = wp_mail( $winner_email, $subject, $message, $headers, '' );
         
+	if(!empty($paypal_link)){
+		$headers = "";
+		//$headers  = "From: ". get_bloginfo('name') ." <". $seller_email ."> \r\n";
+		$headers .= "Reply-To: <". $auction_email ."> \r\n";
+		$headers .= $hdr;
+		$email_sent = wp_mail( $winner_email, $subject, $message, $headers, '' );
+	}
+	
         if($email_sent)
 	{   
             update_post_meta( $auction_id, 'auction_email_sent', 'sent' );
 	}
+	
+	$headers = "";
+	//$headers  = "From: ". get_bloginfo('name') ." <". $seller_email ."> \r\n";
+	$headers .= "Reply-To: <". $winner_email ."> \r\n";
+	$headers .= $hdr;
 	
 	$data_to_seller = array();
 	$data_to_seller = array('auc_id' => $auction_id,
@@ -138,8 +151,9 @@ function ultimate_auction_email_template($auction_name, $auction_id, $auction_de
 				'product_url' => $return_url,
 				'header' => $headers
 			      );
-	 
-	do_action('ua_shipping_data_email', $data_to_seller);
+	
+	if(!empty($paypal_link))
+		do_action('ua_shipping_data_email', $data_to_seller);
 	
 	return $email_sent;
 }

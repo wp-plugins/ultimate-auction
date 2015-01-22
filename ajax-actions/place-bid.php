@@ -77,7 +77,7 @@ jQuery(document).ready(function($){
 		    
 		    if (response.type == 'simple') {
 			
-		    wdmmsg = "<?php _e("Congratulations! You have won this auction since your bid value has reached the 'Buy it Now' price.", "wdm-ultimate-auction");?>";
+		    wdmmsg = "<?php echo str_replace('"', "'", __("Congratulations! You have won this auction since your bid value has reached the 'Buy it Now' price.", "wdm-ultimate-auction"));?>";
 		    
 		    var w_data = {
 				    action: 'bid_notification',
@@ -94,7 +94,7 @@ jQuery(document).ready(function($){
 			};
 		    }
 		    else{
-			wdmmsg = "<?php _e("Sorry, you have been outbid by the current highest bidder for 'Buy it now' price.", "wdm-ultimate-auction");?>";
+			wdmmsg = "<?php echo str_replace('"', "'", __("Sorry, you have been outbid by the current highest bidder for 'Buy it now' price.", "wdm-ultimate-auction"));?>";
 			
 			var w_data = {
 				    action: 'other_bid_notification',
@@ -126,7 +126,7 @@ jQuery(document).ready(function($){
 		    if (response.type == 'simple') {
 		    
 		    if (Number('<?php echo $to_buy;?>') > 0 && Number($("#wdm-bidder-bidval").val()) >= Number('<?php echo $to_buy;?>')) {
-			wdmmsg = "<?php _e("You can be winner if your bid reaches 'Buy it now' price by automatic bidding.", "wdm-ultimate-auction");?>";
+			wdmmsg = "<?php echo str_replace('"', "'", __("You can be winner if your bid reaches 'Buy it now' price by automatic bidding.", "wdm-ultimate-auction"));?>";
 		    }
 		    
 		    var b_data = {

@@ -16,7 +16,7 @@ if(!empty($_POST)){
         $reactivate=false;
         
         //update auction mode
-        if(isset($_POST["update_auction"]) && !empty($_POST["update_auction"]) && !isset($_GET["reactivate"])){
+        if(isset($_POST["update_auction"]) && !empty($_POST["update_auction"]) /*&& !isset($_GET["reactivate"])*/){
             $post_id=$_POST["update_auction"];
             
             $args=array(
@@ -30,7 +30,7 @@ if(!empty($_POST)){
             
         }
         //reactivate auction mode
-        elseif(isset($_POST["update_auction"]) && !empty($_POST["update_auction"]) && isset($_GET["reactivate"]))
+        elseif(/*isset($_POST["update_auction"]) && !empty($_POST["update_auction"]) && */isset($_GET["reactivate"]))
         {
             $args = array(
             'post_title'    => wp_strip_all_tags( $auction_title ),//except for title all other fields are sanitized by wordpress
@@ -311,54 +311,6 @@ $currency_code = substr(get_option('wdm_currency'), -3);
             <label for="buy_it_now_price"><?php _e("Buy Now Price", "wdm-ultimate-auction");?></label>
         </th>
         <td>
-	    <div class="paypal-config-note-text" style="float: right;width: 530px;">
-		
-		<span class="pp-please-note"><?php _e("Mandatory Settings:", "wdm-ultimate-auction");?></span> <br />
-		
-		<span class="pp-url-notification">
-		    <?php printf(__('It is mandatory to set %1$s (if not already set) in your PayPal account for proper functioning of payment related features.', 'wdm-ultimate-auction'),"<strong>Auto Return URL</strong>");?>
-		</span>
-		
-		<a href="" class="auction_fields_tooltip"><strong><?php _e("?", "wdm-ultimate-auction");?></strong>
-		<span style="width: 300px;margin-left: -90px;">
-		    <?php printf(__("Whenever a visitor clicks on 'Buy it Now' button of a product/auction, he is redirected to PayPal where he can make payment for that product/auction.", "wdm-ultimate-auction"));?>
-		  <br />
-		    <?php printf(__("After making payment he is again redirected automatically (if the %s has been set) to this site and then the auction expires.", "wdm-ultimate-auction"),"Auto Return URL");?>
-                </span>
-		</a>
-		<br />
-      <a href="" id="how-set-pp-auto-return"><?php _e("How to do these settings?", "wdm-ultimate-auction");?></a>
-      <br />
-      <div id="wdm-steps-to-be-followed" style="display:none;">
-      <br />
-         <?php printf(__("1. i) Log in to your PayPal account", "wdm-ultimate-auction"));?>- <a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_account" target="_blank">Live</a>
-         / <a href="https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_account" target="_blank">Sandbox</a><br />
-         <?php printf(__('ii) Click the %1$s subtab under %2$s.', 'wdm-ultimate-auction'),"<strong>Profile</strong>","<strong>My Account</strong>");?><br />
-         <?php printf(__("iii) Click the %s link in the left column.", "wdm-ultimate-auction"),"<strong>My Selling Tools</strong>");?><br />
-         <?php printf(__('iv) Under the %1$s section, click the %2$s link in the row for %3$s.', 'wdm-ultimate-auction'),"<strong>Selling Online</strong>","<strong>Update</strong>","<strong>Website Preferences</strong>");?><br />
-         
-         <?php _e("OR", "wdm-ultimate-auction");?>
-         
-         <br />
-         
-         <?php _e("If you are unable to find/open above section in your account, click on the following link to directly open above page", "wdm-ultimate-auction");?> -
-         <span class="pp-url-notification">
-            <?php printf(__("(Please make sure that you have logged into your account before clicking the link since if you log in after clicking it, you might be redirected to main %s page)", "wdm-ultimate-auction"),"Profile");?>
-         </span>
-         
-         <a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-payments" target="_blank">Live</a>
-         / <a href="https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-payments" target="_blank">Sandbox</a>
-         
-         <br />
-         <br />
-         <?php printf(__('2. The %1$s page appears, click the %2$s radio button to enable %3$s.', 'wdm-ultimate-auction'),"<strong>Website Payment Preferences</strong>","<strong>On</strong>","<strong>Auto Return</strong>");?><br />
-         <br />
-         <?php printf(__('3. Set a URL in %1$s box. e.g. you can set URL of your current site i.e. %2$s', 'wdm-ultimate-auction'),"<strong>Return URL</strong>",get_bloginfo("url"));?><br />
-         <span class="pp-url-notification"><?php printf(__('(If the %1$s is not properly formatted or cannot be validated, PayPal will not activate %2$s)', 'wdm-ultimate-auction'),"Return URL","Auto Return");?></span> <br /><br />
-         
-        <?php printf(__("4. Scroll down and click the %s button.", "wdm-ultimate-auction"),"<strong>Save</strong>");?>
-      </div>
-      </div>
             <?php echo $currency_code;?>
             <input name="buy_it_now_price" type="text" id="buy_it_now_price" class="small-text number" value="<?php echo $this->wdm_post_meta('wdm_buy_it_now');?>"/>
             <div class="ult-auc-settings-tip" ><?php _e("Visitors can buy your auction by making payments via PayPal.", "wdm-ultimate-auction");?></div>
@@ -374,7 +326,7 @@ $currency_code = substr(get_option('wdm_currency'), -3);
             <?php   /*$paypal_enabled = get_option('wdm_paypal_address');
                     $wire_enabled = get_option('wdm_wire_transfer');
                     $mailing_enabled = get_option('wdm_mailing_address');*/
-	    
+		    $pay_methods = array();
 		    $pay_methods = get_option('payment_options_enabled');
             ?>
             <select id="payment_method" name="payment_method">
@@ -388,7 +340,7 @@ $currency_code = substr(get_option('wdm_currency'), -3);
     </table>
     <?php
     global $post_id;
-    if(isset($_GET["edit_auction"]) && !empty($_GET["edit_auction"])){//user came here from manage auction table
+    if(isset($_GET["edit_auction"]) && !empty($_GET["edit_auction"]) && !isset($_GET["reactivate"])){
         echo "<input type='hidden' value='".$_GET["edit_auction"]."' name='update_auction'>";
     }
     else if($post_id != "")//user came here after clicking on submit button
@@ -453,13 +405,5 @@ $currency_code = substr(get_option('wdm_currency'), -3);
             dateFormat : 'yy-mm-dd',
 	    minDateTime: 0
             });
-	
-	jQuery("#how-set-pp-auto-return").click(
-	    function(){
-		jQuery("#wdm-steps-to-be-followed").slideToggle('slow');
-		jQuery("html, body").animate({scrollTop: jQuery("#wdm-steps-to-be-followed").offset().top});
-		return false;
-	    }
-         );
         });
 </script>

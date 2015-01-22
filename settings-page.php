@@ -252,6 +252,14 @@ if(!class_exists('wdm_settings'))
 	do_action('wdm_auto_extend_auction_endtime', 'test-setting-admin', 'setting_section_id');
 	
 	add_settings_field(
+		'wdm_auctions_page_num_id', 
+		__('How many auctions should list on one feed page?', 'wdm-ultimate-auction'), 
+		array($this, 'wdm_auctions_num_per_page'), 
+		'test-setting-admin', 
+		'setting_section_id' 			
+	);
+	
+	add_settings_field(
 	    'wdm_auction_url_id', 
 	    __('Auction Page URL', 'wdm-ultimate-auction'), 
 	    array($this, 'wdm_auction_url_field'), 
@@ -412,6 +420,9 @@ if(!class_exists('wdm_settings'))
 	    
 	if(isset($mid['payment_options_enabled']))
 	    update_option('payment_options_enabled',$mid['payment_options_enabled']);
+	    
+	if(isset($mid['wdm_auc_num_per_page']))
+	    update_option('wdm_auc_num_per_page',$mid['wdm_auc_num_per_page']);
 	
     }
     else{
@@ -434,6 +445,15 @@ if(!class_exists('wdm_settings'))
     //'Payment Settings' section 
     public function print_payment_info(){
 
+    }
+    
+    //auctions per page
+    public function wdm_auctions_num_per_page(){
+	add_option('wdm_auc_num_per_page', 20);
+	?>
+	<input class="wdm_settings_input number required" min="1" type="number" size="5" id="wdm_auctions_page_num_id" name="wdm_auc_settings_data[wdm_auc_num_per_page]" value="<?php echo get_option('wdm_auc_num_per_page');?>" />
+	<div class="ult-auc-settings-tip"><?php _e("Please enter a number greater than or equal to 1.", "wdm-ultimate-auction");?></div>
+	<?php
     }
     
     //admin email field
@@ -531,12 +551,12 @@ if(!class_exists('wdm_settings'))
     
     public function wdm_set_payment_options()
     {
-	$default = array("method_paypal" => __("PayPal", "wdm-ultimate-auction"), "method_wire_transfer" => __("Wire Transfer", "wdm-ultimate-auction"), "method_mailing" => __("Mailing Address", "wdm-ultimate-auction"));
+	$default = array("method_paypal" => __("PayPal", "wdm-ultimate-auction"), "method_wire_transfer" => __("Wire Transfer", "wdm-ultimate-auction"), "method_mailing" => __("Cheque", "wdm-ultimate-auction"));
 	
 	$options = apply_filters('ua_add_new_payment_option', $default);
 	
 	add_option('payment_options_enabled', array("method_paypal" => __("PayPal", "wdm-ultimate-auction")));
-	
+	$values = array();
 	foreach($options as $key => $option) {
 		$values = get_option('payment_options_enabled');
 		$checked = (array_key_exists($key, $values)) ? ' checked="checked" ' : '';
@@ -546,7 +566,7 @@ if(!class_exists('wdm_settings'))
 	
 	echo '<br/><br/>';
 	
-	 _e("NOTE: If you choose to activate any payment method, please go to Payment tab and enter its details. For example: if you enable Wire Transfer, go to Payment -> Wire Transfer and enter its details. Same would apply to Paypal and Mailing Address.", "wdm-ultimate-auction");
+	 _e("NOTE: If you choose to activate any payment method, please go to Payment tab and enter its details. For example: if you enable Wire Transfer, go to Payment -> Wire Transfer and enter its details. Same would apply to Paypal and Cheque.", "wdm-ultimate-auction");
     }
     
     //Auction feeder page URL
@@ -648,27 +668,28 @@ if(!class_exists('wdm_settings'))
     }
     
     public function wdm_get_post(){
-        if(isset($_POST["update_auction"]) && !empty($_POST["update_auction"])){
-            $auction=get_post($_POST["update_auction"]);
-            $single_auction["title"]=$auction->post_title;
-            $single_auction["content"]=$auction->post_content;
-	    $single_auction["excerpt"]=$auction->post_excerpt;
-            return $single_auction;
-        }
-        else if(isset($_GET["edit_auction"]) && !empty($_GET["edit_auction"])){
-            $auction=get_post($_GET["edit_auction"]);
-            $single_auction["title"]=$auction->post_title;
-            $single_auction["content"]=$auction->post_content;
-	    $single_auction["excerpt"]=$auction->post_excerpt;
-            return $single_auction;
-            }
-	else if($this->auction_id!=""){
+	if($this->auction_id!=""){
 	    $auction=get_post($this->auction_id);
             $single_auction["title"]=$auction->post_title;
             $single_auction["content"]=$auction->post_content;
 	    $single_auction["excerpt"]=$auction->post_excerpt;
             return $single_auction;
 	}
+        elseif(isset($_POST["update_auction"]) && !empty($_POST["update_auction"])){
+            $auction=get_post($_POST["update_auction"]);
+            $single_auction["title"]=$auction->post_title;
+            $single_auction["content"]=$auction->post_content;
+	    $single_auction["excerpt"]=$auction->post_excerpt;
+            return $single_auction;
+        }
+        elseif(isset($_GET["edit_auction"]) && !empty($_GET["edit_auction"])){
+            $auction=get_post($_GET["edit_auction"]);
+            $single_auction["title"]=$auction->post_title;
+            $single_auction["content"]=$auction->post_content;
+	    $single_auction["excerpt"]=$auction->post_excerpt;
+            return $single_auction;
+        }
+	
         $this->auction_id="";
         $single_auction["title"]="";
         $single_auction["content"]="";

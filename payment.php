@@ -1,7 +1,7 @@
 <?php
     $default = array(	array( 'slug' => 'paypal', 'label' => __('PayPal', 'wdm-ultimate-auction')),
-			array( 'slug' => 'wire_transfer', 'label' => __('Wire Transfer Details', 'wdm-ultimate-auction')),
-			array( 'slug' => 'mailing_address', 'label' => __('Mailing Address', 'wdm-ultimate-auction'))
+			array( 'slug' => 'wire_transfer', 'label' => __('Wire Transfer', 'wdm-ultimate-auction')),
+			array( 'slug' => 'mailing_address', 'label' => __('Cheque', 'wdm-ultimate-auction'))
 		    );
 ?>
 <ul class="subsubsub">
@@ -51,6 +51,7 @@
 		</th>
 		<td>
 		    <input class="wdm_settings_input email" type="text" id="wdm_paypal_id" name="wdm_paypal_address" value="<?php echo get_option('wdm_paypal_address');?>" />
+		    <?php echo paypal_auto_return_url_notes(); ?>
 		</td>
 	    </tr>
 	    <tr valign="top">
@@ -106,11 +107,11 @@
 
 	?>
 	<form id="wdm-payment-form" class="auction_settings_section_style" action="" method="POST">
-	    <?php  echo "<h3>".__("Mailing Address", "wdm-ultimate-auction")."</h3>"; ?>
+	    <?php  echo "<h3>".__("Cheque", "wdm-ultimate-auction")."</h3>"; ?>
 	    <table class="form-table">
 	    <tr valign="top">
 		<th scope="row">
-		    <label for="wdm_mailing_id"><?php _e("Mailing Address", "wdm-ultimate-auction"); ?></label>
+		    <label for="wdm_mailing_id"><?php _e("Mailing Address & Cheque Details", "wdm-ultimate-auction"); ?></label>
 		</th>
 		<td>
         <textarea class="wdm_settings_input" id="wdm_mailing_id" name="wdm_mailing_address"><?php echo get_option('wdm_mailing_address');?></textarea>

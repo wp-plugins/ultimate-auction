@@ -1,9 +1,14 @@
 <?php
-if(isset($_GET["ult_auc_id"]) && $_GET["ult_auc_id"]){
-	wp_enqueue_style('wdm_lightbox_css',plugins_url('lightbox/jquery.fs.boxer.css', __FILE__));
-	wp_enqueue_script('wdm-lightbox-js', plugins_url('lightbox/jquery.fs.boxer.js', __FILE__), array('jquery'));
-	wp_enqueue_script('wdm-block-ui-js', plugins_url('js/wdm-jquery.blockUI.js', __FILE__), array('jquery'));
-	wp_enqueue_script('wdm-custom-js', plugins_url('js/wdm-custom-js.js', __FILE__), array('jquery'));
+add_action('wp_head', 'wdm_enqueue_front_script');
+
+function wdm_enqueue_front_script(){
+	
+	if(isset($_GET["ult_auc_id"]) && $_GET["ult_auc_id"]){
+		wp_enqueue_style('wdm_lightbox_css',plugins_url('lightbox/jquery.fs.boxer.css', __FILE__));
+		wp_enqueue_script('wdm-lightbox-js', plugins_url('lightbox/jquery.fs.boxer.js', __FILE__), array('jquery'));
+		wp_enqueue_script('wdm-block-ui-js', plugins_url('js/wdm-jquery.blockUI.js', __FILE__), array('jquery'));
+		wp_enqueue_script('wdm-custom-js', plugins_url('js/wdm-custom-js.js', __FILE__), array('jquery'));
+	}
 }
 
 function wdm_auction_listing(){
@@ -31,13 +36,72 @@ function wdm_auction_listing(){
 	
 	$auc_time = '';
 	
-	if(isset($_GET["ult_auc_id"]) && $_GET["ult_auc_id"]){
+	if(is_user_logged_in() && isset($_GET["ult_auc_id"]) && !empty($_GET["ult_auc_id"]) && isset($_GET["mt"]) && !empty($_GET["mt"])){
+		
+		$wdm_auction=get_post($_GET["ult_auc_id"]);
+		$curr_user = wp_get_current_user();
+		$buyer_email = $curr_user->user_email;
+		//$winner_name = $curr_user->user_login;
+		$ret_url = get_permalink().$set_char."ult_auc_id=".$wdm_auction->ID;
+		
+		$check_method = get_post_meta($_GET["ult_auc_id"], 'wdm_payment_method', true);
+		
+		_e('Thank you for buying this product.', 'wdm-ultimate-auction');
+		echo "<br /><br />";
+		
+		//$auc_post = get_post($_GET["ult_auc_id"]);
+		//$auction_author_id = $auc_post->post_author;
+		//$auction_author = new WP_User($auction_author_id);
+		
+		if($check_method === 'method_wire_transfer'){
+			$mthd = __('Wire Transfer', 'wdm-ultimate-auction');
+			
+			//if(in_array('administrator', $auction_author->roles))
+				$det = get_option('wdm_wire_transfer');
+			//else
+			//	$det = get_user_meta($auction_author_id, 'wdm_wire_transfer', true);
+		}
+		elseif($check_method === 'method_mailing'){
+			$mthd = __('Cheque', 'wdm-ultimate-auction');
+			
+			//if(in_array('administrator', $auction_author->roles))
+				$det = get_option('wdm_mailing_address');
+			//else
+			//	$det = get_user_meta($auction_author_id, 'wdm_mailing_address', true);
+		}
+		//if($check_method === 'method_cash'){
+		//	$mthd = __('Cash', 'wdm-ultimate-auction');
+		//	
+		//	//if(in_array('administrator', $auction_author->roles))
+		//		$det = get_option('wdm_cash');
+		//	//else
+		//	//	$det = get_user_meta($auction_author_id, 'wdm_cash', true);
+		//}
+		
+		$mthd = "<strong>".$mthd."</strong>";
+		
+		printf(__('You can make the payment by %s', 'wdm-ultimate-auction'), $mthd);
+		
+		if(!empty($det))
+			echo "<br /><br /><strong>".__('Details').":</strong> <br/>".$det;
+		
+		echo '<br /><br /><a href="'.get_permalink().$set_char.'ult_auc_id='.$_GET['ult_auc_id'].'">'.__('Go Back', 'wdm-ultimate-auction').'</a>';
+		
+		$buy_now_price = get_post_meta($wdm_auction->ID, 'wdm_buy_it_now', true);
+		
+		ultimate_auction_email_template($wdm_auction->post_title, $wdm_auction->ID, $wdm_auction->post_content, $buy_now_price, $buyer_email, $ret_url);
+		
+	}
+	elseif(isset($_GET["ult_auc_id"]) && $_GET["ult_auc_id"]){
 		
 		//if single auction page is found do the following
 		global $wpdb;
 		$wpdb->hide_errors();
 		$wdm_auction=get_post($_GET["ult_auc_id"]);
 		if($wdm_auction){
+			
+		$auction_author_id = $wdm_auction->post_author;
+		$auction_author = new WP_User($auction_author_id);
 		//update single auction page url on single auction page visit - if the permalink type is updated we should have appropriate url to be sent in email 	
 		update_post_meta($wdm_auction->ID, 'current_auction_permalink', get_permalink().$set_char."ult_auc_id=".$wdm_auction->ID);
 		 
@@ -91,7 +155,11 @@ function wdm_auction_listing(){
 				   
 				   $imgURL = get_post_meta($wdm_auction->ID,'wdm-image-'.$c,true);
 				   $imgMime = wdm_get_mime_type($imgURL);
-			           $img_ext = end(explode(".",$imgURL));
+			           $img_ext = explode(".",$imgURL);
+				   $img_ext = end($img_ext);
+				   
+				   if(strpos($img_ext, '?') !== false)
+					$img_ext = strtolower(strstr($img_ext, '?', true));
 				   
 				    if(empty($imgURL)){
 						$images .= '';
@@ -129,7 +197,11 @@ function wdm_auction_listing(){
 				   
 			    $imgURL = get_post_meta($wdm_auction->ID,'wdm-image-'.$c,true);
 			    $imgMime = wdm_get_mime_type($imgURL);
-			    $img_ext = end(explode(".",$imgURL));
+			    $img_ext = explode(".",$imgURL);
+			    $img_ext = end($img_ext);
+			    
+			    if(strpos($img_ext, '?') !== false)
+				$img_ext = strtolower(strstr($img_ext, '?', true));
 			    
 			    if(empty($imgURL)){
 				$images .= '';
@@ -168,7 +240,7 @@ function wdm_auction_listing(){
 			$inc_price = $curr_price + get_post_meta($wdm_auction->ID,'wdm_incremental_val',true);
 			
 			//if the auction has reached it's time limit, expire it
-			if((mktime() >= strtotime(get_post_meta($wdm_auction->ID,'wdm_listing_ends',true)))){
+			if((time() >= strtotime(get_post_meta($wdm_auction->ID,'wdm_listing_ends',true)))){
 				if(!in_array('expired',$active_terms))
 				{
 					$check_term = term_exists('expired', 'auction-status');
@@ -177,11 +249,11 @@ function wdm_auction_listing(){
 				
 			}
 			
-			$now = mktime(); 
+			$now = time(); 
 		        $ending_date = strtotime(get_post_meta($wdm_auction->ID, 'wdm_listing_ends', true));
 			
 			//display message for expired auction
-			if((mktime() >= strtotime(get_post_meta($wdm_auction->ID,'wdm_listing_ends',true))) || in_array('expired',$active_terms)){
+			if((time() >= strtotime(get_post_meta($wdm_auction->ID,'wdm_listing_ends',true))) || in_array('expired',$active_terms)){
 				
 				$seconds =  $now - $ending_date;
 				
@@ -253,8 +325,11 @@ function wdm_auction_listing(){
 				
 				$auc_time = "live";
 				
-				if(is_user_logged_in())
+				if(is_user_logged_in()){
 				   $curr_user = wp_get_current_user();
+				   $auction_bidder_name = $curr_user->user_login;
+				   $auction_bidder_email = $curr_user->user_email;
+				}
 				
 			?>
 			<!--form to place bids-->
@@ -287,8 +362,8 @@ function wdm_auction_listing(){
 				
 				if(is_user_logged_in()) {
 				   //$curr_user = wp_get_current_user();
-				   $auction_bidder_name = $curr_user->user_login;
-				   $auction_bidder_email = $curr_user->user_email;
+				   //$auction_bidder_name = $curr_user->user_login;
+				   //$auction_bidder_email = $curr_user->user_email;
 				   
 				   if($curr_user->ID != $wdm_auction->post_author){
 				   
@@ -347,7 +422,10 @@ function wdm_auction_listing(){
 				   else
 					  $pp_link  = "https://www.paypal.com/cgi-bin/webscr";
 				   if(is_user_logged_in()){
+						
+					$check_method = get_post_meta($wdm_auction->ID, 'wdm_payment_method', true);
 					
+					if($check_method == 'method_paypal'){
 				   ?>
 				<!--buy now button-->
 				<div id="wdm_buy_now_section">
@@ -384,7 +462,50 @@ function wdm_auction_listing(){
 		
 			    });
 			       </script>
-				<?php 
+				<?php
+				
+				   }
+				   else{
+					if($check_method === 'method_wire_transfer'){
+						$mthd = __('Wire Transfer', 'wdm-ultimate-auction');
+					}
+					elseif($check_method === 'method_mailing'){
+						$mthd = __('Cheque', 'wdm-ultimate-auction');
+					}
+					//if($check_method === 'method_cash'){
+					//	$mthd = __('Cash', 'wdm-ultimate-auction');
+					//}
+		
+					$bn_text = sprintf(__('Buy it now for %s %.2f', 'wdm-ultimate-auction'), $currency_code, $buy_now_price);
+    
+					$shipAmt = 0;
+					$shipAmt = apply_filters('ua_shipping_data_invoice', $shipAmt, $wdm_auction->ID, $auction_bidder_email);
+    
+					if($shipAmt > 0){
+						$bn_text = sprintf(__('Buy it now for %s %.2f + %.2f (shipping)', 'wdm-ultimate-auction'), $currency_code, $buy_now_price, $shipAmt);
+					}
+					?>
+					<div id="wdm_buy_now_section">
+						<?php if($curr_user->ID != $wdm_auction->post_author){ ?>
+						<div id="wdm-buy-line-above" >
+						<form action="<?php echo add_query_arg(array('mt' => 'bn', 'wdm' => $a_key), get_permalink().$set_char."ult_auc_id=".$wdm_auction->ID);?>" method="post">
+							<input type="submit" value="<?php echo $bn_text; ?>" id="wdm-buy-now-button">
+						</form>
+						</div>
+						<?php } ?>
+					</div>
+					
+					<script type="text/javascript">
+						jQuery(document).ready(function($){
+							$("#wdm-buy-now-button").click(function(){
+								var bcnf = confirm('<?php printf(__("You need to pay %s %.2f amount via %s to %s. If you choose OK, you will receive an email with payment details and auction will expire. Choose Cancel to ignore this buy now transaction.", "wdm-ultimate-auction"), $currency_code, $buy_now_price+$shipAmt, $mthd, $auction_author->user_login);?>');
+								if(bcnf == true){ return true; }
+								return false;
+							});
+						});
+					</script>
+					<?php
+				}
 				}
 				else{?>
 				   <div id="wdm_buy_now_section">
@@ -435,7 +556,7 @@ function wdm_auction_listing(){
 				   }); 
 			    });
        
-		jQuery(".auction-main-img-a").boxer({'fixed': true});
+		//jQuery(".auction-main-img-a").boxer({'fixed': true});
 		
         var eDays = jQuery('#wdm_days');
         var eHours = jQuery('#wdm_hours');

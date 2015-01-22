@@ -89,7 +89,7 @@ text-decoration: underline;
 .wdm_single_prod_desc
 {
     float: left;
-    width: 300px;
+    width: 350px;
 }
 
 #wdm_place_bid_section form{
@@ -118,7 +118,7 @@ text-decoration: underline;
 .wdm-auction-listing-container{
     width: 100%;
     position: relative;
-    font-size: 12px !important;
+    /*font-size: 12px !important;*/
     font-weight: normal !important;
 }
 
@@ -133,27 +133,27 @@ text-decoration: underline;
 }
 
 .wdm-auction-listing-container .wdm-apn {
-width: 17%;
+width: 20%;
 margin-left: 10px !important;
 margin-right: 3%;
-max-width: 100px;
+/*max-width: 100px;*/
 }
 
 .wdm-auction-listing-container .wdm-apt {
-width: 17%;
+width: 18%;
 color: #FF4800 !important;
 }
 
 .wdm-auction-listing-container .wdm-app {
-width: 16%;
+width: 14%;
 }
 
 .wdm-auction-listing-container .wdm-apb {
-width: 13%;
+width: 14%;
 }
 
 .wdm-auction-listing-container .wdm-ape {
-width: 12%;
+width: 11%;
 }
 
 .wdm-auction-listing-container .wdm-apbid{
@@ -175,7 +175,7 @@ width: 12%;
     width: auto !important;
     /*height: auto !important;*/
     max-width: 100% !important;
-    max-height: 80px !important;
+    max-height: 120px !important;
     padding: 0 !important;
     box-shadow: none !important;
     border: none !important;
@@ -186,10 +186,10 @@ width: 12%;
 
 .wdm-auction-listing-container .wdm-apd{
     margin-top: 45px;
-    font-size: 14px;
+    /*font-size: 14px;*/
     line-height: 1.5;
-    padding: 0 10px;
-    font-size: 12px;
+    padding: 10px 10px 5px 10px;
+    /*font-size: 12px;*/
     color: #21759B !important;
     clear: both;
 }
@@ -281,7 +281,8 @@ width: 12%;
     border-radius: 3px;
     text-shadow: none;
     font-weight: normal;
-    font-size: 15px;
+    /*font-size: 15px;*/
+        font-size: inherit !important;
     text-decoration: none !important;
 }
 
@@ -417,7 +418,10 @@ width: 12%;
 
 .wdm_reserved_note{
     margin: 5px 0 10px;
+    clear: both;
 }
+
+.wdm_bid_val{float: left;}
 
 .wdm-current-preview-image{
     border: 1px solid #CCC;
