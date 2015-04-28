@@ -267,6 +267,8 @@ if(!class_exists('wdm_settings'))
 	    'setting_section_id' 			
 	);
 	
+	do_action('wdm_ua_after_auction_page_url_settings', 'test-setting-admin', 'setting_section_id');
+	
 	add_settings_field(
 	    'wdm_login_url_id', 
 	    __('Login Page URL', 'wdm-ultimate-auction'), 
@@ -423,6 +425,8 @@ if(!class_exists('wdm_settings'))
 	    
 	if(isset($mid['wdm_auc_num_per_page']))
 	    update_option('wdm_auc_num_per_page',$mid['wdm_auc_num_per_page']);
+	    
+	do_action('wdm_ua_update_ext_settings');
 	
     }
     else{
@@ -444,7 +448,8 @@ if(!class_exists('wdm_settings'))
     
     //'Payment Settings' section 
     public function print_payment_info(){
-
+	wp_enqueue_script( 'curr-detect', plugins_url('/js/curr-detect.js',__FILE__), array('jquery'));	
+	wp_localize_script('curr-detect', 'curr_script_vars', array('ajax_url' => admin_url( 'admin-ajax.php' )));
     }
     
     //auctions per page
@@ -513,45 +518,167 @@ if(!class_exists('wdm_settings'))
     
     //currency codes field
     public function wdm_currency_field(){
-        $currencies = array(
-			    "Australian Dollar - AUD",
-			    "Canadian Dollar - CAD",
-			    "Euro - EUR",
-			    "British Pound - GBP",
-			    "Japanese Yen - JPY",
-			    "U.S. Dollar - USD",
-			    "New Zealand Dollar - NZD",
-			    "Swiss Franc - CHF",
-			    "Hong Kong Dollar - HKD",
-			    "Singapore Dollar - SGD",
-			    "Swedish Krona - SEK",
-			    "Danish Krone - DKK",
-			    "Polish Zloty - PLN",
-			    "Norwegian Krone - NOK",
-			    "Hungarian Forint - HUF",
-			    "Czech Koruna - CZK",
-			    "Israeli New Shekel - ILS",
-			    "Mexican Peso - MXN",
-			    "Brazilian Real - BRL",
-			    "Malaysian Ringgit - MYR",
-			    "Philippine Peso - PHP",
-			    "New Taiwan Dollar - TWD",
-			    "Thai Baht - THB",
-			    "Turkish Lira - TRY"
+	$b='$b';
+	$U='$U';
+        $currencies = array("Albania Lek -Lek ALL",
+"Afghanistan Afghani -؋ AFN",
+"Argentina Peso -$ ARS",
+"Aruba Guilder -ƒ AWG",
+"Australian Dollar -$ AUD",
+"Azerbaijan Manat -ман AZN",
+"Bahamas Dollar -$ BSD",
+"Barbados Dollar -$ BBD",
+"Belarus Ruble -p. BYR",
+"Belize Dollar -BZ$ BZD",
+"Bermuda Dollar -$ BMD",
+"Bolivia Boliviano -$b BOB",
+"Bosnia and Herzegovina	Convertible Marka -KM BAM",	
+"Botswana Pula -P BWP",
+"Bulgaria Lev -лв BGN",
+"Brazilian Real -R$ BRL",
+"Brunei Dollar -$ BND",
+"Cambodia Riel -៛ KHR",
+"Canadian Dollar -$ CAD",
+"Cayman Dollar -$ KYD",
+"Chile Peso -$ CLP",
+"China Yuan Renminbi -¥ CNY",
+"Colombia Peso -$ COP",
+"Costa Rica Colon -₡ CRC",
+"Croatia Kuna -kn HRK",
+"Cuba Peso -₱ CUP",
+"Czech Koruna -Kč CZK",
+"Danish Krone -kr DKK",
+"Dominican Republic Peso -RD$ DOP",
+"East Caribbean	Dollar -$ XCD",
+"Egypt Pound -£	EGP",
+"El Salvador Colon -$ SVC",	
+"Estonia Kroon -kr EEK",
+"Euro -€ EUR",
+"Falkland Islands Pound	-£ FKP",
+"Fiji Dollar -$	FJD",
+"Ghana Cedis -¢	GHC",
+"Gibraltar Pound -£ GIP",
+"Guatemala Quetzal -Q GTQ",
+"Guernsey Pound	-£ GGP",
+"Guyana	Dollar -$ GYD",
+"Honduras Lempira -L HNL",
+"Hong Kong Dollar -$ HKD",
+"Hungarian Forint -kr HUF",
+"Iceland Krona -kr ISK",
+"India	Rupee -₹ INR",
+"Indonesia Rupiah -Rp IDR",	
+"Iran Rial -﷼ IRR",
+"Isle of Man Pound -£ IMP",
+"Israeli New Shekel -₪ ILS",
+"Jamaica Dollar	-J$ JMD",
+"Japanese Yen -¥ JPY",
+"Jersey	Pound -£ JEP",
+"Kazakhstan Tenge -лв KZT",
+"Korea (North) Won -₩ KPW",
+"Korea (South) Won -₩ KRW",
+"Kyrgyzstan Som	-лв KGS",
+"Laos Kip -₭ LAK",
+"Latvia	Lat -Ls	LVL",
+"Lebanon Pound -£ LBP",
+"Liberia Dollar	-$ LRD",
+"Lithuania Litas -Lt LTL",
+"Macedonia Denar -ден MKD",
+"Malaysian Ringgit -RM MYR",
+"Mauritius Rupee -₨ MUR",
+"Mexican Peso -$ MXN",
+"Mongolia Tughrik -₮ MNT",
+"Mozambique Metical -MT	MZN",
+"Namibia Dollar	-$ NAD",
+"Nepal	Rupee -₨ NPR",
+"Netherlands Antilles Guilder -ƒ ANG",
+"New Zealand Dollar -$ NZD",
+"Nicaragua Cordoba -C$	NIO",
+"Nigeria Naira	-₦ NGN",
+"Norwegian Krone -kr NOK",
+"Oman Rial -﷼ OMR",
+"Pakistan Rupee	-₨ PKR",	
+"Panama	Balboa	-B/. PAB",
+"Paraguay Guarani -Gs PYG",
+"Peru Nuevo Sol	-S/. PEN",
+"Philippine Peso -₱ PHP",
+"Polish Zloty -zł PLN",
+"Qatar Riyal -﷼ QAR",
+"Romania New Leu -lei RON",
+"Russia	Ruble -руб RUB",
+"Saint Helena Pound -£ SHP",
+"Saudi Arabia Riyal -﷼	SAR",
+"Serbia	Dinar -Дин. RSD",
+"Seychelles Rupee -₨ SCR",
+"Singapore Dollar -$ SGD",
+"Solomon Islands Dollar	-$ SBD",
+"Somalia Shilling -S SOS",
+"South Africa Rand -S ZAR",
+"Sri Lanka Rupee -₨ LKR",
+"Swedish Krona -kr SEK",
+"Swiss Franc -CHF CHF",
+"Suriname Dollar -$ SRD",
+"Syria Pound -£	SYP",
+"New Taiwan Dollar -NT$ TWD",	
+"Thai Baht -฿ THB",
+"Trinidad and Tobago Dollar -TT$ TTD",	
+"Turkey	Lira -₤	TRL",
+"Tuvalu	Dollar	-$ TVD",
+"Ukraine Hryvna	-₴ UAH",
+"British Pound -£ GBP",
+"U.S. Dollar -$ USD",
+"Uruguay Peso $U UYU",	
+"Uzbekistan Som -лв UZS",
+"Venezuela Bolivar Fuerte -Bs VEF",
+"Viet Nam Dong -₫ VND",
+"Yemen	Rial -﷼ YER",
+"Zimbabwe Dollar -Z$ ZWD",
+"Turkish Lira -₺ TRY"
+);
+        $pp_currencies = array(
+			"Australian Dollar -$ AUD",
+		    "Canadian Dollar -$ CAD",
+		    "Euro -€ EUR",
+		    "British Pound -£ GBP",
+		    "Japanese Yen -¥ JPY",
+		    "U.S. Dollar -$ USD",
+		    "New Zealand Dollar -$ NZD",
+		    "Swiss Franc -CHF CHF",
+		    "Hong Kong Dollar -$ HKD",
+		    "Singapore Dollar -$ SGD",
+		    "Swedish Krona -kr SEK",
+		    "Danish Krone -kr DKK",
+		    "Polish Zloty -zł PLN",
+		    "Norwegian Krone -kr NOK",
+		    "Hungarian Forint -kr HUF",
+		    "Czech Koruna -Kč CZK",
+		    "Israeli New Shekel -₪ ILS",
+		    "Mexican Peso -$ MXN",
+		    "Brazilian Real -R$ BRL",
+		    "Malaysian Ringgit -RM MYR",
+		    "Philippine Peso -₱ PHP",
+		    "New Taiwan Dollar -NT$ TWD",
+		    "Thai Baht -฿ THB",
+		    "Turkish Lira -₺ TRY"
 			    );
 	
 	echo "<select class='wdm_settings_input' id='wdm_currency_id' name='wdm_auc_settings_data[wdm_currency]'>";
 	foreach($currencies as $currency) {
-		$selected = (get_option('wdm_currency') == $currency) ? 'selected="selected"' : '';
-		echo "<option value='$currency' $selected>$currency</option>";
+		$selected = (substr(get_option('wdm_currency'), -3) == substr($currency, -3)) ? 'selected="selected"' : '';
+	
+	    if(!in_array($currency, $pp_currencies))
+	    {
+	        echo "<option data-curr='npl' value='$currency' $selected>$currency</option>";
+	    }
+	    else
+	        echo "<option value='$currency' $selected>$currency</option>";
 	}
 	echo "</select>";
-	
+	echo ' <div id="nonpaypal" style="display: none; color: red;">'.__("This currency is not available for PayPal.", "wdm-ultimate-auction").'</div>';
     }
     
     public function wdm_set_payment_options()
     {
-	$default = array("method_paypal" => __("PayPal", "wdm-ultimate-auction"), "method_wire_transfer" => __("Wire Transfer", "wdm-ultimate-auction"), "method_mailing" => __("Cheque", "wdm-ultimate-auction"));
+	$default = array("method_paypal" => __("PayPal", "wdm-ultimate-auction"), "method_wire_transfer" => __("Wire Transfer", "wdm-ultimate-auction"), "method_mailing" => __("Cheque", "wdm-ultimate-auction"), "method_cash" => __("Cash", "wdm-ultimate-auction"));
 	
 	$options = apply_filters('ua_add_new_payment_option', $default);
 	
@@ -561,7 +688,7 @@ if(!class_exists('wdm_settings'))
 		$values = get_option('payment_options_enabled');
 		$checked = (array_key_exists($key, $values)) ? ' checked="checked" ' : '';
 		
-		echo "<input $checked value='$option' name='wdm_auc_settings_data[payment_options_enabled][$key]' type='checkbox' /> $option <br />";
+		echo "<input $checked value='$option' name='wdm_auc_settings_data[payment_options_enabled][$key]' type='checkbox' class=wdm_$key /> $option <br />";
 	}
 	
 	echo '<br/><br/>';
@@ -578,11 +705,14 @@ if(!class_exists('wdm_settings'))
     
 	<a href="" class="auction_fields_tooltip"><strong><?php _e("?", "wdm-ultimate-auction");?></strong>
 	    <span style="width: 370px;margin-left: -90px;">
-	    <?php _e("If you want to make each auction title as a link to the front end single auction page in 'Title' columns of the plugin dashboard, you'll need to enter front end URL of the page where you have used auction shortcode i.e. auction feeder page.", "wdm-ultimate-auction");?>
+	    <?php _e("If you want to make each auction title as a link to the front end single auction page in 'Title' columns of the plugin dashboard, you'll need to enter front end URL of the page where you have used shortcode for auctions listing.", "wdm-ultimate-auction");?>
 	    <br /><br />
-	    <?php _e("NOTE: Whenever you change the permalink, do not forget to enter the modified URL over here. Also, if you select auction page as Home page, do not enter Home page URL, instead use actual full URL of the feeder page.", "wdm-ultimate-auction");?>
+	    <?php _e("NOTE: Whenever you change the permalink, do not forget to enter the modified URL here. Also, if you select auction page as Home page, do not enter Home page URL, instead use actual full URL of the feeder page.", "wdm-ultimate-auction");?>
 	    </span>
 	</a>
+	<br /><br />
+	<span class="ult-auc-settings-tip"><?php _e("Use this shortcode in a page to make it auction feeder page:", "wdm-ultimate-auction");?></span>
+	<?php echo "<code>[wdm_auction_listing]</code>";?>
     </div>
     <?php
     }

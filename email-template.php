@@ -109,6 +109,26 @@ function ultimate_auction_email_template($auction_name, $auction_id, $auction_de
 	    $message .= __("Mailing Address & Cheque Details", 'wdm-ultimate-auction').": <br />";
 	    $message .= get_option('wdm_mailing_address');
 	}
+	elseif($check_method === 'method_cash')
+	{
+	    $msg = apply_filters('ua_product_shipping_cost_wire_cheque',$shipping_link, $auction_id,$winner_bid,$winner_email);
+	    
+	    if(!empty($msg))
+	    {
+		$message .= sprintf(__('%s by Cash','wdm-ultimate-auction'),$msg).'<br /><br />';
+	    }
+	    else
+	    {
+		$message .= sprintf(__('You can pay %s by Cash.', 'wdm-ultimate-auction'), $pay_amt)."<br /><br />";
+	    }
+	    
+	    $cash_msg = get_option('wdm_mailing_address');
+	    
+	    if(!empty($cash_msg)){
+		$message .= __("Cash Details", 'wdm-ultimate-auction').": <br />";
+		$message .= $cash_msg;
+	    }
+	}
 	
 	$hdr = "";
 	//$headers  = "From: ". $site_name ." <". $auction_email ."> \r\n";

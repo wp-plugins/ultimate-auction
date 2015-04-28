@@ -6,8 +6,9 @@ jQuery(document).ready(
                             var pm = jQuery("#auction-settings-form #wdm_paypal_id").val();
                             var wm = jQuery("#auction-settings-form #wdm_wire_transfer_id").val();
                             var mm = jQuery("#auction-settings-form #wdm_mailing_id").val();
+                            var cash=jQuery("#auction-settings-form #wdm_cash").val();
                             
-                            if(pm == '' && wm == '' && mm == '')
+                            if(pm == '' && wm == '' && mm == '' && cash == '')
                             {
                                 alert(wdm_ua_obj_l10nv.pmt);
                                 return false;

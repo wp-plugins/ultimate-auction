@@ -333,6 +333,7 @@ $currency_code = substr(get_option('wdm_currency'), -3);
                 <option id="wdm_method_paypal" value="method_paypal" <?php if($this->wdm_post_meta('wdm_payment_method') == "method_paypal") echo "selected"; if(!array_key_exists("method_paypal", $pay_methods)) echo "disabled='disabled'";?>>PayPal</option>
                 <option id="wdm_method_wire_transfer" value="method_wire_transfer" <?php if($this->wdm_post_meta('wdm_payment_method') == "method_wire_transfer") echo "selected"; if(!array_key_exists("method_wire_transfer", $pay_methods)) echo "disabled='disabled'";?>>Wire Transfer</option>
                 <option id="wdm_method_mailing" value="method_mailing" <?php if($this->wdm_post_meta('wdm_payment_method') == "method_mailing") echo "selected"; if(!array_key_exists("method_mailing", $pay_methods)) echo "disabled='disabled'";?>>By Cheque</option>
+		<option id="wdm_method_cash" value="method_cash" <?php if($this->wdm_post_meta('wdm_payment_method') == "method_cash") echo "selected"; if(!array_key_exists("method_cash", $pay_methods)) echo "disabled='disabled'";?>><?php _e("Cash", "wdm-ultimate-auction");?></option>
             </select>
 	    <div class="ult-auc-settings-tip"><?php _e("Only those methods will be active for which you've entered details inside plugin's settings page.", "wdm-ultimate-auction");?></div>
         </td>

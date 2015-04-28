@@ -3,7 +3,7 @@ Contributors: nitesh_singh,WisdmLabs
 Donate link: http://auctionplugin.net/
 Tags: auctions,auction,auction plugin,wp auction,wordpress auction,wp auctions,auction script,ebay,ebay auction,bidding
 Requires at least: 3.5
-Tested up to: 4.1
+Tested up to: 4.2.1
 License: GPLv2 or later
 Stable tag: trunk
 
@@ -44,6 +44,8 @@ Lots of features, very configurable.  Easy to setup.  Great support.
 	13. Add To WATCHLIST feature
 	14. BULK IMPORT feature
 	15. WIDGET to show auction.
+	16. Best Offer feature
+	
 	
 	
 
@@ -108,6 +110,12 @@ This page is responsible for displaying all live auctions. If you click a specif
 == Frequently Asked Questions ==
 
 == Changelog ==
+= 3.6.1 = 
+* New Feature - New payment method known as CASH has been added.
+* Fix - Currencies are now displayed with their symbols and values are comma separated. 
+* Fix - Username are displayed inside manage auction section for buy now listings.
+
+
 = 3.6.0 = 
 * New Feature - Allows localhost url on add auction page.
 * New Feature - Added "Reply to" header for users mentioned inside expired auctions so that it is convenient for admin to click and email them.

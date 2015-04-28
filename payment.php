@@ -1,7 +1,8 @@
 <?php
     $default = array(	array( 'slug' => 'paypal', 'label' => __('PayPal', 'wdm-ultimate-auction')),
 			array( 'slug' => 'wire_transfer', 'label' => __('Wire Transfer', 'wdm-ultimate-auction')),
-			array( 'slug' => 'mailing_address', 'label' => __('Cheque', 'wdm-ultimate-auction'))
+			array( 'slug' => 'mailing_address', 'label' => __('Cheque', 'wdm-ultimate-auction')),
+			array( 'slug' => 'cash', 'label' => __('Cash', 'wdm-ultimate-auction'))
 		    );
 ?>
 <ul class="subsubsub">
@@ -122,6 +123,29 @@
 	    <?php submit_button(__('Save Changes', 'wdm-ultimate-auction')); ?>
 	</form>
 	<?php
+    }
+    elseif(isset($_GET['method']) && ($_GET['method'] == 'cash')){
+	
+        if(isset($_POST['wdm_cash'])){	
+            update_option('wdm_cash', $_POST['wdm_cash']);	
+        }	
+             ?>	
+        <form id="wdm-payment-form" class="auction_settings_section_style" action="" method="POST">
+            <?php  echo "<h3>".__("Cash", "wdm-ultimate-auction")."</h3>"; ?>
+            <table class="form-table">	
+            <tr valign="top">
+                <th scope="row">
+                    <label for="wdm_cash_id"><?php _e("Customer Message (optional)", "wdm-ultimate-auction"); ?></label>	
+                </th>	
+                <td>	
+        <textarea class="wdm_settings_input" id="wdm_cash_id" name="wdm_cash"><?php echo get_option('wdm_cash');?></textarea>	
+    <div class="ult-auc-settings-tip"><?php _e("By choosing this payment method, PRO would send a congratulatory email mentioning that final bidder should pay in cash the final bidding amount to auctioneer for the auctioned item.", "wdm-ultimate-auction");?></div>
+                </td>
+            </tr>
+            </table>
+            <?php submit_button(__('Save Changes', 'wdm-ultimate-auction')); ?>
+        </form>
+        <?php	
     }
     elseif(isset($_GET['method'])){
 	do_action('ua_payment_register_settings', $_GET['method']);

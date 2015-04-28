@@ -19,6 +19,21 @@ function wdm_auction_listing(){
 	ob_start();
 	//check the permalink from database and append variable to the auction single pages accordingly
 	$perma_type = get_option('permalink_structure');
+		
+	//get currency code
+	$currency_code			 = substr( get_option( 'wdm_currency' ), -3 );
+	$currency_code_display	 = '';
+	preg_match( '/-([^ ]+)/', get_option( 'wdm_currency' ), $matches );
+	$currency_symbol = $matches[ 1 ];
+
+	if(empty($currency_symbol)){
+		$currency_symbol = $currency_code.' ';
+	}
+	else{
+		if ( $currency_symbol == '$' || $currency_symbol == 'kr' ) {
+			$currency_code_display = $currency_code;
+		}	
+	}
 	
 	//get Login url if set
 	$wdm_login_url=get_option('wdm_login_page_url');
@@ -69,14 +84,14 @@ function wdm_auction_listing(){
 			//else
 			//	$det = get_user_meta($auction_author_id, 'wdm_mailing_address', true);
 		}
-		//if($check_method === 'method_cash'){
-		//	$mthd = __('Cash', 'wdm-ultimate-auction');
-		//	
-		//	//if(in_array('administrator', $auction_author->roles))
-		//		$det = get_option('wdm_cash');
-		//	//else
-		//	//	$det = get_user_meta($auction_author_id, 'wdm_cash', true);
-		//}
+		elseif($check_method === 'method_cash'){
+			$mthd = __('Cash', 'wdm-ultimate-auction');
+			
+			//if(in_array('administrator', $auction_author->roles))
+				$det = get_option('wdm_cash');
+			//else
+			//	$det = get_user_meta($auction_author_id, 'wdm_cash', true);
+		}
 		
 		$mthd = "<strong>".$mthd."</strong>";
 		
@@ -268,7 +283,7 @@ function wdm_auction_listing(){
 			    if(!empty($to_bid)){?>
 				   
 				   <div class="wdm_bidding_price" style="float:left;">
-						 <strong><?php echo $currency_code." ".sprintf("%.2f", $curr_price); ?></strong>
+								<strong><?php echo $currency_symbol . number_format($curr_price, 2, '.', ','). " " . $currency_code_display; ?></strong>
 				   </div>
 				   <div id="wdm-auction-bids-placed" class="wdm_bids_placed" style="float:right;">
 					<a href="#wdm-tab-anchor-id" id="wdm-total-bids-link"><?php echo $total_bids." "; echo ($total_bids == 1) ? __("Bid", "wdm-ultimate-auction") : __("Bids", "wdm-ultimate-auction"); ?></a>
@@ -281,7 +296,9 @@ function wdm_auction_listing(){
 			    $bought = get_post_meta($wdm_auction->ID, 'auction_bought_status', true);
 			    
 			    if($bought === 'bought'){
-				   printf('<div class="wdm-mark-red">'.__('This auction has been bought by paying Buy it Now price %s', 'wdm-ultimate-auction').'</div>', '['.$currency_code.' '.$buy_now_price.']');
+				$buyer_id = get_post_meta($wdm_auction->ID, 'wdm_auction_buyer', true);
+				$buyer = get_user_by('id', $buyer_id);
+				printf( '<div class="wdm-mark-red">' . __( 'This auction has been bought by %s at %s', 'wdm-ultimate-auction' ) . '</div>', $buyer->user_login, '[' . $currency_symbol . number_format($buy_now_price, 2, '.', ','). ' ' . $currency_code_display . ']' );
 			    }
 			    else{
 				   $cnt_qry = "SELECT COUNT(bid) FROM ".$wpdb->prefix."wdm_bidders WHERE auction_id =".$wdm_auction->ID;
@@ -298,7 +315,7 @@ function wdm_auction_listing(){
 						 $winner_name  = "";
 						 $name_qry = "SELECT name FROM ".$wpdb->prefix."wdm_bidders WHERE bid =".$win_bid." AND auction_id =".$wdm_auction->ID." ORDER BY id DESC";
 						 $winner_name = $wpdb->get_var($name_qry);
-						 printf('<div class="wdm-mark-red">'.__('This auction has been sold to %1$s at %2$s.', 'wdm-ultimate-auction').'</div>', $winner_name, $currency_code." ".$win_bid);
+						printf( '<div class="wdm-mark-red">' . __( 'This auction has been sold to %1$s at %2$s.', 'wdm-ultimate-auction' ) . '</div>', $winner_name, $currency_symbol . number_format($win_bid, 2, '.', ','). " " . $currency_code_display );
 					  }
 					  else
 					  {
@@ -339,7 +356,7 @@ function wdm_auction_listing(){
 				<?php if(!empty($to_bid)) {?>
 				<div id="wdm_place_bid_section">
 				<div class="wdm_bidding_price" style="float:left;">
-						 <strong><?php echo $currency_code." ".sprintf("%.2f", $curr_price); ?></strong>
+									<strong><?php echo $currency_symbol . number_format($curr_price, 2, '.', ','). " " . $currency_code_display; ?></strong>
 				</div>
 				<div id="wdm-auction-bids-placed" class="wdm_bids_placed" style="float:right;">
 					<a href="#wdm-tab-anchor-id" id="wdm-total-bids-link"><?php echo $total_bids." "; echo ($total_bids == 1) ? __("Bid", "wdm-ultimate-auction") : __("Bids", "wdm-ultimate-auction"); ?></a>
@@ -372,7 +389,7 @@ function wdm_auction_listing(){
 				<form action="<?php echo dirname(__FILE__); ?>" style="margin-top:20px;">
 					<div class="wdm_bid_val" style="">
 						<label for="wdm-bidder-bidval"><?php _e('Bid Value', 'wdm-ultimate-auction');?>: </label>
-						<input type="text" id="wdm-bidder-bidval" style="width:85px;" placeholder="<?php printf(__('in %s', 'wdm-ultimate-auction'), $currency_code);?>" />
+						<input type="text" id="wdm-bidder-bidval" style="width:85px;" placeholder="<?php printf( __( 'in %s', 'wdm-ultimate-auction' ), $currency_symbol . $currency_code_display ); ?>" />
 						<br /><span class="wdm_enter_val_text" style="float:left;">
 						<small>(<?php printf(__('Enter %.2f or more', 'wdm-ultimate-auction'), $inc_price);?>)
 						<?php
@@ -397,8 +414,8 @@ function wdm_auction_listing(){
 				  ?>
 				   <br />
 					<div class="wdm_bid_val" style="float:left;">
-						<label for="wdm-bidder-bidval"><?php _e('Bid Value', 'wdm-ultimate-auction');?>: </label>
-						<input type="text" id="wdm-bidder-bidval" style="width:85px;" placeholder="<?php printf(__('in %s', 'wdm-ultimate-auction'), $currency_code);?>" />
+										<label for="wdm-bidder-bidval"><?php _e( 'Bid Value', 'wdm-ultimate-auction' ); ?>: </label>
+										<input type="text" id="wdm-bidder-bidval" style="width:85px;" placeholder="<?php printf( __( 'in %s', 'wdm-ultimate-auction' ), $currency_symbol . $currency_code_display ); ?>" />
 						<br /><span class="wdm_enter_val_text" style="float:right;">
 						<small>(<?php printf(__('Enter %.2f or more', 'wdm-ultimate-auction'), $inc_price);?>)</small>
 						</span>
@@ -446,7 +463,7 @@ function wdm_auction_listing(){
 				<input type="hidden" name="button_subtype" value="services">
 				<input type="hidden" name="no_note" value="0">
 				<input type="hidden" name="bn" value="PP-BuyNowBF:btn_buynowCC_LG.gif:NonHostedGuest">
-				<input type="submit" value="<?php printf(__('Buy it now for %s %.2f', 'wdm-ultimate-auction'), $currency_code, $buy_now_price);?>" id="wdm-buy-now-button">
+				<input type="submit" value="<?php printf(__('Buy it now for %s%s %s', 'wdm-ultimate-auction'),  $currency_symbol, number_format($buy_now_price, 2, '.', ','), $currency_code_display);?>" id="wdm-buy-now-button">
 				</form>
 					</div>
 					<?php }
@@ -472,17 +489,17 @@ function wdm_auction_listing(){
 					elseif($check_method === 'method_mailing'){
 						$mthd = __('Cheque', 'wdm-ultimate-auction');
 					}
-					//if($check_method === 'method_cash'){
-					//	$mthd = __('Cash', 'wdm-ultimate-auction');
-					//}
+					elseif($check_method === 'method_cash'){
+						$mthd = __('Cash', 'wdm-ultimate-auction');
+					}
 		
-					$bn_text = sprintf(__('Buy it now for %s %.2f', 'wdm-ultimate-auction'), $currency_code, $buy_now_price);
+					$bn_text = sprintf(__('Buy it now for %s%s %s', 'wdm-ultimate-auction'),  $currency_symbol, number_format($buy_now_price, 2, '.', ','), $currency_code_display);
     
 					$shipAmt = 0;
 					$shipAmt = apply_filters('ua_shipping_data_invoice', $shipAmt, $wdm_auction->ID, $auction_bidder_email);
     
-					if($shipAmt > 0){
-						$bn_text = sprintf(__('Buy it now for %s %.2f + %.2f (shipping)', 'wdm-ultimate-auction'), $currency_code, $buy_now_price, $shipAmt);
+									if ( $shipAmt > 0 ) {
+										$bn_text = sprintf( __( 'Buy it now for %s%s %s + %s%s %s(shipping)', 'wdm-ultimate-auction' ), $currency_symbol, number_format($buy_now_price, 2, '.', ','), $currency_code_display, $currency_symbol, number_format($shipAmt, 2, '.', ','), $currency_code_display );
 					}
 					?>
 					<div id="wdm_buy_now_section">
@@ -511,7 +528,7 @@ function wdm_auction_listing(){
 				   <div id="wdm_buy_now_section">
 					  <div id="wdm-buy-line-above" >
 					  <a class="wdm-login-to-buy-now" href="<?php echo $wdm_login_url; ?>" title="<?php _e('Login', 'wdm-ultimate-auction');?>">
-						 <?php printf(__('Buy it now for %s %.2f', 'wdm-ultimate-auction'), $currency_code, $buy_now_price);?>
+						 <?php printf( __( 'Buy it now for %s%s %s', 'wdm-ultimate-auction' ), $currency_symbol, number_format($buy_now_price, 2, '.', ','), $currency_code_display ); ?>
 					  </a>
 					  </div>
 					  

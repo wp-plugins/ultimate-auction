@@ -212,7 +212,7 @@
 							<?php echo $result->name; ?> 
 						  </li>
 						  <li>
-						    <?php echo $currency_code." ".$result->bid; ?>
+						    <?php echo $currency_symbol.number_format($result->bid,2,'.',',')." ".$currency_code_display; ?>
 						  </li>
 						  <li>
 							<?php printf(__('%s ago', 'wdm-ultimate-auction'), $ago_time); ?>

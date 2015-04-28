@@ -40,7 +40,10 @@ function wdm_create_bidders_table()
    
    //for old table (till 'Wordpress Auction Plugin' version 1.0.2) which had 'bid' column as integer(MEDIUMINT)
    $alt_sql = "ALTER TABLE $data_table MODIFY bid DECIMAL(10,2);";
+   $wpdb->query($alt_sql);
    
+   //for old table which had 'bid' column without index
+   $alt_sql = "ALTER TABLE $data_table ADD INDEX (bid);";
    $wpdb->query($alt_sql);
 }
 
@@ -500,6 +503,7 @@ function wdm_set_auction_timezone()
                                           }
                                           
                                           update_post_meta($single_auction->ID, 'auction_bought_status', 'bought');
+					  update_post_meta($single_auction->ID, 'wdm_auction_buyer', get_current_user_id());
                                           echo '<script type="text/javascript">
                                           setTimeout(function() {
                                                                 alert("'.__("Thank you for buying this product.", "wdm-ultimate-auction").'");

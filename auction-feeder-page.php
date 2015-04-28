@@ -133,11 +133,11 @@ $args = array(
 			$bnp = get_post_meta($wdm_single_auction->ID, 'wdm_buy_it_now', true);
 			
 			if((!empty($curr_price) || $curr_price > 0) && !empty($ob))
-				echo $cc ." ". sprintf("%.2f", $curr_price);
+				echo $currency_symbol. number_format($curr_price, 2, '.', ',')." ".$currency_code_display;
 			elseif(!empty($ob))
-				echo $cc ." ".sprintf("%.2f", $ob);
+				echo $currency_symbol.number_format($ob, 2, '.', ',')." ".$currency_code_display;
 			elseif(empty($ob) && !empty($bnp))
-				printf(__('Buy at %s %.2f', 'wdm-ultimate-auction'), $cc, $bnp);
+				printf(__('Buy at %s%s %s', 'wdm-ultimate-auction'), $currency_symbol, number_format($bnp, 2, '.', ','), $currency_code_display);
 				?>
 			</span>
 			</li>

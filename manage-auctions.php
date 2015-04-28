@@ -127,17 +127,23 @@ class Auctions_List_Table extends WP_List_Table {
 		$payment_qry = get_post_meta($single_auction->ID,'wdm_payment_method',true);
 		$payment_method = str_replace("method_"," ",$payment_qry);
 		$payment_method = str_replace("_"," ",$payment_method);
+		$buyer_id = get_post_meta($single_auction->ID, 'wdm_auction_buyer', true);
 		
 		if($payment_method == 'mailing')
 		    $payment_method = 'cheque';
 		    
 		$row['email_payment'] = "<span>".sprintf(__('Method : %s', 'wdm-ultimate-auction'), $payment_method)."</span><br /><br />";
-                
+                $buyer = get_user_by('id', $buyer_id);
                 if(get_post_meta($single_auction->ID,'auction_bought_status',true) === 'bought')
                 {
-                    $row['email_payment'] .= "<span class='wdm-auction-bought'>".__('Auction has been bought by paying Buy Now price', 'wdm-ultimate-auction')." <br/> [".$currency_code." ".$buy_it_now_price."] </span>";
+		    if(empty($buyer)){
+			$row['email_payment'] .= "<span class='wdm-auction-bought'>".__('Auction has been bought by paying Buy Now price', 'wdm-ultimate-auction')." <br/> [".$currency_code." ".$buy_it_now_price."] </span>";
+		    }
+		    else{
+			$row['email_payment'] .= "<div class='wdm-auction-bought'>".sprintf(__("Bought by %s", "wdm-ultimate-auction"), apply_filters('ua_list_winner_info', $buyer->user_login, $buyer, $single_auction->ID, "e"))."</div><div class='wdm-margin-bottom wdm-mark-green'>".__("Price", "wdm-ultimate-auction")."[".$currency_code." ".$buy_it_now_price."]</div>";
+		    }
+                    
                 }
-                
                 else
                 {
                     if(!empty($results))
@@ -151,6 +157,10 @@ class Auctions_List_Table extends WP_List_Table {
 			{
 			    $email_qry = "SELECT email FROM ".$wpdb->prefix."wdm_bidders WHERE bid =".$winner_bid." AND auction_id =".$single_auction->ID." ORDER BY id DESC";
 			    $winner_email = $wpdb->get_var($email_qry);
+			    
+			    $winner = get_user_by('email', $winner_email);
+			    
+			    $row['email_payment'] .= "<div class='wdm-margin-bottom wdm-mark-green'>".sprintf(__("Won by %s", "wdm-ultimate-auction"), apply_filters('ua_list_winner_info', $winner->user_login, $winner, $single_auction->ID, "e"))."</div>";
 			    
 			    $email_sent = get_post_meta($single_auction->ID,'auction_email_sent',true);
 			    
