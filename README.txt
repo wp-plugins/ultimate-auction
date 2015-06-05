@@ -3,7 +3,7 @@ Contributors: nitesh_singh,WisdmLabs
 Donate link: http://auctionplugin.net/
 Tags: auctions,auction,auction plugin,wp auction,wordpress auction,wp auctions,auction script,ebay,ebay auction,bidding
 Requires at least: 3.5
-Tested up to: 4.2.1
+Tested up to: 4.1
 License: GPLv2 or later
 Stable tag: trunk
 
@@ -44,8 +44,6 @@ Lots of features, very configurable.  Easy to setup.  Great support.
 	13. Add To WATCHLIST feature
 	14. BULK IMPORT feature
 	15. WIDGET to show auction.
-	16. Best Offer feature
-	
 	
 	
 
@@ -110,6 +108,11 @@ This page is responsible for displaying all live auctions. If you click a specif
 == Frequently Asked Questions ==
 
 == Changelog ==
+= 3.6.2 = 
+* New Feature - Free plugin now has a feature where in admin can now configure visitors to place bids by just providing name and email instead of creating an account on the website.
+* Fix - User deletion will now delete all corresponding auctions.
+
+
 = 3.6.1 = 
 * New Feature - New payment method known as CASH has been added.
 * Fix - Currencies are now displayed with their symbols and values are comma separated. 

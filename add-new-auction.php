@@ -101,7 +101,8 @@ if(!empty($_POST)){
             update_post_meta($post_id, 'wdm_incremental_val', round($_POST["incremental_value"], 2));
             update_post_meta($post_id, 'wdm_payment_method', $_POST["payment_method"]);
 	    //if another bidding engine is active
-	    update_post_meta($post_id, 'wdm_bidding_engine', $_POST["bidding_engine"]);
+        $bidding_engine = ( isset($_POST["bidding_engine"]) ? $_POST["bidding_engine"] : "" );
+	    update_post_meta($post_id, 'wdm_bidding_engine', $bidding_engine);
 			for($im=1; $im<=4; $im++)
 			{
 				if(get_post_meta($post_id,'wdm-main-image',true) == 'main_image_'.$im)

@@ -347,9 +347,14 @@ function wdm_auction_listing(){
 				   $auction_bidder_name = $curr_user->user_login;
 				   $auction_bidder_email = $curr_user->user_email;
 				}
+				//else
+				//{
+				//	$auction_bidder_name = $curr_user->user_login;
+				//	$auction_bidder_email = $curr_user->user_email;
+				//}
 				
 			?>
-			<!--form to place bids-->
+			
 				
 				<div class="wdm-auction-ending-time"><?php printf(__('Ending in: %s', 'wdm-ultimate-auction'),'<span class="wdm-single-auction-ending">'.$rem_tm.'</span>');?></div>
 				
@@ -407,24 +412,71 @@ function wdm_auction_listing(){
 					
 				</form>
 				<?php
+					
 				   require_once('ajax-actions/place-bid.php'); //file to handle ajax requests related to bid placing form
 				   }
 				}
 				else{
+					$check=get_option('wdm_users_login');
+					if($check=='without_login')
+					{
+					$auction_bidder_name='';
+					$auction_bidder_email='';
 				  ?>
 				   <br />
-					<div class="wdm_bid_val" style="float:left;">
-										<label for="wdm-bidder-bidval"><?php _e( 'Bid Value', 'wdm-ultimate-auction' ); ?>: </label>
-										<input type="text" id="wdm-bidder-bidval" style="width:85px;" placeholder="<?php printf( __( 'in %s', 'wdm-ultimate-auction' ), $currency_symbol . $currency_code_display ); ?>" />
+					
+					<div class="wdm_bidder_name" style="float:left;padding-top:2px">
+						<label for="wdm-bidder-name"><?php _e( 'Name', 'wdm-ultimate-auction' ); ?>: </label>
+						<input type="text" id="wdm-bidder-name" name="wdm-bidder-name"/>
+					</div>
+						
+					<div class="wdm_bidder_email" style="float:left;padding-top:2px">
+						<label for="wdm-bidder-email"><?php _e( 'Email', 'wdm-ultimate-auction' ); ?>:  </label>
+						<input type="text" id="wdm-bidder-email" name="wdm-bidder-email" />
+					</div>
+					<div class="wdm_bid_val" style="float:left;padding-top:2px">
+						<label for="wdm-bidder-bidval"><?php _e( 'Bid Value', 'wdm-ultimate-auction' ); ?>: </label>
+						<input type="text" id="wdm-bidder-bidval" style="width:85px;" placeholder="<?php printf( __( 'in %s', 'wdm-ultimate-auction' ), $currency_symbol . $currency_code_display ); ?>" />
+						<br /><span class="wdm_enter_val_text" style="float:right;">
+						<small>(<?php printf(__('Enter %.2f or more', 'wdm-ultimate-auction'), $inc_price);?>)
+						<?php
+							$ehtml = '';
+							$ehtml = apply_filters('wdm_ua_text_after_bid_form', $ehtml, $wdm_auction->ID);
+							echo $ehtml;
+						?>
+						
+						</small>
+						</span>
+					</div>
+					
+					
+				   <div class="wdm_place_bid" style="float:right;padding-top:6px;">
+					<input type="submit" value="<?php _e('Place Bid', 'wdm-ultimate-auction');?>" id="wdm-place-bid-now" />	
+					  
+				   </div>
+					<?php
+					}
+					else
+					{
+					?>
+						<div class="wdm_bid_val" style="float:left;padding-top:2px">
+						<label for="wdm-bidder-bidval"><?php _e( 'Bid Value', 'wdm-ultimate-auction' ); ?>: </label>
+						<input type="text" id="wdm-bidder-bidval" style="width:85px;" placeholder="<?php printf( __( 'in %s', 'wdm-ultimate-auction' ), $currency_symbol . $currency_code_display ); ?>" />
 						<br /><span class="wdm_enter_val_text" style="float:right;">
 						<small>(<?php printf(__('Enter %.2f or more', 'wdm-ultimate-auction'), $inc_price);?>)</small>
 						</span>
 					</div>
 					
+					
 				   <div class="wdm_place_bid" style="float:right;padding-top:6px;">
-					  <a class="wdm-login-to-place-bid" href="<?php echo $wdm_login_url; ?>" title="<?php _e('Login', 'wdm-ultimate-auction');?>"><?php _e('Place Bid', 'wdm-ultimate-auction');?></a>
+					<a class="wdm-login-to-place-bid" href="<?php echo $wdm_login_url; ?>" title="<?php _e('Login', 'wdm-ultimate-auction');?>"><?php _e('Place Bid', 'wdm-ultimate-auction');?></a>
+					  
 				   </div>
-				<?php }?>
+				   
+				<?php
+					}
+				require_once('ajax-actions/place-bid.php');
+				}?>
 				</div> <!--wdm_place_bid_section ends here-->
 				<?php
 				}?>

@@ -5,7 +5,7 @@
   Description: Awesome plugin to host auctions on your wordpress site and sell anything you want.
   Author: Nitesh Singh
   Author URI: http://auctionplugin.net
-  Version: 3.6.1
+  Version: 3.6.2
   License: GPLv2
   Copyright 2015 Nitesh Singh
 */
@@ -45,6 +45,34 @@ function wdm_create_bidders_table()
    //for old table which had 'bid' column without index
    $alt_sql = "ALTER TABLE $data_table ADD INDEX (bid);";
    $wpdb->query($alt_sql);
+}
+
+//create feed page along with shortcode on plugin activation
+register_activation_hook(__FILE__, 'wdm_create_shortcode_pages');
+
+function wdm_create_shortcode_pages(){
+   
+   $option = 'ua_page_exists';
+   $default = array();
+   $default = get_option($option);
+   
+    if(!isset($default['listing']))
+    {
+        
+        $feed_page = array(
+            'post_type' => 'page',
+            'post_title' => __("Auctions", "wdm-ultimate-auction"),
+            'post_status' => 'publish',
+            'post_content' => '[wdm_auction_listing]'
+            );
+	
+        $id = wp_insert_post($feed_page);
+	
+	if(!empty($id)){
+		$default['listing'] = $id;
+		update_option( $option, $default );
+	}
+    }
 }
 
 //send email Ajax callback - An automatic activity once an auction has expired
@@ -225,7 +253,18 @@ add_action('wp_ajax_nopriv_cancel_last_bid', 'cancel_last_bid_callback');
 function place_bid_now_callback()
 {
    $ab_bid=round((double)$_POST['ab_bid'],2);
-   if(is_user_logged_in()){
+   $check=get_option('wdm_users_login');
+   $flag=false;
+   if($check=='with_login' && !is_user_logged_in())
+   {
+      echo json_encode(array("stat" => "Please log in to place bid"));
+      die();
+   }
+   else if($check=="without_login" || is_user_logged_in())
+   {
+      $flag=true;
+   }
+   if($flag){
     global $wpdb;
     $wpdb->hide_errors();
     
@@ -254,13 +293,17 @@ function place_bid_now_callback()
     }
     elseif(in_array('expired',$terms))
     {
-      echo json_encode(array("stat" => "Expired"));  
+      echo json_encode(array("stat" => "Expired"));
     }
     else
     {
          $ab_name = $_POST['ab_name'];
          $ab_email = $_POST['ab_email'];
-         
+	 if(email_exists($ab_email) && !is_user_logged_in() && $check=="without_login")
+	 {
+	    echo json_encode(array("stat" => "email_exists"));  
+	    die();
+	 }
          $ab_bid = apply_filters('wdm_ua_modified_bid_amt', $ab_bid, $high_bid, $_POST['auction_id']);
          
          $a_bid = array();
@@ -317,7 +360,7 @@ function place_bid_now_callback()
 		     $check_term = term_exists('expired', 'auction-status');
 		     wp_set_post_terms($_POST['auction_id'], $check_term["term_id"], 'auction-status');
                      update_post_meta($_POST['auction_id'], 'email_sent_imd', 'sent_imd');
-                        
+            
                      echo json_encode(array('type' => 'simple', 'stat' => 'Won', 'bid' => $ab_bid));
                }
             }   
@@ -333,7 +376,6 @@ function place_bid_now_callback()
             do_action('wdm_ua_modified_bid_place', array( 'mod_name' => $ab_name, 'mod_email' => $ab_email, 'mod_bid' => $ab_bid, 'orig_bid' => $cu_bid, 'orig_name' => $_POST['ab_name'], 'orig_email' => $_POST['ab_email'], 'auc_name' => $_POST['auc_name'], 'auc_desc' => $_POST['auc_desc'], 'auc_url' => $_POST['auc_url'], 'site_char' => $_POST['ab_char'], 'auc_id' => $_POST['auction_id']));
             } 
         else{
-         
                do_action('wdm_extend_auction_time', $_POST['auction_id']);
                
                $place_bid = $wpdb->insert( 

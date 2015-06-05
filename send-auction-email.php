@@ -65,16 +65,16 @@ foreach($completed_auctions as $ca){
           update_post_meta($ca->ID, 'wdm_to_be_sent', 'in_progress');
           
 	  $winner_email  = "";
-	  //$email_qry = "SELECT email FROM ".$wpdb->prefix."wdm_bidders WHERE bid =".$winner_bid." AND auction_id =".$ca->ID." ORDER BY id DESC";
-	  //$winner_email = $wpdb->get_var($email_qry);
+	  $email_qry = "SELECT email FROM ".$wpdb->prefix."wdm_bidders WHERE bid =".$winner_bid." AND auction_id =".$ca->ID." ORDER BY id DESC";
+	  $winner_email = $wpdb->get_var($email_qry);
 		
-	  $name_qry = "SELECT name FROM ".$wpdb->prefix."wdm_bidders WHERE bid =".$winner_bid." AND auction_id =".$ca->ID." ORDER BY id DESC";
+	  //$name_qry = "SELECT name FROM ".$wpdb->prefix."wdm_bidders WHERE bid =".$winner_bid." AND auction_id =".$ca->ID." ORDER BY id DESC";
+	  //
+	  //$winner_name = $wpdb->get_var($name_qry);
 	
-	  $winner_name = $wpdb->get_var($name_qry);
+          //$winner = get_user_by('login', $winner_name);
 	
-          $winner = get_user_by('login', $winner_name);
-	
-          $winner_email = $winner->user_email;
+          //$winner_email = $winner->user_email;
 	  
           $return_url = get_post_meta($ca->ID, 'current_auction_permalink',true);
 		 wp_enqueue_script('jquery');

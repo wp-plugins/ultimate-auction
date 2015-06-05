@@ -233,7 +233,13 @@ if(!class_exists('wdm_settings'))
 	    'test-setting-admin', 
 	    'setting_section_id' 			
 	);
-	
+	add_settings_field(
+	    'wdm_allow_users_id', 
+	    __('Allow users to bid', 'wdm-ultimate-auction'),
+	    array($this, 'wdm_allow_users_field'), 
+	    'test-setting-admin', 
+	    'setting_section_id' 			
+	);
 	$bidding_engine = array();
 	
 	$bidding_engine = apply_filters('ua_add_bidding_engine_option', $bidding_engine);
@@ -425,7 +431,9 @@ if(!class_exists('wdm_settings'))
 	    
 	if(isset($mid['wdm_auc_num_per_page']))
 	    update_option('wdm_auc_num_per_page',$mid['wdm_auc_num_per_page']);
-	    
+
+        if(isset($mid['wdm_users_login']))
+	    update_option('wdm_users_login',$mid['wdm_users_login']);
 	do_action('wdm_ua_update_ext_settings');
 	
     }
@@ -778,7 +786,20 @@ if(!class_exists('wdm_settings'))
 	}
 	printf("<div class='ult-auc-settings-tip'>".__("Choose Yes if you want to display private message section.", "wdm-ultimate-auction")."</div>");
     }
-    
+    public function wdm_allow_users_field()
+    {
+	$options = array("with_login", "without_login");
+	add_option('wdm_users_login','with_login');
+	foreach($options as $option) {
+		$checked = (get_option('wdm_users_login')== $option) ? ' checked="checked" ' : '';
+		if($option == 'with_login')
+		    $opt = __('Only if they are logged in', 'wdm-ultimate-auction');
+		else
+		    $opt = __('Without login as well', 'wdm-ultimate-auction');
+		    echo "<input ".$checked." value='$option' name='wdm_auc_settings_data[wdm_users_login]' type='radio' /> $opt <br />";
+	}
+	echo "<br /><div class='ult-auc-settings-tip'>".sprintf(__("%sPLEASE NOTE:%s 'Without login as well' option is not compatible with Shipping and Proxy bidding add ons for ultimate auction. Also, for 'Buy it now' option, login is still compulsory.", "wdm-ultimate-auction"), '<strong>', '</strong>')."</div>";
+    }
     //handle post meta keys
     public function wdm_post_meta($meta_key){
         if($this->auction_id!="")

@@ -158,9 +158,11 @@ class Auctions_List_Table extends WP_List_Table {
 			    $email_qry = "SELECT email FROM ".$wpdb->prefix."wdm_bidders WHERE bid =".$winner_bid." AND auction_id =".$single_auction->ID." ORDER BY id DESC";
 			    $winner_email = $wpdb->get_var($email_qry);
 			    
-			    $winner = get_user_by('email', $winner_email);
+			    //$winner = get_user_by('email', $winner_email);
+			    $name_qry = "SELECT name FROM ".$wpdb->prefix."wdm_bidders WHERE bid =".$winner_bid." AND auction_id =".$single_auction->ID." AND email = '".$winner_email."' ORDER BY id DESC";
+			    $winner_name = $wpdb->get_var($name_qry);
 			    
-			    $row['email_payment'] .= "<div class='wdm-margin-bottom wdm-mark-green'>".sprintf(__("Won by %s", "wdm-ultimate-auction"), apply_filters('ua_list_winner_info', $winner->user_login, $winner, $single_auction->ID, "e"))."</div>";
+			    $row['email_payment'] .= "<div class='wdm-margin-bottom wdm-mark-green'>".sprintf(__("Won by %s", "wdm-ultimate-auction"), $winner_name)."</div>";
 			    
 			    $email_sent = get_post_meta($single_auction->ID,'auction_email_sent',true);
 			    

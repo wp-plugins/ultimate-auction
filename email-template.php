@@ -4,10 +4,10 @@ function ultimate_auction_email_template($auction_name, $auction_id, $auction_de
 {
 	global $wpdb;
 
-	//$name_qry = "SELECT name FROM ".$wpdb->prefix."wdm_bidders WHERE bid =".$winner_bid." AND auction_id =".$auction_id." ORDER BY id DESC";
-	//$winner_name = $wpdb->get_var($name_qry);
-	$winner_user = get_user_by('email', $winner_email);
-	$winner_name = $winner_user->user_login;
+	$name_qry = "SELECT name FROM ".$wpdb->prefix."wdm_bidders WHERE bid =".$winner_bid." AND auction_id =".$auction_id." AND email = '".$winner_email."' ORDER BY id DESC";
+	$winner_name = $wpdb->get_var($name_qry);
+	//$winner_user = get_user_by('email', $winner_email);
+	//$winner_name = $winner_user->user_login;
 	
         $rec_email    	= get_option('wdm_paypal_address');
         $cur_code     	= substr(get_option('wdm_currency'), -3);
