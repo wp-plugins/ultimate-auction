@@ -554,6 +554,11 @@ color:#fff;
     padding-left: 3px !important;
 }
 
+a.wdm-login-to-buy-now {
+    width: 200px;
+    text-align: center;
+} 
+
 .wdm-image-container .auction-main-img-cont{height: 285px; width: 290px;}
 .wdm-image-container .auction-small-img-cont{width: 290px; margin-top: 10px !important; height: 70px;}
 .wdm-image-container .auction-small-img {max-width:60px; max-height:65px}

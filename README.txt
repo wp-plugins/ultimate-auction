@@ -44,6 +44,7 @@ Lots of features, very configurable.  Easy to setup.  Great support.
 	13. Add To WATCHLIST feature
 	14. BULK IMPORT feature
 	15. WIDGET to show auction.
+	16. Social share your auctions.
 	
 	
 
@@ -108,6 +109,11 @@ This page is responsible for displaying all live auctions. If you click a specif
 == Frequently Asked Questions ==
 
 == Changelog ==
+= 3.6.3 = 
+* Fix - Issue with localhost images has been fixed.
+* Fix - CSS changes for buy now button.
+
+
 = 3.6.2 = 
 * New Feature - Free plugin now has a feature where in admin can now configure visitors to place bids by just providing name and email instead of creating an account on the website.
 * Fix - User deletion will now delete all corresponding auctions.
